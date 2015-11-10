@@ -46,7 +46,7 @@ $actionId = $this->context->action->id;
                                 </ul>
                             </div>
                             <div class="logo-element">
-                                IN+
+                                Mai3
                             </div>
                         </li>
                         <li<?= in_array($controllerId, ['tenants']) ? ' class="active"' : '' ?>>
