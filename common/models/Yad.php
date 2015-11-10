@@ -7,9 +7,11 @@ use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 use yii\web\Cookie;
 
-class Yad {
+class Yad
+{
 
-    public static function getLanguages() {
+    public static function getLanguages()
+    {
         return [
             'ar' => Yii::t('language', 'ar'),
             'bg' => Yii::t('language', 'bg'),
@@ -52,7 +54,8 @@ class Yad {
      * 时区列表
      * @return array
      */
-    public static function getTimezones() {
+    public static function getTimezones()
+    {
         return [
             'Etc/GMT' => Yii::t('timezone', 'Etc/GMT'),
             'Etc/GMT+0' => Yii::t('timezone', 'Etc/GMT+0'),
@@ -78,18 +81,19 @@ class Yad {
      * @param integer $tenantId
      * @return boolean
      */
-    public static function setTenantData($tenantId) {
+    public static function setTenantData($tenantId)
+    {
         $db = Yii::$app->db;
         $tenantUser = $db->createCommand('SELECT [[t.role]], [[t.rule_id]], [[u.role]] AS [[user_role]] FROM {{%tenant_user}} t LEFT JOIN {{%user}} u ON [[t.user_id]] = [[u.id]] WHERE [[t.tenant_id]] = :tenantId AND [[t.user_id]] = :userId AND [[t.enabled]] = :enabled')->bindValues([
-                    ':tenantId' => (int) $tenantId,
-                    ':userId' => Yii::$app->user->id,
-                    ':enabled' => Option::BOOLEAN_TRUE
-                ])->queryOne();
+                ':tenantId' => (int) $tenantId,
+                ':userId' => Yii::$app->user->id,
+                ':enabled' => Option::BOOLEAN_TRUE
+            ])->queryOne();
         if ($tenantUser !== false) {
             $tenant = $db->createCommand('SELECT [[id]], [[name]], [[language]], [[timezone]], [[date_format]], [[time_format]], [[datetime_format]], [[domain_name]] FROM {{%tenant}} WHERE [[id]] = :id AND [[enabled]] = :enabled')->bindValues([
-                        ':id' => (int) $tenantId,
-                        ':enabled' => Option::BOOLEAN_TRUE
-                    ])->queryOne();
+                    ':id' => (int) $tenantId,
+                    ':enabled' => Option::BOOLEAN_TRUE
+                ])->queryOne();
             if ($tenant) {
                 $cookie = new Cookie(['name' => '_tenant', 'httpOnly' => true]);
                 $cookie->value = [
@@ -123,7 +127,8 @@ class Yad {
      * @param mixed $default
      * @return mixed
      */
-    public static function getTenantValue($key, $default = null) {
+    public static function getTenantValue($key, $default = null)
+    {
         $tenant = Yii::$app->getRequest()->getCookies()->get('_tenant');
         if ($tenant != null) {
             $value = $tenant->value;
@@ -137,19 +142,23 @@ class Yad {
     /**
      * Get current language
      */
-    public static function getLanguage() {
+    public static function getLanguage()
+    {
         return self::getTenantValue('language', Yii::$app->getRequest()->getPreferredLanguage(array_keys(self::getLanguages())));
     }
 
-    public static function getTimezone() {
+    public static function getTimezone()
+    {
         return self::getTenantValue('timezone', Yii::$app->timeZone);
     }
 
-    public static function getTenantId() {
+    public static function getTenantId()
+    {
         return self::getTenantValue('id', 0);
     }
 
-    public static function getTenantName() {
+    public static function getTenantName()
+    {
         return self::getTenantValue('name');
     }
 
@@ -157,7 +166,8 @@ class Yad {
      * 用户系统角色
      * @return mixed
      */
-    public static function getUserRole() {
+    public static function getUserRole()
+    {
         return self::getTenantValue('systemRole');
     }
 
@@ -165,7 +175,8 @@ class Yad {
      * 租赁站点的用户角色
      * @return mixed
      */
-    public static function getTenantUserRole() {
+    public static function getTenantUserRole()
+    {
         return self::getTenantValue('role');
     }
 
@@ -173,7 +184,8 @@ class Yad {
      * 租赁站点用户审核规则
      * @return mixed
      */
-    public static function getTenantUserRule() {
+    public static function getTenantUserRule()
+    {
         return self::getTenantValue('rule');
     }
 
@@ -184,7 +196,8 @@ class Yad {
      * @param string $modelName
      * @return string
      */
-    public static function modelName2TableName($modelName) {
+    public static function modelName2TableName($modelName)
+    {
         $tableName = null;
         if (!empty($modelName)) {
             $tableName = (Yii::$app->getDb()->tablePrefix ? : '') . Inflector::camel2id(StringHelper::basename(BaseActiveRecord::id2ClassName($modelName)), '_');
@@ -199,7 +212,8 @@ class Yad {
      * @param string|integer $order
      * @return array|string|null
      */
-    public static function getTextImages($content, $order = 'ALL') {
+    public static function getTextImages($content, $order = 'ALL')
+    {
         $images = null;
         if (!empty($content)) {
             $pattern = "/<img.*?src=[\'|\"](.*?(?:[\.gif|\.jpg]))[\'|\"].*?[\/]?>/";

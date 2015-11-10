@@ -2,15 +2,14 @@
 
 namespace common\models;
 
-use Yii;
+use common\models\TenantAccessToken;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Brand;
 
 /**
- * BrandSearch represents the model behind the search form about `common\models\Brand`.
+ * TenantAccessTokenSearch represents the model behind the search form about `common\models\TenantAccessToken`.
  */
-class BrandSearch extends Brand
+class TenantAccessTokenSearch extends TenantAccessToken
 {
 
     /**
@@ -19,8 +18,8 @@ class BrandSearch extends Brand
     public function rules()
     {
         return [
-            [['id', 'ordering', 'tenant_id', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['slug', 'name', 'icon_path', 'description'], 'safe'],
+            [['status', 'tenant_id'], 'integer'],
+            [['name', 'access_token'], 'safe'],
         ];
     }
 
@@ -42,10 +41,16 @@ class BrandSearch extends Brand
      */
     public function search($params)
     {
-        $query = Brand::find();
+        $query = TenantAccessToken::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'tenant_id' => SORT_ASC,
+                    'created_at' => SORT_DESC,
+                ]
+            ]
         ]);
 
         $this->load($params);
@@ -57,20 +62,11 @@ class BrandSearch extends Brand
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
-            'ordering' => $this->ordering,
-            'tenant_id' => $this->tenant_id,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'slug', $this->slug])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'icon_path', $this->icon_path])
-            ->andFilterWhere(['like', 'description', $this->description]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'access_token', $this->access_token]);
 
         return $dataProvider;
     }

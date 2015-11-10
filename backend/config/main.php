@@ -16,6 +16,7 @@ return [
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
+            'loginUrl' => ['/default/login'],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -27,7 +28,25 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            'errorAction' => '/default/error',
+        ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+        ],
+        'i18n' => [
+            'translations' => [
+                '*' => [
+                    'class' => '\yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                ],
+                'app' => [
+                    'class' => '\yii\i18n\PhpMessageSource',
+                    'basePath' => '@common/messages',
+                ],
+            ],
+        ],
+        'assetManager' => [
+            'appendTimestamp' => true,
         ],
     ],
     'params' => $params,

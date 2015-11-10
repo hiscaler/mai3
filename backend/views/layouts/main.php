@@ -49,6 +49,12 @@ $actionId = $this->context->action->id;
                                 IN+
                             </div>
                         </li>
+                        <li<?= in_array($controllerId, ['tenants']) ? ' class="active"' : '' ?>>
+                            <a href="javascript:;"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li><a href="<?= Url::toRoute(['tenants/index']) ?>">站点管理</a></li>
+                            </ul>
+                        </li>
                         <li>
                             <a href="javascript:;"><i class="fa fa-th-large"></i> <span class="nav-label">控制面板</span> <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
@@ -70,7 +76,7 @@ $actionId = $this->context->action->id;
                                 <li><a href="<?= Url::toRoute(['items/index']) ?>">商品管理</a></li>
                                 <li><a href="<?= Url::toRoute(['orders/index']) ?>">订单管理</a></li>
                                 <li><a href="<?= Url::toRoute(['comments/index']) ?>">评论管理</a></li>
-                                
+
                             </ul>
                         </li>
                         <li>

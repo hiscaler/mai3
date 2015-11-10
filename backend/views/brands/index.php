@@ -17,68 +17,65 @@ $this->params['menus'] = [
     ['label' => Yii::t('app', '搜索'), 'url' => '#'],
 ];
 ?>
-<div class="row">
-    <div class="col-lg-12">        
-        <div class="ibox float-e-margins">
 
-            <div class="ibox-content">
-                <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="ibox float-e-margins">
 
-                <?=
-                GridView::widget([
-                    'dataProvider' => $dataProvider,
-                    'columns' => [
-                        [
-                            'class' => 'yii\grid\SerialColumn',
-                            'contentOptions' => ['class' => 'serial-number']
-                        ],
-                        [
-                            'attribute' => 'ordering',
-                            'contentOptions' => ['class' => 'ordering'],
-                        ],
-                        [
-                            'attribute' => 'slug',
-                            'headerOptions' => ['class' => 'slug'],
-                        ],
-                        'name',
-                        'description:ntext',
-                        [
-                            'attribute' => 'status',
-                            'format' => 'boolean',
-                            'contentOptions' => ['class' => 'boolean pointer'],
-                        ],
-                        [
-                            'attribute' => 'created_by',
-                            'value' => function($model) {
+    <div class="ibox-content">
+        <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+
+        <?=
+        GridView::widget([
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                [
+                    'class' => 'yii\grid\SerialColumn',
+                    'contentOptions' => ['class' => 'serial-number']
+                ],
+                [
+                    'attribute' => 'ordering',
+                    'contentOptions' => ['class' => 'ordering'],
+                ],
+                [
+                    'attribute' => 'slug',
+                    'headerOptions' => ['class' => 'slug'],
+                ],
+                'name',
+                'description:ntext',
+                [
+                    'attribute' => 'status',
+                    'format' => 'boolean',
+                    'contentOptions' => ['class' => 'boolean pointer'],
+                ],
+                [
+                    'attribute' => 'created_by',
+                    'value' => function($model) {
 //                                return $model['creater']['nickname'];
-                            },
-                            'contentOptions' => ['class' => 'username']
-                        ],
-                        [
-                            'attribute' => 'created_at',
-                            'format' => 'date',
-                            'contentOptions' => ['class' => 'date']
-                        ],
-                        [
-                            'attribute' => 'updated_by',
-                            'value' => function($model) {
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'created_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'attribute' => 'updated_by',
+                    'value' => function($model) {
 //                                return $model['updater']['nickname'];
-                            },
-                            'contentOptions' => ['class' => 'username']
-                        ],
-                        [
-                            'attribute' => 'updated_at',
-                            'format' => 'date',
-                            'contentOptions' => ['class' => 'date']
-                        ],
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'headerOptions' => array('class' => 'btns-3 last'),
-                        ],
-                    ],
-                ]);
-                ?>
-            </div>            
-        </div>
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'updated_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'headerOptions' => array('class' => 'btns-3 last'),
+                ],
+            ],
+        ]);
+        ?>
     </div>
 </div>
