@@ -29,7 +29,7 @@ class Label extends BaseActiveRecord
      */
     public static function tableName()
     {
-        return '{{%attribute}}';
+        return '{{%label}}';
     }
 
     /**

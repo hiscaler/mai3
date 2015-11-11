@@ -55,12 +55,12 @@ $actionId = $this->context->action->id;
                                 <li><a href="<?= Url::toRoute(['tenants/index']) ?>">站点管理</a></li>
                             </ul>
                         </li>
-                        <li>
+                        <li<?= in_array($controllerId, ['lookups', 'ads', 'labels']) ? ' class="active"' : '' ?>>
                             <a href="javascript:;"><i class="fa fa-th-large"></i> <span class="nav-label">控制面板</span> <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li><a href="<?= Url::toRoute(['lookups/index']) ?>">系统设置</a></li>
                                 <li><a href="<?= Url::toRoute(['ads/index']) ?>">广告管理</a></li>
-                                <li><a href="<?= Url::toRoute(['ads/index']) ?>">推送位管理</a></li>
+                                <li><a href="<?= Url::toRoute(['labels/index']) ?>">推送位管理</a></li>
                                 <li><a href="<?= Url::toRoute(['ads/index']) ?>">资讯管理</a></li>
                                 <li><a href="<?= Url::toRoute(['ads/index']) ?>">文章管理</a></li>
                             </ul>
