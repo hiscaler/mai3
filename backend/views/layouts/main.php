@@ -12,6 +12,8 @@ AppAsset::register($this);
 
 $controllerId = $this->context->id;
 $actionId = $this->context->action->id;
+$baseUrl = Yii::$app->getRequest()->getBaseUrl();
+$identity = Yii::$app->getUser()->getIdentity();
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -20,7 +22,7 @@ $actionId = $this->context->action->id;
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
-        <title><?= Html::encode($this->title) ?></title>
+        <title><?= Html::encode($this->title) ?> - <?= Yii::$app->name ?></title>
         <?php $this->head() ?>
     </head>
     <body>
@@ -32,10 +34,10 @@ $actionId = $this->context->action->id;
                     <ul class="nav metismenu" id="side-menu">
                         <li class="nav-header">
                             <div class="dropdown profile-element"> <span>
-                                    <img alt="image" class="img-circle" src="images/profile_small.jpg" />
+                                    <img alt="<?= $identity->username ?>" class="img-circle" src="<?= $baseUrl ?>/images/profile_small.jpg" />
                                 </span>
                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                    <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold">David Williams</strong>
+                                    <span class="clear"> <span class="block m-t-xs"> <strong class="font-bold"><?= $identity->username ?></strong>
                                         </span> <span class="text-muted text-xs block">Art Director <b class="caret"></b></span> </span> </a>
                                 <ul class="dropdown-menu animated fadeInRight m-t-xs">
                                     <li><a href="profile.html">Profile</a></li>
@@ -123,14 +125,11 @@ $actionId = $this->context->action->id;
                             <a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
                             <form role="search" class="navbar-form-custom" action="search_results.html">
                                 <div class="form-group">
-                                    <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                                    <input type="text" placeholder="请输入您要查询的订单号" class="form-control" name="top-search" id="top-search">
                                 </div>
                             </form>
                         </div>
                         <ul class="nav navbar-top-links navbar-right">
-                            <li>
-                                <span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>
-                            </li>
                             <li class="dropdown">
                                 <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                                     <i class="fa fa-envelope"></i>  <span class="label label-warning">16</span>
@@ -139,7 +138,7 @@ $actionId = $this->context->action->id;
                                     <li>
                                         <div class="dropdown-messages-box">
                                             <a href="profile.html" class="pull-left">
-                                                <img alt="image" class="img-circle" src="images/a7.jpg">
+                                                <img alt="image" class="img-circle" src="<?= $baseUrl ?>/images/a7.jpg">
                                             </a>
                                             <div>
                                                 <small class="pull-right">46h ago</small>
@@ -152,7 +151,7 @@ $actionId = $this->context->action->id;
                                     <li>
                                         <div class="dropdown-messages-box">
                                             <a href="profile.html" class="pull-left">
-                                                <img alt="image" class="img-circle" src="images/a4.jpg">
+                                                <img alt="image" class="img-circle" src="<?= $baseUrl ?>/images/a4.jpg">
                                             </a>
                                             <div>
                                                 <small class="pull-right text-navy">5h ago</small>
@@ -165,7 +164,7 @@ $actionId = $this->context->action->id;
                                     <li>
                                         <div class="dropdown-messages-box">
                                             <a href="profile.html" class="pull-left">
-                                                <img alt="image" class="img-circle" src="images/profile.jpg">
+                                                <img alt="image" class="img-circle" src="<?= $baseUrl ?>/images/profile.jpg">
                                             </a>
                                             <div>
                                                 <small class="pull-right">23h ago</small>
@@ -229,8 +228,8 @@ $actionId = $this->context->action->id;
 
 
                             <li>
-                                <a href="login.html">
-                                    <i class="fa fa-sign-out"></i> Log out
+                                <a href="<?= Url::toRoute(['/default/logout']) ?>">
+                                    <i class="fa fa-sign-out"></i> 注销
                                 </a>
                             </li>
                             <li>
@@ -313,7 +312,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a1.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a1.jpg">
 
                                             <div class="m-t-xs">
                                                 <i class="fa fa-star text-warning"></i>
@@ -331,7 +330,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a2.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a2.jpg">
                                         </div>
                                         <div class="media-body">
                                             The point of using Lorem Ipsum is that it has a more-or-less normal.
@@ -343,7 +342,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a3.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a3.jpg">
 
                                             <div class="m-t-xs">
                                                 <i class="fa fa-star text-warning"></i>
@@ -361,7 +360,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a4.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a4.jpg">
                                         </div>
 
                                         <div class="media-body">
@@ -374,7 +373,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a8.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a8.jpg">
                                         </div>
                                         <div class="media-body">
 
@@ -387,7 +386,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a7.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a7.jpg">
                                         </div>
                                         <div class="media-body">
                                             Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
@@ -399,7 +398,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a3.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a3.jpg">
 
                                             <div class="m-t-xs">
                                                 <i class="fa fa-star text-warning"></i>
@@ -417,7 +416,7 @@ $actionId = $this->context->action->id;
                                 <div class="sidebar-message">
                                     <a href="#">
                                         <div class="pull-left text-center">
-                                            <img alt="image" class="img-circle message-avatar" src="images/a4.jpg">
+                                            <img alt="image" class="img-circle message-avatar" src="<?= $baseUrl ?>/images/a4.jpg">
                                         </div>
                                         <div class="media-body">
                                             Uncover many web sites still in their infancy. Various versions have.
