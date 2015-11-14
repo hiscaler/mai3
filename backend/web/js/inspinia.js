@@ -40,13 +40,13 @@ $(document).ready(function () {
     });
 
     // Fullscreen ibox function
-    $('.fullscreen-link').click(function() {
+    $('.fullscreen-link').click(function () {
         var ibox = $(this).closest('div.ibox');
         var button = $(this).find('i');
         $('body').toggleClass('fullscreen-ibox-mode');
         button.toggleClass('fa-expand').toggleClass('fa-compress');
         ibox.toggleClass('fullscreen');
-        setTimeout(function() {
+        setTimeout(function () {
             $(window).trigger('resize');
         }, 100);
     });
@@ -105,10 +105,10 @@ $(document).ready(function () {
     });
 
     // Tooltips demo
-    $('.tooltip-demo').tooltip({
-        selector: "[data-toggle=tooltip]",
-        container: "body"
-    });
+//    $('.tooltip-demo').tooltip({
+//        selector: "[data-toggle=tooltip]",
+//        container: "body"
+//    });
 
     // Move modal to body
     // Fix Bootstrap backdrop issu with animation.css
@@ -163,8 +163,8 @@ $(document).ready(function () {
         }
     });
 
-    $("[data-toggle=popover]")
-        .popover();
+//    $("[data-toggle=popover]")
+//        .popover();
 
     // Add slimscroll to element
     $('.full-height-scroll').slimscroll({

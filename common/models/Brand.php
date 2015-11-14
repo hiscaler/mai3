@@ -70,6 +70,30 @@ class Brand extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * 获取品牌列表数据
+     * @param boolean $all
+     * @return array
+     */
+    public static function getMap($all = false)
+    {
+        $list = [];
+        $sql = 'SELECT [[id]], [[slug]], [[name]] FROM {{%brand}}';
+        $bindValues = [];
+        if (!$all) {
+            $sql .= ' WHERE [[status]] = :status';
+            $bindValues = [':status' => Constant::BOOLEAN_TRUE];
+        }
+        $sql .= ' ORDER BY [[slug]] DESC';
+
+        $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
+        foreach ($rawData as $data) {
+            $list[$data['id']] = "{$data['slug']}: {$data['name']}";
+        }
+
+        return $list;
+    }
+
     // Events
     public function beforeSave($insert)
     {

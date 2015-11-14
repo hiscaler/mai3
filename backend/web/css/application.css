@@ -409,3 +409,31 @@
 .grid-view table.table td.btns-8 { width: 160px; _widht: 170px; }
 .grid-view table.table td.btns-9 { width: 180px; _widht: 190px; }
 .grid-view table.table td.btns-10 { width: 200px; _widht: 210px; }
+/*******************************************************************************
+ * 商品图片列表
+ ******************************************************************************/
+.item-images {}
+.item-images li {
+    width: 122px;
+    height: 161px;
+    display: block;
+    float: left;
+    margin: 10px;
+}
+.item-images li img {
+    width: 120px;
+    height: 160px;
+    border: #d2d6de solid 1px;
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+}
+.item-images li .image span {
+    position: absolute;
+    margin-top: -150px;
+    margin-left: 100px;
+    top: auto;
+}
+.item-images li input {
+    width: 120px;
+    border: #d2d6de solid 1px;
+}

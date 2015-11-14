@@ -1,3 +1,16 @@
+/**
+ * Lock UI
+ */
+;(function ($) {
+    $.fn.lock = function () {
+        this.unlock();
+        $('body').append('<div id="widget-lock-ui" class="lock-ui" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:#000;cursor:wait;opacity:.7;filter: alpha(opacity=70);"><div>');
+    };
+    $.fn.unlock = function () {
+        $('#widget-lock-ui').remove();
+    };
+})(jQuery);
+
 $(document).ready(function () {
     var sparklineCharts = function () {
         $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
@@ -78,5 +91,96 @@ $(document).ready(function () {
             tooltip: false
         }
     );
+
+    // 商品相册图片上传
+    $(document).on('click', '#btn-add-new-goods-image-row', function () {
+        var $t = $(this),
+            $row = $('tr#row-0');
+        if ($row.length) {
+            $cloneRow = $row.clone();
+            $cloneRow
+                .find('input')
+                .val('')
+                .end()
+                .find('.btns')
+                .html('<a href="javascript:;" title="删除" aria-label="删除" class="btn-remove-dynamic-row"><span class="glyphicon glyphicon-trash"></span></a>');
+            $('#grid-goods-images table tbody').append($cloneRow);
+
+            $('#grid-goods-images table tbody tr').each(function (i) {
+                $(this).attr('id', 'row-' + i);
+            });
+        } else {
+            layer.alert('不存在参考行。', {icon: -1});
+        }
+
+        return false;
+    });
+
+    $(document).on('click', 'a.btn-remove-dynamic-row', function () {
+        $(this).parent().parent().remove();
+
+        return false;
+    });
+
+    // 删除商品图片
+    $(document).on('click', '.btn-delete-image', function () {
+        if (confirm('是否删除该图片？')) {
+            var $t = $(this),
+                id = $t.attr('data-key');
+            $.ajax({
+                type: 'POST',
+                url: $t.attr('data-url'),
+                data: {id: id},
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    $.fn.lock();
+                }, success: function (response) {
+                    if (response.success) {
+                        $t.parent().parent().remove();
+                    } else {
+                        layer.alert(response.error.message, {icon: -1});
+                    }
+                    $.fn.unlock();
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText, {icon: -1});
+                    $.fn.unlock();
+                }
+            });
+        }
+
+        return false;
+    });
+
+    // 更新商品图片描述文字
+    $(document).on('blur', '.update-image-description', function () {
+        var $t = $(this),
+            id = $t.attr('data-key'),
+            originalValue = $t.attr('data-original'),
+            value = $t.val();
+        if (value != originalValue) {
+            $.ajax({
+                type: 'POST',
+                url: $t.attr('data-url'),
+                data: {
+                    id: id,
+                    description: value
+                },
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    $.fn.lock();
+                }, success: function (response) {
+                    if (!response.success) {
+                        layer.alert(response.error.message, {icon: -1});
+                    }
+                    $.fn.unlock();
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText, {icon: -1});
+                    $.fn.unlock();
+                }
+            });
+        }
+
+        return false;
+    });
 
 });

@@ -24,6 +24,8 @@ class AppAsset extends AssetBundle
         'css/animate.css',
         'css/inspinia.css',
         'css/application.css',
+        'layer/skin/layer.css',
+        'layer/skin/layer.ext.css',
     ];
     public $js = [
         'js/jquery.metisMenu.js',
@@ -38,11 +40,13 @@ class AppAsset extends AssetBundle
         'js/inspinia.js',
         'js/pace.min.js',
         'js/jquery.sparkline.min.js',
+        'layer/layer.min.js',
+        'layer/extend/layer.ext.js',
         'js/application.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+        'yii\bootstrap\BootstrapPluginAsset',
     ];
 
 }

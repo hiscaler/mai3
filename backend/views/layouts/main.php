@@ -75,7 +75,7 @@ $identity = Yii::$app->getUser()->getIdentity();
                                 <li><a href="<?= Url::toRoute(['attributes/index']) ?>">属性管理</a></li>
                                 <li><a href="<?= Url::toRoute(['payments/index']) ?>">支付管理</a></li>
                                 <li><a href="<?= Url::toRoute(['posts/index']) ?>">邮费模版管理</a></li>
-                                <li><a href="<?= Url::toRoute(['items/index']) ?>">商品管理</a></li>
+                                <li<?= $controllerId == 'items' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['items/index']) ?>">商品管理</a></li>
                                 <li><a href="<?= Url::toRoute(['orders/index']) ?>">订单管理</a></li>
                                 <li><a href="<?= Url::toRoute(['comments/index']) ?>">评论管理</a></li>
 

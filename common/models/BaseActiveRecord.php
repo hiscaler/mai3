@@ -34,7 +34,6 @@ class BaseActiveRecord extends ActiveRecord
     public $entityNodeIds;
     public $entityNodeNames;
     private $_oldNodeId;
-    public $images = [];
     public $isDraft = Option::BOOLEAN_FALSE; // 记录是否为草稿
     public $content_image_number = 1; // 从文本内容中获取第几章图片作为缩略图
 
