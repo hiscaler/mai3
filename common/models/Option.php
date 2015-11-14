@@ -100,4 +100,17 @@ class Option
         return $options;
     }
 
+    /**
+     * 分类类型
+     * @return array
+     */
+    public static function categoryTypeOptions()
+    {
+        return [
+            Constant::CATEGORY_ARTICLE => '文章',
+            Constant::CATEGORY_NEWS => '资讯',
+            Constant::CATEGORY_ITEM => '商品',
+        ];
+    }
+
 }

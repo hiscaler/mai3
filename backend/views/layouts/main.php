@@ -54,7 +54,7 @@ $identity = Yii::$app->getUser()->getIdentity();
                         <li<?= in_array($controllerId, ['tenants']) ? ' class="active"' : '' ?>>
                             <a href="javascript:;"><i class="fa fa-th-large"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="<?= Url::toRoute(['tenants/index']) ?>">站点管理</a></li>
+                                <li<?= $controllerId == 'tenants' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['tenants/index']) ?>">站点管理</a></li>
                             </ul>
                         </li>
                         <li<?= in_array($controllerId, ['lookups', 'ads', 'labels']) ? ' class="active"' : '' ?>>
@@ -62,16 +62,16 @@ $identity = Yii::$app->getUser()->getIdentity();
                             <ul class="nav nav-second-level">
                                 <li><a href="<?= Url::toRoute(['lookups/index']) ?>">系统设置</a></li>
                                 <li><a href="<?= Url::toRoute(['ads/index']) ?>">广告管理</a></li>
-                                <li><a href="<?= Url::toRoute(['labels/index']) ?>">推送位管理</a></li>
+                                <li<?= $controllerId == 'labels' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['labels/index']) ?>">推送位管理</a></li>
                                 <li><a href="<?= Url::toRoute(['ads/index']) ?>">资讯管理</a></li>
                                 <li><a href="<?= Url::toRoute(['ads/index']) ?>">文章管理</a></li>
                             </ul>
                         </li>
-                        <li<?= in_array($controllerId, ['brands']) ? ' class="active"' : '' ?>>
+                        <li<?= in_array($controllerId, ['brands', 'categories']) ? ' class="active"' : '' ?>>
                             <a href="javascript:;"><i class="fa fa-th-large"></i> <span class="nav-label">店铺管理</span> <span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li><a href="<?= Url::toRoute(['brands/index']) ?>">品牌管理</a></li>
-                                <li><a href="<?= Url::toRoute(['categories/index']) ?>">分类管理</a></li>
+                                <li<?= $controllerId == 'brands' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['brands/index']) ?>">品牌管理</a></li>
+                                <li<?= $controllerId == 'categories' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['categories/index']) ?>">分类管理</a></li>
                                 <li><a href="<?= Url::toRoute(['attributes/index']) ?>">属性管理</a></li>
                                 <li><a href="<?= Url::toRoute(['payments/index']) ?>">支付管理</a></li>
                                 <li><a href="<?= Url::toRoute(['posts/index']) ?>">邮费模版管理</a></li>
@@ -245,7 +245,7 @@ $identity = Yii::$app->getUser()->getIdentity();
                 <?php if (isset($this->params['breadcrumbs']) || isset($this->params['menus'])): ?>
                     <div class="row wrapper border-bottom white-bg page-heading">
                         <div id="page-navigation" class="col-lg-12">
-                            <h2 class="name">商品品牌管理</h2>
+                            <h2 class="name"><?= $this->title ?></h2>
                             <?php
                             if (isset($this->params['breadcrumbs']) && $this->params['breadcrumbs']) {
                                 echo Breadcrumbs::widget(
