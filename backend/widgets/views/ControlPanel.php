@@ -40,13 +40,13 @@ use yii\helpers\Url;
                     <li><a href="<?= Url::toRoute(['ads/index']) ?>">文章管理</a></li>
                 </ul>
             </li>
-            <li<?= in_array($controllerId, ['brands', 'categories', 'items']) ? ' class="active"' : '' ?>>
+            <li<?= in_array($controllerId, ['brands', 'categories', 'items', 'payment-configs']) ? ' class="active"' : '' ?>>
                 <a href="javascript:;"><i class="fa fa-th-large"></i> <span class="nav-label">店铺管理</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li<?= $controllerId == 'brands' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['brands/index']) ?>">品牌管理</a></li>
                     <li<?= $controllerId == 'categories' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['categories/index']) ?>">分类管理</a></li>
                     <li><a href="<?= Url::toRoute(['attributes/index']) ?>">属性管理</a></li>
-                    <li><a href="<?= Url::toRoute(['payments/index']) ?>">支付管理</a></li>
+                    <li<?= $controllerId == 'payment-configs' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['payment-configs/index']) ?>">支付管理</a></li>
                     <li><a href="<?= Url::toRoute(['posts/index']) ?>">邮费模版管理</a></li>
                     <li<?= $controllerId == 'items' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['items/index']) ?>">商品管理</a></li>
                     <li><a href="<?= Url::toRoute(['orders/index']) ?>">订单管理</a></li>

@@ -127,6 +127,7 @@ return array(
     'Email Users' => '邮箱用户',
     'Tenant List' => '站点列表',
     'Votes' => '投票管理',
+    'Payment Configs' => '支付配置管理',
     // yii
     'The file "{file}" is too small. Its size cannot be smaller than {limit}.' => '文件"{file}"太小。它的大小不得小于 {limit}。',
     'The file "{file}" is too big. Its size cannot exceed {limit}.' => '文件"{file}"太大。它的大小不能超过 {limit}。',
