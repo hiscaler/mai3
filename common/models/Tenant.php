@@ -99,7 +99,7 @@ class Tenant extends BaseActiveRecord
 
     /**
      * 获取站点定义的 access token
-     * @return ActiveReocrd
+     * @return ActiveRecord
      */
     public function getAccessTokens()
     {

@@ -133,21 +133,6 @@ class Item extends BaseActiveRecord
         }
     }
 
-    public function beforeSave($insert)
-    {
-        if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->tenant_id = 1;
-                $this->created_at = $this->updated_at = time();
-                $this->created_by = $this->updated_by = Yii::$app->getUser()->getId();
-            }
-
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

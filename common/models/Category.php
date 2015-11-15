@@ -102,12 +102,6 @@ class Category extends BaseActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->tenant_id = 1;
-                $this->created_at = $this->updated_at = time();
-                $this->created_by = $this->updated_by = Yii::$app->getUser()->getId();
-            }
-
             if (empty($this->alias) && !empty($this->name)) {
                 $this->alias = Inflector::slug($this->name);
             }
