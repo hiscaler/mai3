@@ -21,7 +21,8 @@ class MenuButtons extends Widget
                 unset($this->items[$i]);
                 continue;
             }
-            $output .= '<a class="btn btn-xs btn-white" href="' . Url::toRoute($item['url']) . '">' . $item['label'] . '</a>';
+            $searchButton = $item['url'] == '#';
+            $output .= '<a class="btn btn-xs btn-white' . ($searchButton ? ' btn-search' : '') . '" href="' . ($searchButton ? 'javascript:;' : Url::toRoute($item['url'])) . '">' . $item['label'] . '</a>';
         }
 
 

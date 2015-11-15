@@ -75,10 +75,10 @@ class Item extends BaseActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'category_id' => Yii::t('app', 'Category ID'),
-            'brand_id' => Yii::t('app', 'Brand ID'),
-            'sn' => Yii::t('app', 'Sn'),
-            'name' => Yii::t('app', 'Name'),
+            'category_id' => Yii::t('item', 'Category'),
+            'brand_id' => Yii::t('item', 'Brand'),
+            'sn' => Yii::t('item', 'Sn'),
+            'name' => Yii::t('item', 'Name'),
             'market_price' => Yii::t('app', '市场价'),
             'shop_price' => Yii::t('app', '店铺价'),
             'member_price' => Yii::t('app', '会员价'),

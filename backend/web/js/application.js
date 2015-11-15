@@ -1,7 +1,8 @@
 /**
  * Lock UI
  */
-;(function ($) {
+;
+(function ($) {
     $.fn.lock = function () {
         this.unlock();
         $('body').append('<div id="widget-lock-ui" class="lock-ui" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:#000;cursor:wait;opacity:.7;filter: alpha(opacity=70);"><div>');
@@ -91,6 +92,20 @@ $(document).ready(function () {
             tooltip: false
         }
     );
+
+    $(document).on('click', 'a.btn-search', function () {
+        var $t = $(this);
+        if ($t.attr('data-toggle') === 'show') {
+            $t.attr('data-toggle', 'hide');
+            $('.form-search').hide();
+        } else {
+            $t.attr('data-toggle', 'show');
+            $('.form-search').show();
+        }
+
+
+        return false;
+    });
 
     // 商品相册图片上传
     $(document).on('click', '#btn-add-new-goods-image-row', function () {
