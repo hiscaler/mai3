@@ -40,6 +40,10 @@ $this->params['menus'] = [
                 'brand.name',
                 [
                     'attribute' => 'sn',
+                    'format' => 'raw',
+                    'value' => function($model) {
+                        return Html::a($model['sn'], ['update', 'id' => $model['id']]);
+                    },
                     'contentOptions' => ['class' => 'item-sn'],
                 ],
                 'name',

@@ -55,9 +55,13 @@ class Item extends BaseActiveRecord
     {
         return [
             [['sn', 'name', 'market_price', 'shop_price', 'member_price', 'keywords', 'content'], 'required'],
-            [['category_id', 'brand_id', 'market_price', 'shop_price', 'member_price', 'ordering', 'clicks_count', 'sales_count', 'status', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['name', 'keywords', 'description'], 'trim'],
+            ['sn', 'match', 'pattern' => '/^[a-zA-Z0-9]+[a-zA-Z0-9_][a-zA-Z0-9]$/'],
+            [['status'], 'boolean'],
+            [['category_id', 'brand_id', 'market_price', 'shop_price', 'member_price', 'ordering', 'clicks_count', 'sales_count', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['description', 'content'], 'string'],
             [['sn'], 'string', 'max' => 16],
+            ['sn', 'unique', 'targetAttribute' => ['sn', 'tenant_id']],
             [['name'], 'string', 'max' => 50],
             [['picture_path', 'keywords'], 'string', 'max' => 100],
             [['imageFiles'], 'safe'],
@@ -147,14 +151,26 @@ class Item extends BaseActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        if ($insert) {
-            Yii::$app->getDb()->createCommand()->insert('{{%item_content}}', ['item_id' => $this->id, 'content' => $this->content])->execute();
-        } else {
-            Yii::$app->getDb()->createCommand()->update('{{%item_content}}', ['content' => $this->content], ['item_id' => $this->id])->execute();
-        }
-
         $userId = Yii::$app->getUser()->getId();
         $now = time();
+        if ($insert) {
+            Yii::$app->getDb()->createCommand()->insert('{{%item_content}}', [
+                'item_id' => $this->id,
+                'content' => $this->content,
+                'created_at' => $now,
+                'created_by' => $userId,
+                'updated_at' => $now,
+                'updated_by' => $userId,
+            ])->execute();
+        } else {
+            Yii::$app->getDb()->createCommand()->update('{{%item_content}}', [
+                'content' => $this->content,
+                'updated_at' => $now,
+                'updated_by' => $userId
+                ], ['item_id' => $this->id])->execute();
+        }
+
+
         // 处理上传的图片
         $images = $this->imageFiles;
         if ($images) {
