@@ -12,13 +12,13 @@ use Yii;
 class Controller extends \yii\web\Controller
 {
 
-    public function beforeActionXX($action)
+    public function beforeAction($action)
     {
         if (parent::beforeAction($action)) {
             // 如果不是管理员并且没有选择管理站点的一律跳到站点选择界面
-            if (Yad::getUserRole() !== User::ROLE_ADMINISTRATOR && !Yad::getTenantId() && ($this->id != 'default' && !in_array($action->id, ['choice-tenant', 'change-tenant', 'login', 'logout', 'error']))) {
-                $this->redirect(['/default/choice-tenant']);
-            }
+//            if (Yad::getUserRole() !== User::ROLE_ADMINISTRATOR && !Yad::getTenantId() && ($this->id != 'default' && !in_array($action->id, ['choice-tenant', 'change-tenant', 'login', 'logout', 'error']))) {
+//                $this->redirect(['/default/choice-tenant']);
+//            }
 
             $formatter = Yii::$app->getFormatter();
             $language = Yad::getLanguage();

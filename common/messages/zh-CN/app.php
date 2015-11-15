@@ -96,7 +96,7 @@ return array(
     'Faqs' => '常见问题管理',
     'Feedbacks' => '留言管理',
     'News' => '资讯管理',
-    'Products' => '产品管理',
+    'Items' => '商品管理',
     'Quick Url Shortcuts' => 'Url 快捷键管理',
     'Boot Data' => '引导数据管理',
     'Downloads' => '下载管理',

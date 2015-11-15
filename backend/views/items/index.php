@@ -11,8 +11,8 @@ $this->title = Yii::t('app', 'Items');
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menus'] = [
-    ['label' => Yii::t('app', '列表'), 'url' => ['index']],
-    ['label' => Yii::t('app', '添加'), 'url' => ['create']],
+    ['label' => Yii::t('app', 'List'), 'url' => ['index']],
+    ['label' => Yii::t('app', 'Create'), 'url' => ['create']],
     ['label' => Yii::t('app', 'Grid Column Config'), 'url' => ['grid-column-configs/index', 'name' => 'common-models-Album'], 'htmlOptions' => ['class' => 'grid-column-config', 'data-reload-object' => 'grid-view-album']],
     ['label' => Yii::t('app', '搜索'), 'url' => '#'],
 ];

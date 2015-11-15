@@ -83,16 +83,16 @@ class Yad
      */
     public static function setTenantData($tenantId)
     {
-        $db = Yii::$app->db;
-        $tenantUser = $db->createCommand('SELECT [[t.role]], [[t.rule_id]], [[u.role]] AS [[user_role]] FROM {{%tenant_user}} t LEFT JOIN {{%user}} u ON [[t.user_id]] = [[u.id]] WHERE [[t.tenant_id]] = :tenantId AND [[t.user_id]] = :userId AND [[t.enabled]] = :enabled')->bindValues([
+        $db = Yii::$app->getDb();
+        $tenantUser = $db->createCommand('SELECT [[t.role]], [[t.rule_id]], [[u.role]] AS [[user_role]] FROM {{%tenant_user}} t LEFT JOIN {{%user}} u ON [[t.user_id]] = [[u.id]] WHERE [[t.tenant_id]] = :tenantId AND [[t.user_id]] = :userId AND [[t.status]] = :status')->bindValues([
                 ':tenantId' => (int) $tenantId,
-                ':userId' => Yii::$app->user->id,
-                ':enabled' => Option::BOOLEAN_TRUE
+                ':userId' => Yii::$app->getUser()->getId(),
+                ':status' => Constant::BOOLEAN_TRUE
             ])->queryOne();
         if ($tenantUser !== false) {
-            $tenant = $db->createCommand('SELECT [[id]], [[name]], [[language]], [[timezone]], [[date_format]], [[time_format]], [[datetime_format]], [[domain_name]] FROM {{%tenant}} WHERE [[id]] = :id AND [[enabled]] = :enabled')->bindValues([
+            $tenant = $db->createCommand('SELECT [[id]], [[name]], [[language]], [[timezone]], [[date_format]], [[time_format]], [[datetime_format]], [[domain_name]] FROM {{%tenant}} WHERE [[id]] = :id AND [[status]] = :status')->bindValues([
                     ':id' => (int) $tenantId,
-                    ':enabled' => Option::BOOLEAN_TRUE
+                    ':status' => Constant::BOOLEAN_TRUE
                 ])->queryOne();
             if ($tenant) {
                 $cookie = new Cookie(['name' => '_tenant', 'httpOnly' => true]);

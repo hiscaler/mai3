@@ -6,7 +6,6 @@ use common\models\Item;
 use common\models\ItemSearch;
 use Yii;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 

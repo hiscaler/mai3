@@ -120,8 +120,7 @@ $this->params['menus'] = [
                         ]) : '';
                     }
                 ],
-                'headerOptions' => ['class' => 'last'],
-                'contentOptions' => ['class' => 'btn-4'],
+                'headerOptions' => ['class' => 'btns-4 last'],
             ],
         ],
     ]);

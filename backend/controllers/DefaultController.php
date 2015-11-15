@@ -65,6 +65,7 @@ class DefaultController extends Controller
     public function actionIndex()
     {
         if (!Yad::getTenantId()) {
+            
         }
 
         return $this->render('index');
@@ -171,12 +172,12 @@ class DefaultController extends Controller
 
     /**
      * 设置当前用户管理的租赁
-     * @param integer $tenantId
+     * @param integer $id
      * @return mixed
      */
-    public function actionChangeTenant($tenantId)
+    public function actionChangeTenant($id)
     {
-        Yad::setTenantData($tenantId);
+        Yad::setTenantData($id);
 
         return $this->redirect(['default/index']);
     }
@@ -189,7 +190,7 @@ class DefaultController extends Controller
     {
         $this->layout = 'base';
         $tenants = Yii::$app->db->createCommand('SELECT [[id]], [[name]], [[domain_name]], [[description]] FROM {{%tenant}} WHERE [[enabled]] = :enabled AND [[id]] IN (SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId)')->bindValues([
-                ':enabled' => Option::BOOLEAN_TRUE,
+                ':enabled' => \common\models\Constant::BOOLEAN_TRUE,
                 ':userId' => Yii::$app->user->id
             ])->queryAll();
 
