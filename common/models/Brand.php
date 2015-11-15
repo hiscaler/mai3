@@ -21,7 +21,7 @@ use yii\helpers\Inflector;
  * @property integer $updated_at
  * @property integer $updated_by
  */
-class Brand extends \yii\db\ActiveRecord
+class Brand extends BaseActiveRecord
 {
 
     /**
@@ -98,12 +98,6 @@ class Brand extends \yii\db\ActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if ($insert) {
-                $this->tenant_id = 1;
-                $this->created_at = $this->updated_at = time();
-                $this->created_by = $this->updated_by = Yii::$app->getUser()->getId();
-            }
-
             if (empty($this->slug) && !empty($this->name)) {
                 $this->slug = Inflector::slug($this->name);
             }
