@@ -85,7 +85,7 @@ return array(
     // Cotrol Panels
     'Basic Settings' => '基本设置',
     // Controllers
-    'Attributes' => '推送位管理',
+    'Labels' => '推送位管理',
     'Articles' => '单文章管理',
     'Albums' => '相册管理',
     'Album Photos' => '相册照片管理',
