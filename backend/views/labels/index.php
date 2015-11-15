@@ -6,10 +6,10 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\AttributeSearch */
+/* @var $searchModel common\models\LabelSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Attributes');
+$this->title = Yii::t('app', 'Labels');
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menus'] = [
@@ -47,52 +47,53 @@ $this->params['menus'] = [
                 'value' => function ($model) {
                     return "<span class=\"pk\">[ {$model['id']} ]</span>" . Html::a($model['name'], ['update', 'id' => $model['id']]);
                 }
+                ],
+                [
+                    'attribute' => 'frequency',
+                    'contentOptions' => ['class' => 'number'],
+                ],
+                [
+                    'attribute' => 'status',
+                    'format' => 'boolean',
+                    'contentOptions' => ['class' => 'boolean pointer enabled-handler'],
+                ],
+                [
+                    'attribute' => 'created_by',
+                    'value' => function($model) {
+                        return $model['creater']['nickname'];
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'created_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'attribute' => 'updated_by',
+                    'value' => function($model) {
+                        return $model['updater']['nickname'];
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'updated_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'template' => '{update} {delete}',
+                    'headerOptions' => ['class' => 'btns-2 last'],
+                ],
             ],
-            [
-                'attribute' => 'frequency',
-                'contentOptions' => ['class' => 'number'],
-            ],
-            [
-                'attribute' => 'status',
-                'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean pointer enabled-handler'],
-            ],
-            [
-                'attribute' => 'created_by',
-                'value' => function($model) {
-                    return $model['creater']['nickname'];
-                },
-                'contentOptions' => ['class' => 'username']
-            ],
-            [
-                'attribute' => 'created_at',
-                'format' => 'date',
-                'contentOptions' => ['class' => 'date']
-            ],
-            [
-                'attribute' => 'updated_by',
-                'value' => function($model) {
-                    return $model['updater']['nickname'];
-                },
-                'contentOptions' => ['class' => 'username']
-            ],
-            [
-                'attribute' => 'updated_at',
-                'format' => 'date',
-                'contentOptions' => ['class' => 'date']
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'template' => '{update} {delete}',
-                'headerOptions' => ['class' => 'btns-2 last'],
-            ],
-        ],
-    ]);
-    Pjax::end();
-    ?>
+        ]);
+        Pjax::end();
+        ?>
 
-</div>
+    </div>
 
-<?php
-$this->registerJs('yadjet.actions.toggle("table td.enabled-handler img", "' . Url::toRoute('toggle') . '");');
-$this->registerJs('yadjet.actions.toggle("table td.entity-enabled-handler img", "' . Url::toRoute('toggle-entity-enabled') . '");');
+    <?php
+    $this->registerJs('yadjet.actions.toggle("table td.enabled-handler img", "' . Url::toRoute('toggle') . '");');
+    $this->registerJs('yadjet.actions.toggle("table td.entity-enabled-handler img", "' . Url::toRoute('toggle-entity-enabled') . '");');
+    

@@ -1,11 +1,11 @@
 <?php
 /* @var $this yii\web\View */
-/* @var $model common\models\Attribute */
+/* @var $model common\models\Label */
 
 $this->title = Yii::t('app', 'Create {modelClass}', [
-            'modelClass' => Yii::t('model', 'Attribute'),
-        ]);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Attributes'), 'url' => ['index']];
+        'modelClass' => Yii::t('model', 'Labels'),
+    ]);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Labels'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Create');
 
 $this->params['menus'] = [
