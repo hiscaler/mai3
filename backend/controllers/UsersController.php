@@ -21,9 +21,11 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
 /**
- * UserController implements the CRUD actions for User model.
+ * 系统用户管理
+ * 
+ * @author hiscaler <hiscaler@gmail.com>
  */
-class UsersController extends AccessibleController
+class UsersController extends Controller
 {
 
     public function behaviors()

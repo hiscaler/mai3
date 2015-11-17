@@ -24,7 +24,7 @@ use yii\helpers\Url;
                     Mai3
                 </div>
             </li>
-            <li<?= in_array($controllerId, ['tenants']) ? ' class="active"' : '' ?>>
+            <li<?= in_array($controllerId, ['tenants', 'users']) ? ' class="active"' : '' ?>>
                 <a href="javascript:;"><i class="fa fa-tv"></i> <span class="nav-label">系统管理</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li<?= $controllerId == 'tenants' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['tenants/index']) ?>">站点管理</a></li>
@@ -36,6 +36,7 @@ use yii\helpers\Url;
                 <ul class="nav nav-second-level">
                     <li><a href="<?= Url::toRoute(['lookups/index']) ?>">系统设置</a></li>
                     <li<?= $controllerId == 'labels' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['labels/index']) ?>">推送位管理</a></li>
+                    <li<?= $controllerId == 'members' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['members/index']) ?>">会员管理</a></li>
                 </ul>
             </li>
             <li<?= in_array($controllerId, ['ads', 'news', 'articles']) ? ' class="active"' : '' ?>>

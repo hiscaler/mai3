@@ -121,9 +121,8 @@ class Tenant extends BaseActiveRecord
             ->from('{{%tenant_user_group}}')
             ->where([
                 'tenant_id' => $tenantId === null ? Yad::getTenantId() : $tenantId,
-                'enabled' => Option::BOOLEAN_TRUE
+                'status' => Constant::BOOLEAN_TRUE
             ])
-            ->orderBy(['alias' => SORT_ASC])
             ->indexBy('id')
             ->column();
 
