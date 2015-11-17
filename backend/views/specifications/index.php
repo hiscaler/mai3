@@ -1,25 +1,25 @@
 <?php
 
+use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel common\models\BrandSearch */
+/* @var $searchModel common\models\SpecificationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Brands');
+$this->title = Yii::t('app', 'Specifications');
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menus'] = [
     ['label' => Yii::t('app', 'List'), 'url' => ['index']],
     ['label' => Yii::t('app', 'Create'), 'url' => ['create']],
-    ['label' => Yii::t('app', 'Grid Column Config'), 'url' => ['grid-column-configs/index', 'name' => 'common-models-Album'], 'htmlOptions' => ['class' => 'grid-column-config', 'data-reload-object' => 'grid-view-album']],
     ['label' => Yii::t('app', 'Search'), 'url' => '#'],
 ];
 ?>
-
 <div class="ibox float-e-margins">
 
     <div class="ibox-content">
+
         <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
         <?=
@@ -27,19 +27,15 @@ $this->params['menus'] = [
             'dataProvider' => $dataProvider,
             'columns' => [
                 [
-                    'class' => 'yii\grid\SerialColumn',
-                    'contentOptions' => ['class' => 'serial-number']
+                    'attribute' => 'id',
+                    'contentOptions' => ['class' => 'id'],
                 ],
                 [
                     'attribute' => 'ordering',
                     'contentOptions' => ['class' => 'ordering'],
                 ],
-                [
-                    'attribute' => 'slug',
-                    'headerOptions' => ['class' => 'slug'],
-                ],
                 'name',
-                'description:ntext',
+                'type',
                 [
                     'attribute' => 'status',
                     'format' => 'boolean',
@@ -48,7 +44,7 @@ $this->params['menus'] = [
                 [
                     'attribute' => 'created_by',
                     'value' => function($model) {
-//                                return $model['creater']['nickname'];
+                        return $model['creater']['nickname'];
                     },
                     'contentOptions' => ['class' => 'username']
                 ],
@@ -60,7 +56,7 @@ $this->params['menus'] = [
                 [
                     'attribute' => 'updated_by',
                     'value' => function($model) {
-//                                return $model['updater']['nickname'];
+                        return $model['updater']['nickname'];
                     },
                     'contentOptions' => ['class' => 'username']
                 ],
@@ -76,5 +72,6 @@ $this->params['menus'] = [
             ],
         ]);
         ?>
+
     </div>
 </div>
