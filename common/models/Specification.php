@@ -75,6 +75,30 @@ class Specification extends BaseActiveRecord
         return $this->hasMany(SpecificationValue::className(), ['specification_id' => 'id'])->orderBy(['ordering' => SORT_ASC]);
     }
 
+    /**
+     * 获取商品规格列表数据
+     * @param boolean $all
+     * @return array
+     */
+    public static function getMap($all = false)
+    {
+        $list = [];
+        $sql = 'SELECT [[id]], [[name]] FROM {{%specification}}';
+        $bindValues = [];
+        if (!$all) {
+            $sql .= ' WHERE [[status]] = :status';
+            $bindValues = [':status' => Constant::BOOLEAN_TRUE];
+        }
+        $sql .= ' ORDER BY [[ordering]] ASC';
+
+        $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
+        foreach ($rawData as $data) {
+            $list[$data['id']] = "{$data['name']}";
+        }
+
+        return $list;
+    }
+
     // 事件
     public function afterSave($insert, $changedAttributes)
     {
