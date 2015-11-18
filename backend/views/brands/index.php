@@ -48,7 +48,7 @@ $this->params['menus'] = [
                 [
                     'attribute' => 'created_by',
                     'value' => function($model) {
-//                                return $model['creater']['nickname'];
+                        return $model['creater']['nickname'];
                     },
                     'contentOptions' => ['class' => 'username']
                 ],
@@ -60,7 +60,7 @@ $this->params['menus'] = [
                 [
                     'attribute' => 'updated_by',
                     'value' => function($model) {
-//                                return $model['updater']['nickname'];
+                        return $model['updater']['nickname'];
                     },
                     'contentOptions' => ['class' => 'username']
                 ],
