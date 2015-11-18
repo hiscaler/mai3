@@ -91,28 +91,33 @@ class Specification extends BaseActiveRecord
             }
         } else {
             foreach ($values as $value) {
-                $specificationValue = $db->createCommand('SELECT [[text]], [[icon_path]], [[ordering]], [[status]] FROM {{%specification_value}} WHERE [[tenant_id]] = :tenantId AND [[specification_id]] = :specificationId AND [[text]] = :text')->bindValues([':tenantId' => $tenantId, ':specificationId' => $this->id, ':text' => $value['text']])->queryOne();
-                if ($specificationValue) {
-                    if ($value['text'] != $specificationValue['text'] || $value['icon_path'] != $specificationValue['icon_path'] || $value['ordering'] != $specificationValue['ordering'] || $value['status'] != $specificationValue['status']) {
-                        $updateColumns = [
-                            'updated_at' => $now,
-                            'updated_by' => $userId,
-                        ];
-                        if ($value['text'] != $specificationValue['text']) {
-                            $updateColumns['text'] = $value['text'];
+                $valueId = isset($value['id']) && $value['id'] ? $value['id'] : null;
+                if ($valueId) {
+                    // Update
+                    $specificationValue = $db->createCommand('SELECT [[text]], [[icon_path]], [[ordering]], [[status]] FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId AND [[specification_id]] = :specificationId')->bindValues([':id' => $valueId, ':tenantId' => $tenantId, ':specificationId' => $this->id])->queryOne();
+                    if ($specificationValue) {
+                        if ($value['text'] != $specificationValue['text'] || $value['icon_path'] != $specificationValue['icon_path'] || $value['ordering'] != $specificationValue['ordering'] || $value['status'] != $specificationValue['status']) {
+                            $updateColumns = [
+                                'updated_at' => $now,
+                                'updated_by' => $userId,
+                            ];
+                            if ($value['text'] != $specificationValue['text']) {
+                                $updateColumns['text'] = $value['text'];
+                            }
+                            if ($value['icon_path'] != $specificationValue['icon_path']) {
+                                $updateColumns['icon_path'] = $value['icon_path'];
+                            }
+                            if ($value['ordering'] != $specificationValue['ordering']) {
+                                $updateColumns['ordering'] = $value['ordering'];
+                            }
+                            if ($value['status'] != $specificationValue['status']) {
+                                $updateColumns['status'] = $value['status'];
+                            }
+                            $db->createCommand()->update('{{%specification_value}}', $updateColumns, ['id' => $valueId, 'tenant_id' => $tenantId, 'specification_id' => $this->id])->execute();
                         }
-                        if ($value['icon_path'] != $specificationValue['icon_path']) {
-                            $updateColumns['icon_path'] = $value['icon_path'];
-                        }
-                        if ($value['ordering'] != $specificationValue['ordering']) {
-                            $updateColumns['ordering'] = $value['ordering'];
-                        }
-                        if ($value['status'] != $specificationValue['status']) {
-                            $updateColumns['status'] = $value['status'];
-                        }
-                        $db->createCommand()->update('{{%specification_value}}', $updateColumns, ['tenant_id' => $tenantId, 'specification_id' => $this->id, 'text' => $value['text']])->execute();
                     }
                 } else {
+                    // Insert
                     $insertColumns = array_merge($value, ['specification_id' => $this->id, 'tenant_id' => $tenantId, 'created_at' => $now, 'created_by' => $userId, 'updated_at' => $now, 'updated_by' => $userId]);
                     $insertValues[] = array_values($insertColumns);
                 }

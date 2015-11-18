@@ -59,7 +59,10 @@ use yii\widgets\ActiveForm;
                                                 foreach ($model->values as $index => $value):
                                                     ?>
                                                     <tr id="row-<?= $index ?>">
-                                                        <td><?= $form->field($model, "valuesData[$index][ordering]")->dropDownList(Option::orderingOptions(), ['value' => $value['ordering']])->label(false) ?></td>
+                                                        <td>
+                                                            <?= $form->field($model, "valuesData[$index][id]")->hiddenInput(['value' => $value['id']])->label(false) ?>
+                                                            <?= $form->field($model, "valuesData[$index][ordering]")->dropDownList(Option::orderingOptions(), ['prompt' => 'value', 'options' => [$value['ordering'] => ['selected' => 'selected']]])->label(false) ?>
+                                                        </td>
                                                         <td><?= $form->field($model, "valuesData[$index][text]")->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
                                                         <td><?= $form->field($model, "valuesData[$index][icon_path]")->fileInput()->label(false) ?></td>
                                                         <td class="boolean"><?= $form->field($model, "valuesData[$index][status]")->checkbox(['value' => $value['status']], null)->label(false) ?></td>
@@ -74,7 +77,7 @@ use yii\widgets\ActiveForm;
                                                     <td><?= $form->field($model, "valuesData[0][ordering]")->dropDownList(Option::orderingOptions())->label(false) ?></td>
                                                     <td><?= $form->field($model, "valuesData[0][text]")->textInput(['maxlength' => 20])->label(false) ?></td>
                                                     <td><?= $form->field($model, "valuesData[0][icon_path]")->fileInput()->label(false) ?></td>
-                                                    <td class="boolean"><?= $form->field($model, "valuesData[0][status]")->checkbox([], null)->label(false) ?></td>
+                                                    <td class="boolean"><?= $form->field($model, "valuesData[0][status]")->checkbox(['value' => 1], true)->label(false) ?></td>
 
                                                     <td>Delete</td>
                                                 </tr>

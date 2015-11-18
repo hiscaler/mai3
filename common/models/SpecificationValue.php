@@ -7,6 +7,7 @@ use Yii;
 /**
  * This is the model class for table "{{%specification_value}}".
  *
+ * @property integer $id
  * @property integer $specification_id
  * @property string $text
  * @property string $icon_path
@@ -20,6 +21,7 @@ use Yii;
  */
 class SpecificationValue extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
@@ -47,6 +49,7 @@ class SpecificationValue extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id' => Yii::t('app', 'ID'),
             'specification_id' => Yii::t('app', 'Specification ID'),
             'text' => Yii::t('app', 'Text'),
             'icon_path' => Yii::t('app', 'Icon Path'),
@@ -59,4 +62,5 @@ class SpecificationValue extends \yii\db\ActiveRecord
             'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
+
 }

@@ -11,6 +11,7 @@ class m151117_111259_create_specification_value_table extends Migration
     public function up()
     {
         $this->createTable('{{%specification_value}}', [
+            'id' => $this->primaryKey(),
             'specification_id' => $this->integer()->notNull(),
             'text' => $this->string(30)->notNull(),
             'icon_path' => $this->string(100),
