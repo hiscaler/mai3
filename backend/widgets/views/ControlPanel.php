@@ -47,7 +47,7 @@ use yii\helpers\Url;
                     <li><a href="<?= Url::toRoute(['articles/index']) ?>">文章管理</a></li>
                 </ul>
             </li>
-            <li<?= in_array($controllerId, ['brands', 'categories', 'items', 'payment-configs', 'specifications']) ? ' class="active"' : '' ?>>
+            <li<?= in_array($controllerId, ['brands', 'categories', 'items', 'payment-configs', 'specifications', 'item-types']) ? ' class="active"' : '' ?>>
                 <a href="javascript:;"><i class="fa fa-shopping-cart"></i> <span class="nav-label">店铺管理</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li<?= $controllerId == 'brands' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['brands/index']) ?>">品牌管理</a></li>

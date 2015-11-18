@@ -1,8 +1,12 @@
 <?php
 
-use yii\db\Schema;
 use yii\db\Migration;
 
+/**
+ * 商品类型和规格关联表
+ * 
+ * @author hiscaler <hiscaler@gmail.com>
+ */
 class m151118_143657_create_item_type_specification_table extends Migration
 {
 
@@ -11,6 +15,7 @@ class m151118_143657_create_item_type_specification_table extends Migration
         $this->createTable('{{%item_type_specification}}', [
             'item_type_id' => $this->integer()->notNull(),
             'specification_id' => $this->integer()->notNull(),
+            'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
         ]);
     }
 

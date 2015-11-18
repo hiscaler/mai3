@@ -19,6 +19,7 @@ use yii\widgets\ActiveForm;
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#tab-base">商品类型</a></li>
                         <li><a data-toggle="tab" href="#tab-brands">关联品牌</a></li>
+                        <li><a data-toggle="tab" href="#tab-properties">扩展属性</a></li>
                         <li><a data-toggle="tab" href="#tab-specifications">关联规格</a></li>
                     </ul>
 
@@ -40,9 +41,38 @@ use yii\widgets\ActiveForm;
                             </div>
                         </div>
 
+                        <div id="tab-properties" class="tab-pane">
+                            <div class="panel-body">
+                                properties
+                            </div>
+                        </div>
+
                         <div id="tab-specifications" class="tab-pane">
                             <div class="panel-body">
-                                specifications
+                                <?php if ($specifications): ?>
+                                    <div class="grid-view">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th class="checkbox-column"></th>
+                                                    <th>规格名称</th>
+                                                    <th class="btns-1 last"></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($specifications as $item): ?>
+                                                    <tr>
+                                                        <td><?= \yii\bootstrap\Html::checkbox('check') ?></td>
+                                                        <td><?= $item['name'] ?></td>
+                                                        <td></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="notice">暂无商品规格定义。</div>
+                                <?php endif ?>
                             </div>
                         </div>
 

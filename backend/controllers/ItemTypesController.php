@@ -63,12 +63,14 @@ class ItemTypesController extends Controller
     public function actionCreate()
     {
         $model = new ItemType();
+        $specifications = \common\models\Specification::findAll(['tenant_id' => \common\models\Yad::getTenantId()]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                     'model' => $model,
+                    'specifications' => $specifications,
             ]);
         }
     }
@@ -82,12 +84,14 @@ class ItemTypesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $specifications = \common\models\Specification::findAll(['tenant_id' => \common\models\Yad::getTenantId()]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                     'model' => $model,
+                    'specifications' => $specifications,
             ]);
         }
     }
