@@ -437,3 +437,19 @@
     width: 120px;
     border: #d2d6de solid 1px;
 }
+/*******************************************************************************
+ * 商品关联品牌
+ ******************************************************************************/
+.tabs-container {
+    margin-bottom: 10px;
+}
+.tabs-container #tab-brands label {
+    padding: 5px 10px;
+    border: #ccc solid 1px;
+    border-radius: 10px;
+    font-weight: normal;
+    margin-right: 5px;
+}
+.tabs-container #tab-brands label input {
+    vertical-align: middle;
+}

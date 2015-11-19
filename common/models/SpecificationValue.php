@@ -63,4 +63,9 @@ class SpecificationValue extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getSpecification()
+    {
+        return $this->hasOne(Specification::className(), ['id' => 'specification_id']);
+    }
+
 }

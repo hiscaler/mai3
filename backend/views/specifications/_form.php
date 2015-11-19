@@ -63,10 +63,12 @@ use yii\widgets\ActiveForm;
                                                             <?= $form->field($model, "valuesData[$index][id]")->hiddenInput(['value' => $value['id']])->label(false) ?>
                                                             <?= $form->field($model, "valuesData[$index][ordering]")->dropDownList(Option::orderingOptions(), ['prompt' => 'value', 'options' => [$value['ordering'] => ['selected' => 'selected']]])->label(false) ?>
                                                         </td>
-                                                        <td><?= $form->field($model, "valuesData[$index][text]")->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
+                                                        <td><?= $form->field($model, "valuesData[text][]")->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
                                                         <td><?= $form->field($model, "valuesData[$index][icon_path]")->fileInput()->label(false) ?></td>
-                                                        <td class="boolean"><?= $form->field($model, "valuesData[$index][status]")->checkbox(['value' => $value['status']], null)->label(false) ?></td>
+                                                        <td class="boolean">
+                                                            <?= Html::checkbox('Specification[valuesData][status][]', $value->status) ?>
 
+                                                        </td>
                                                         <td>Delete</td>
                                                     </tr>
                                                     <?php

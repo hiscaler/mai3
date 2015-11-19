@@ -2,11 +2,13 @@
 
 namespace backend\controllers;
 
-use Yii;
 use common\models\ItemType;
 use common\models\ItemTypeSearch;
-use yii\web\NotFoundHttpException;
+use common\models\Specification;
+use common\models\Yad;
+use Yii;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
 
 /**
  * 商品类型管理
@@ -63,7 +65,8 @@ class ItemTypesController extends Controller
     public function actionCreate()
     {
         $model = new ItemType();
-        $specifications = \common\models\Specification::findAll(['tenant_id' => \common\models\Yad::getTenantId()]);
+        $model->brandIdList = $model->specificationIdList = [];
+        $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -84,7 +87,10 @@ class ItemTypesController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $specifications = \common\models\Specification::findAll(['tenant_id' => \common\models\Yad::getTenantId()]);
+        $db = Yii::$app->getDb();
+        $model->brandIdList = $db->createCommand('SELECT brand_id FROM {{%item_type_brand}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $model->id)->queryColumn();
+        $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
+        $model->specificationIdList = $db->createCommand('SELECT specification_id FROM {{%item_type_specification}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $model->id)->queryColumn();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

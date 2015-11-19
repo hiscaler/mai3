@@ -1,5 +1,7 @@
 <?php
 
+use common\models\Brand;
+use common\models\Option;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -29,7 +31,7 @@ use yii\widgets\ActiveForm;
                             <div class="panel-body">
                                 <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-                                <?= $form->field($model, 'ordering')->dropDownList(common\models\Option::orderingOptions()) ?>
+                                <?= $form->field($model, 'ordering')->dropDownList(Option::orderingOptions()) ?>
 
                                 <?= $form->field($model, 'status')->checkbox([], false) ?>
                             </div>
@@ -37,7 +39,7 @@ use yii\widgets\ActiveForm;
 
                         <div id="tab-brands" class="tab-pane">
                             <div class="panel-body">
-                                <?= $form->field($model, 'brandList[]')->checkboxList(\common\models\Brand::getMap(false)) ?>
+                                <?= $form->field($model, 'brandIdList')->checkboxList(Brand::getMap(false))->label(false) ?>
                             </div>
                         </div>
 
@@ -55,15 +57,24 @@ use yii\widgets\ActiveForm;
                                             <thead>
                                                 <tr>
                                                     <th class="checkbox-column"></th>
-                                                    <th>规格名称</th>
+                                                    <th style="width: 100px;">规格名称</th>
+                                                    <th>规格值</th>
                                                     <th class="btns-1 last"></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <?php foreach ($specifications as $item): ?>
+
+                                                <?php foreach ($specifications as $spec): ?>
                                                     <tr>
-                                                        <td><?= \yii\bootstrap\Html::checkbox('check') ?></td>
-                                                        <td><?= $item['name'] ?></td>
+                                                        <td>
+                                                            <?= Html::checkbox('ItemType[specificationIdList][]', in_array($spec->id, $model->specificationIdList), ['value' => $spec->id]) ?>
+                                                        </td>
+                                                        <td><?= $spec['name'] ?></td>
+                                                        <td>
+                                                            <?php foreach ($spec->values as $value): ?>
+                                                                <label class="btn btn-circle"><?= $value['text'] ?></label>
+                                                            <?php endforeach; ?>
+                                                        </td>
                                                         <td></td>
                                                     </tr>
                                                 <?php endforeach; ?>
