@@ -80,56 +80,60 @@ class ItemType extends BaseActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
         $db = Yii::$app->getDb();
-        // 关联品牌处理
-        $brandIdList = $this->brandIdList;
-        $insertBrands = $deleteBrands = [];
-        if ($insert) {
-            foreach ($brandIdList as $brandId) {
-                $insertBrands[] = ['item_type_id' => $this->id, 'brand_id' => $brandId];
+        $transaction = $db->beginTransaction();
+        try {
+            // 关联品牌处理
+            $brandIdList = $this->brandIdList;
+            $insertBrands = $deleteBrands = [];
+            if ($insert) {
+                $insertBrands = $brandIdList;
+            } else {
+                $_brandIdList = $db->createCommand('SELECT [[brand_id]] FROM {{%item_type_brand}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $this->id, \PDO::PARAM_INT)->queryColumn();
+                $insertBrands = array_diff($brandIdList, $_brandIdList);
+                $deleteBrands = array_diff($_brandIdList, $brandIdList);
             }
-        } else {
-            $_brandIdList = $db->createCommand('SELECT [[brand_id]] FROM {{%item_type_brand}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $this->id, \PDO::PARAM_INT)->queryColumn();
-            $insertBrands = array_diff($brandIdList, $_brandIdList);
-            $deleteBrands = array_diff($_brandIdList, $brandIdList);
-        }
 
-        if ($insertBrands || $deleteBrands) {
-            if ($insertBrands) {
-                $batchRows = [];
-                foreach ($insertBrands as $brandId) {
-                    $batchRows[] = [$this->id, $brandId];
+            if ($insertBrands || $deleteBrands) {
+                if ($insertBrands) {
+                    $batchRows = [];
+                    foreach ($insertBrands as $brandId) {
+                        $batchRows[] = [$this->id, $brandId];
+                    }
+                    $db->createCommand()->batchInsert('{{%item_type_brand}}', ['item_type_id', 'brand_id'], $batchRows)->execute();
                 }
-                $db->createCommand()->batchInsert('{{%item_type_brand}}', ['item_type_id', 'brand_id'], $batchRows)->execute();
-            }
-            if ($deleteBrands) {
-                $db->createCommand()->delete('{{%item_type_brand}}', ['brand_id' => $deleteBrands])->execute();
-            }
-        }
-
-        // 关联规格处理
-        $specificationIdList = $this->specificationIdList;
-        $insertSpecifications = $deleteSpecifications = [];
-        if ($insert) {
-            foreach ($specificationIdList as $specificationId) {
-                $insertSpecifications[] = ['item_type_id' => $this->id, 'specification_id' => $specificationId];
-            }
-        } else {
-            $_spcificationIdList = $db->createCommand('SELECT [[specification_id]] FROM {{%item_type_specification}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $this->id, \PDO::PARAM_INT)->queryColumn();
-            $insertSpecifications = array_diff($specificationIdList, $_spcificationIdList);
-            $deleteSpecifications = array_diff($_spcificationIdList, $specificationIdList);
-        }
-
-        if ($insertSpecifications || $deleteSpecifications) {
-            if ($insertSpecifications) {
-                $batchRows = [];
-                foreach ($insertSpecifications as $specificationId) {
-                    $batchRows[] = [$this->id, $specificationId];
+                if ($deleteBrands) {
+                    $db->createCommand()->delete('{{%item_type_brand}}', ['brand_id' => $deleteBrands])->execute();
                 }
-                $db->createCommand()->batchInsert('{{%item_type_specification}}', ['item_type_id', 'specification_id'], $batchRows)->execute();
             }
-            if ($deleteSpecifications) {
-                $db->createCommand()->delete('{{%item_type_specification}}', ['specification_id' => $deleteSpecifications])->execute();
+
+            // 关联规格处理
+            $specificationIdList = $this->specificationIdList;
+            $insertSpecifications = $deleteSpecifications = [];
+            if ($insert) {
+                $insertSpecifications = $specificationIdList;
+            } else {
+                $_spcificationIdList = $db->createCommand('SELECT [[specification_id]] FROM {{%item_type_specification}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $this->id, \PDO::PARAM_INT)->queryColumn();
+                $insertSpecifications = array_diff($specificationIdList, $_spcificationIdList);
+                $deleteSpecifications = array_diff($_spcificationIdList, $specificationIdList);
             }
+
+            if ($insertSpecifications || $deleteSpecifications) {
+                if ($insertSpecifications) {
+                    $batchRows = [];
+                    foreach ($insertSpecifications as $specificationId) {
+                        $batchRows[] = [$this->id, $specificationId];
+                    }
+                    $db->createCommand()->batchInsert('{{%item_type_specification}}', ['item_type_id', 'specification_id'], $batchRows)->execute();
+                }
+                if ($deleteSpecifications) {
+                    $db->createCommand()->delete('{{%item_type_specification}}', ['specification_id' => $deleteSpecifications])->execute();
+                }
+            }
+
+            $transaction->commit();
+        } catch (\Exception $e) {
+            $transaction->rollBack();
+            throw $e;
         }
     }
 
