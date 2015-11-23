@@ -205,9 +205,9 @@ $(document).ready(function () {
             $cloneRow = $('#row-0').clone(false),
             indexCounter = $('#mai3-index-counter').val(),
             id, name, elements, element, attrs;
-            
-        elements = $cloneRow.find('input');
-        console.info(elements);
+        
+        $cloneRow.find('td.btn-render').html('<a class="btn-delete-dynamic-table-row" href="javascript:;" title="删除"><span class="glyphicon glyphicon-trash"></span></a>');
+        elements = $cloneRow.find('input,select');
         for (var i = 0, l = elements.length; i < l; i++) {
             element = $(elements[i]);
             if (element.attr('id')==='specification-valuesdata-0-id') {
@@ -217,7 +217,6 @@ $(document).ready(function () {
                 });
             } else {
                 attrs = {};
-                console.info(element.prev().is("input"));
                 if (element.prev().is("input")) {
                     attrs.value = '';
                 } else if (element.prev().is('select')) {
@@ -234,14 +233,14 @@ $(document).ready(function () {
                 $(elements[i]).attr(attrs);
             }
         }
-        $tableBody.append('<tr id="row-' + $tableBody.find('tr').length + '">' + $cloneRow.html() + '</tr>');
+        $tableBody.append('<tr id="row-' + $('#mai3-index-counter').val() + '">' + $cloneRow.html() + '</tr>');
         $('#mai3-index-counter').val(parseInt(indexCounter) + 1);
         
         return false;
     });
     
     // 删除表格行记录
-    $(document).on('click', '#btn-delete-table-row', function () {
+    $(document).on('click', '.btn-delete-table-row', function () {
         var $t = $(this);
             
         $.ajax({
@@ -262,6 +261,13 @@ $(document).ready(function () {
                 $.fn.unlock();
             }
         });
+        
+        return false;
+    });
+    
+    // 删除表格动态行
+    $(document).on('click', '.btn-delete-dynamic-table-row', function () {
+        $(this).parent().parent().remove();
         
         return false;
     });

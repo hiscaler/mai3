@@ -71,21 +71,22 @@ use yii\widgets\ActiveForm;
                                                             <?= $form->field($model, "valuesData[$index][status]")->checkbox([], false)->label(false) ?>
 
                                                         </td>
-                                                        <td>
+                                                        <td class="btn-render">
                                                             <a class="btn-delete-table-row" href="<?= Url::toRoute(['delete-value', 'id' => $value['id']]) ?>" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
                                                         </td>
                                                     </tr>
                                                     <?php
                                                 endforeach;
                                             else:
+                                                echo Html::hiddenInput('mai3-index-counter', 1, ['id' => 'mai3-index-counter']);
                                                 ?>
                                                 <tr id="row-0">
                                                     <td><?= $form->field($model, "valuesData[0][ordering]")->dropDownList(Option::orderingOptions())->label(false) ?></td>
                                                     <td><?= $form->field($model, "valuesData[0][text]")->textInput(['maxlength' => 20])->label(false) ?></td>
                                                     <td><?= $form->field($model, "valuesData[0][icon_path]")->fileInput()->label(false) ?></td>
-                                                    <td class="boolean"><?= $form->field($model, "valuesData[0][status]")->checkbox(['value' => 1], true)->label(false) ?></td>
+                                                    <td class="boolean"><?= $form->field($model, "valuesData[0][status]")->checkbox([], false)->label(false) ?></td>
 
-                                                    <td>Delete</td>
+                                                    <td class="btn-render"></td>
                                                 </tr>
                                             <?php endif ?>
                                         </tbody>
