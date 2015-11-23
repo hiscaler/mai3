@@ -7,7 +7,6 @@ use common\models\SpecificationSearch;
 use common\models\Yad;
 use Yii;
 use yii\filters\VerbFilter;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
