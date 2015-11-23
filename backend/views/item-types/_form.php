@@ -72,7 +72,7 @@ use yii\widgets\ActiveForm;
                                                         <td><?= $spec['name'] ?></td>
                                                         <td>
                                                             <?php foreach ($spec->values as $value): ?>
-                                                                <label class="btn btn-circle"><?= $value['text'] ?></label>
+                                                                <span class="label label-success"><?= $value['text'] ?></span>
                                                             <?php endforeach; ?>
                                                         </td>
                                                         <td></td>
