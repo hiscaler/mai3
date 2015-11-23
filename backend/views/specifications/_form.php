@@ -3,6 +3,7 @@
 use common\models\Option;
 use common\models\Specification;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\ActiveForm;
 
@@ -42,7 +43,7 @@ use yii\widgets\ActiveForm;
                                 <div class="grid-view">
                                     <table class="table">
                                         <caption>
-                                            <a id="btn-add-new-goods-image-row" href="javascript:;" class="btn btn-primary btn-xs">添加一行</a>
+                                            <a id="btn-dynamic-add-specifications-row" href="javascript:;" class="btn btn-primary btn-xs">添加一行</a>
                                         </caption>
                                         <thead>
                                             <tr>
@@ -56,20 +57,23 @@ use yii\widgets\ActiveForm;
                                         <tbody>
                                             <?php
                                             if ($model->values):
+                                                echo Html::hiddenInput('mai3-index-counter', count($model->values), ['id' => 'mai3-index-counter']);
                                                 foreach ($model->values as $index => $value):
                                                     ?>
                                                     <tr id="row-<?= $index ?>">
-                                                        <td>
-                                                            <?= $form->field($model, "valuesData[$index][id]")->hiddenInput(['value' => $value['id']])->label(false) ?>
-                                                            <?= $form->field($model, "valuesData[$index][ordering]")->dropDownList(Option::orderingOptions(), ['prompt' => 'value', 'options' => [$value['ordering'] => ['selected' => 'selected']]])->label(false) ?>
+                                                        <td class="ordering">
+                                                            <?= $form->field($model, "valuesData[$index][id]", ['template' => '{input}'])->hiddenInput()->label(false) ?>
+                                                            <?= $form->field($model, "valuesData[$index][ordering]")->dropDownList(Option::orderingOptions(), ['options' => ['selected' => 'selected']])->label(false) ?>
                                                         </td>
-                                                        <td><?= $form->field($model, "valuesData[text][]")->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
+                                                        <td class="text"><?= $form->field($model, "valuesData[$index][text]")->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
                                                         <td><?= $form->field($model, "valuesData[$index][icon_path]")->fileInput()->label(false) ?></td>
                                                         <td class="boolean">
-                                                            <?= Html::checkbox('Specification[valuesData][status][]', $value->status) ?>
+                                                            <?= $form->field($model, "valuesData[$index][status]")->checkbox([], false)->label(false) ?>
 
                                                         </td>
-                                                        <td>Delete</td>
+                                                        <td>
+                                                            <a class="btn-delete-table-row" href="<?= Url::toRoute(['delete-value', 'id' => $value['id']]) ?>" title="删除"><span class="glyphicon glyphicon-trash"></span></a>
+                                                        </td>
                                                     </tr>
                                                     <?php
                                                 endforeach;
@@ -91,8 +95,6 @@ use yii\widgets\ActiveForm;
                         </div>
                     </div>
 
-
-
                     <div class="form-group">
                         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
                     </div>
@@ -103,3 +105,4 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
     </div>
+</div>

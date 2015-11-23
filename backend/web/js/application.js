@@ -197,5 +197,73 @@ $(document).ready(function () {
 
         return false;
     });
+    
+    // 动态添加属性
+    $(document).on('click', '#btn-dynamic-add-specifications-row', function () {
+        var $t = $(this),
+            $tableBody = $t.parent().parent().find('tbody'),
+            $cloneRow = $('#row-0').clone(false),
+            indexCounter = $('#mai3-index-counter').val(),
+            id, name, elements, element, attrs;
+            
+        elements = $cloneRow.find('input');
+        console.info(elements);
+        for (var i = 0, l = elements.length; i < l; i++) {
+            element = $(elements[i]);
+            if (element.attr('id')==='specification-valuesdata-0-id') {
+                element.val(0).attr({
+                    id: 'specification-valuesdata-' + indexCounter + '-id',
+                    name: 'Specification[valuesData][' + indexCounter + '][id]'
+                });
+            } else {
+                attrs = {};
+                console.info(element.prev().is("input"));
+                if (element.prev().is("input")) {
+                    attrs.value = '';
+                } else if (element.prev().is('select')) {
+                    attrs.index = 0;
+                } else if (element.prev().is('checkbox')) {
+                    attrs.checked = 'checked';
+                }
+                id = element.attr('id')
+                if (typeof id !== typeof undefined && id !== false) {
+                    attrs.id = id.replace('0', indexCounter);
+                }                
+                name = element.attr('name');
+                attrs.name = name.replace('0', indexCounter);
+                $(elements[i]).attr(attrs);
+            }
+        }
+        $tableBody.append('<tr id="row-' + $tableBody.find('tr').length + '">' + $cloneRow.html() + '</tr>');
+        $('#mai3-index-counter').val(parseInt(indexCounter) + 1);
+        
+        return false;
+    });
+    
+    // 删除表格行记录
+    $(document).on('click', '#btn-delete-table-row', function () {
+        var $t = $(this);
+            
+        $.ajax({
+            type: 'POST',
+            url: $t.attr('href'),
+            dataType: 'json',
+            beforeSend: function (xhr) {
+                $.fn.lock();
+            }, success: function (response) {
+                if (response.success) {
+                    $t.parent().parent().remove();
+                } else {
+                    layer.alert(response.error.message, {icon: -1});
+                }
+                $.fn.unlock();
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText, {icon: -1});
+                $.fn.unlock();
+            }
+        });
+        
+        return false;
+    });
 
 });

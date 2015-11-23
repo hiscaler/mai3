@@ -2,12 +2,14 @@
 
 namespace backend\controllers;
 
-use Yii;
 use common\models\Specification;
 use common\models\SpecificationSearch;
+use common\models\Yad;
+use Yii;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * 商品规格管理
@@ -83,6 +85,7 @@ class SpecificationsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->valuesData = $model->values;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -104,6 +107,30 @@ class SpecificationsController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    public function actionDeleteValue($id)
+    {
+        $success = false;
+        $errorMessage = null;
+        $db = Yii::$app->getDb();
+        $value = $db->createCommand('SELECT COUNT(*) FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId')->bindValues([':id' => (int) $id, ':tenantId' => Yad::getTenantId()])->queryScalar();
+        if ($value) {
+            $db->createCommand()->delete('{{%specification_value}}', ['id' => (int) $id])->execute();
+            $success = true;
+        } else {
+            $errorMessage = '记录不存在。';
+        }
+
+        $responseBody = ['success' => $success];
+        if (!$success) {
+            $responseBody['error']['message'] = $errorMessage;
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $responseBody
+        ]);
     }
 
     /**
