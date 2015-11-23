@@ -152,4 +152,11 @@ class Specification extends BaseActiveRecord
         }
     }
 
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        // 清理掉规格值
+        Yii::$app->getDb()->createCommand()->delete('{{%specification_value}}', ['specification_id' => $this->id])->execute();
+    }
+
 }
