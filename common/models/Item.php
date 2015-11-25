@@ -15,6 +15,7 @@ use yii\web\UploadedFile;
  *
  * @property integer $id
  * @property integer $category_id
+ * @property integer $type_id
  * @property integer $brand_id
  * @property string $sn
  * @property string $name
@@ -54,11 +55,11 @@ class Item extends BaseActiveRecord
     public function rules()
     {
         return [
-            [['sn', 'name', 'market_price', 'shop_price', 'member_price', 'keywords', 'content'], 'required'],
+            [['type_id', 'sn', 'name', 'market_price', 'shop_price', 'member_price', 'keywords', 'content'], 'required'],
             [['name', 'keywords', 'description'], 'trim'],
             ['sn', 'match', 'pattern' => '/^[a-zA-Z0-9]+[a-zA-Z0-9_][a-zA-Z0-9]$/'],
             [['status'], 'boolean'],
-            [['category_id', 'brand_id', 'market_price', 'shop_price', 'member_price', 'ordering', 'clicks_count', 'sales_count', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['category_id', 'type_id', 'brand_id', 'market_price', 'shop_price', 'member_price', 'ordering', 'clicks_count', 'sales_count', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['description', 'content'], 'string'],
             [['sn'], 'string', 'max' => 16],
             ['sn', 'unique', 'targetAttribute' => ['sn', 'tenant_id']],
@@ -76,6 +77,7 @@ class Item extends BaseActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'category_id' => Yii::t('item', 'Category'),
+            'type_id' => Yii::t('item', 'Type'),
             'brand_id' => Yii::t('item', 'Brand'),
             'sn' => Yii::t('item', 'Sn'),
             'name' => Yii::t('item', 'Name'),

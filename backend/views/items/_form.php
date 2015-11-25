@@ -25,6 +25,7 @@ use yii\widgets\ActiveForm;
                         <li class="active"><a data-toggle="tab" href="#tab-base"> 基础资料</a></li>
                         <li><a data-toggle="tab" href="#tab-content">详情描述</a></li>
                         <li><a data-toggle="tab" href="#tab-images">商品图片</a></li>
+                        <li><a data-toggle="tab" href="#tab-specifications">商品规格</a></li>
                     </ul>
 
                     <div class="tab-content">
@@ -33,6 +34,8 @@ use yii\widgets\ActiveForm;
                             <div class="panel-body">
                                 <?= $form->field($model, 'category_id')->dropDownList(common\models\Category::getMap(), ['prompt' => '']) ?>
 
+                                <?= $form->field($model, 'type_id')->dropDownList(\common\models\ItemType::getMap(), ['prompt' => '']) ?>
+                                
                                 <?= $form->field($model, 'brand_id')->dropDownList(\common\models\Brand::getMap(), ['prompt' => '']) ?>
 
                                 <?= $form->field($model, 'sn')->textInput(['maxlength' => true]) ?>
@@ -116,12 +119,20 @@ use yii\widgets\ActiveForm;
                                 </div>
                             </div>
                         </div>
-                        <!-- // 商品图片 -->                       
+                        <!-- // 商品图片 -->
+                        
+                        <!-- 商品规格 -->
+                        <div id="tab-specifications" class="tab-pane">
+                            <div class="panel-body">
+                                <label for=""></label>
+                                <?= yii\bootstrap\Html::dropDownList('item_type_id', null, \common\models\ItemType::getMap()) ?>
+                            </div>
+                        </div>
+                        <!-- // 商品规格 -->
 
                         <div class="form-group">
                             <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
                         </div>
-
 
                     </div>
                 </div>

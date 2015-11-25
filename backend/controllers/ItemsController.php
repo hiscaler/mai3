@@ -4,6 +4,7 @@ namespace backend\controllers;
 
 use common\models\Item;
 use common\models\ItemSearch;
+use common\models\Specification;
 use Yii;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
@@ -84,12 +85,14 @@ class ItemsController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $specifications = Specification::getMap(true);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                     'model' => $model,
+                    'specifications' => $specifications,
             ]);
         }
     }

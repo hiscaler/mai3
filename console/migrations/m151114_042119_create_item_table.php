@@ -15,6 +15,7 @@ class m151114_042119_create_item_table extends Migration
         $this->createTable('{{%item}}', [
             'id' => $this->primaryKey(),
             'category_id' => $this->integer()->notNull()->defaultValue(0),
+            'type_id' => $this->integer()->notNull()->defaultValue(0),
             'brand_id' => $this->integer()->notNull()->defaultValue(0),
             'sn' => $this->string(16)->notNull(),
             'name' => $this->string(50)->notNull(),

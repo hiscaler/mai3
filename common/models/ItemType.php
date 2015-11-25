@@ -3,6 +3,7 @@
 namespace common\models;
 
 use Yii;
+use yii\db\Query;
 
 /**
  * This is the model class for table "{{%item_type}}".
@@ -73,6 +74,11 @@ class ItemType extends BaseActiveRecord
     public function getSpecifications()
     {
         return $this->hasMany(ItemTypeSpecification::className(), ['item_type_id' => 'id']);
+    }
+
+    public static function getMap()
+    {
+        return (new Query())->select('name')->from(static::tableName())->indexBy('id')->column();
     }
 
     // 事件
