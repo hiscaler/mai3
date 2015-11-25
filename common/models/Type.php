@@ -6,7 +6,7 @@ use Yii;
 use yii\db\Query;
 
 /**
- * This is the model class for table "{{%item_type}}".
+ * This is the model class for table "{{%type}}".
  *
  * @property integer $id
  * @property string $name
@@ -18,7 +18,7 @@ use yii\db\Query;
  * @property integer $updated_at
  * @property integer $updated_by
  */
-class ItemType extends BaseActiveRecord
+class Type extends BaseActiveRecord
 {
 
     /**
@@ -38,7 +38,7 @@ class ItemType extends BaseActiveRecord
      */
     public static function tableName()
     {
-        return '{{%item_type}}';
+        return '{{%type}}';
     }
 
     /**
@@ -62,18 +62,18 @@ class ItemType extends BaseActiveRecord
     public function attributeLabels()
     {
         return [
-            'name' => Yii::t('itemType', 'Name'),
+            'name' => Yii::t('Type', 'Name'),
         ];
     }
 
     public function getBrands()
     {
-        return $this->hasMany(ItemTypeBrand::className(), ['item_type_id' => 'id']);
+        return $this->hasMany(TypeBrand::className(), ['type_id' => 'id']);
     }
 
     public function getSpecifications()
     {
-        return $this->hasMany(ItemTypeSpecification::className(), ['item_type_id' => 'id']);
+        return $this->hasMany(TypeSpecification::className(), ['type_id' => 'id']);
     }
 
     public static function getMap()
@@ -94,7 +94,7 @@ class ItemType extends BaseActiveRecord
             if ($insert) {
                 $insertBrands = $brandIdList;
             } else {
-                $_brandIdList = $db->createCommand('SELECT [[brand_id]] FROM {{%item_type_brand}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $this->id, \PDO::PARAM_INT)->queryColumn();
+                $_brandIdList = $db->createCommand('SELECT [[brand_id]] FROM {{%type_brand}} WHERE [[type_id]] = :typeId')->bindValue(':typeId', $this->id, \PDO::PARAM_INT)->queryColumn();
                 $insertBrands = array_diff($brandIdList, $_brandIdList);
                 $deleteBrands = array_diff($_brandIdList, $brandIdList);
             }
@@ -105,10 +105,10 @@ class ItemType extends BaseActiveRecord
                     foreach ($insertBrands as $brandId) {
                         $batchRows[] = [$this->id, $brandId];
                     }
-                    $db->createCommand()->batchInsert('{{%item_type_brand}}', ['item_type_id', 'brand_id'], $batchRows)->execute();
+                    $db->createCommand()->batchInsert('{{%type_brand}}', ['type_id', 'brand_id'], $batchRows)->execute();
                 }
                 if ($deleteBrands) {
-                    $db->createCommand()->delete('{{%item_type_brand}}', ['brand_id' => $deleteBrands])->execute();
+                    $db->createCommand()->delete('{{%type_brand}}', ['brand_id' => $deleteBrands])->execute();
                 }
             }
 
@@ -118,7 +118,7 @@ class ItemType extends BaseActiveRecord
             if ($insert) {
                 $insertSpecifications = $specificationIdList;
             } else {
-                $_spcificationIdList = $db->createCommand('SELECT [[specification_id]] FROM {{%item_type_specification}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $this->id, \PDO::PARAM_INT)->queryColumn();
+                $_spcificationIdList = $db->createCommand('SELECT [[specification_id]] FROM {{%type_specification}} WHERE [[type_id]] = :typeId')->bindValue(':typeId', $this->id, \PDO::PARAM_INT)->queryColumn();
                 $insertSpecifications = array_diff($specificationIdList, $_spcificationIdList);
                 $deleteSpecifications = array_diff($_spcificationIdList, $specificationIdList);
             }
@@ -129,10 +129,10 @@ class ItemType extends BaseActiveRecord
                     foreach ($insertSpecifications as $specificationId) {
                         $batchRows[] = [$this->id, $specificationId];
                     }
-                    $db->createCommand()->batchInsert('{{%item_type_specification}}', ['item_type_id', 'specification_id'], $batchRows)->execute();
+                    $db->createCommand()->batchInsert('{{%type_specification}}', ['type_id', 'specification_id'], $batchRows)->execute();
                 }
                 if ($deleteSpecifications) {
-                    $db->createCommand()->delete('{{%item_type_specification}}', ['specification_id' => $deleteSpecifications])->execute();
+                    $db->createCommand()->delete('{{%type_specification}}', ['specification_id' => $deleteSpecifications])->execute();
                 }
             }
 

@@ -6,7 +6,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\ItemType */
+/* @var $model common\models\Type */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -67,7 +67,7 @@ use yii\widgets\ActiveForm;
                                                 <?php foreach ($specifications as $spec): ?>
                                                     <tr>
                                                         <td>
-                                                            <?= Html::checkbox('ItemType[specificationIdList][]', in_array($spec->id, $model->specificationIdList), ['value' => $spec->id]) ?>
+                                                            <?= Html::checkbox('Type[specificationIdList][]', in_array($spec->id, $model->specificationIdList), ['value' => $spec->id]) ?>
                                                         </td>
                                                         <td><?= $spec['name'] ?></td>
                                                         <td>

@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
                             <div class="panel-body">
                                 <?= $form->field($model, 'category_id')->dropDownList(common\models\Category::getMap(), ['prompt' => '']) ?>
 
-                                <?= $form->field($model, 'type_id')->dropDownList(\common\models\ItemType::getMap(), ['prompt' => '']) ?>
+                                <?= $form->field($model, 'type_id')->dropDownList(\common\models\Type::getMap(), ['prompt' => '']) ?>
                                 
                                 <?= $form->field($model, 'brand_id')->dropDownList(\common\models\Brand::getMap(), ['prompt' => '']) ?>
 
@@ -125,7 +125,7 @@ use yii\widgets\ActiveForm;
                         <div id="tab-specifications" class="tab-pane">
                             <div class="panel-body">
                                 <label for=""></label>
-                                <?= yii\bootstrap\Html::dropDownList('item_type_id', null, \common\models\ItemType::getMap()) ?>
+                                <?= yii\bootstrap\Html::dropDownList('item_type_id', null, \common\models\Type::getMap()) ?>
                             </div>
                         </div>
                         <!-- // 商品规格 -->

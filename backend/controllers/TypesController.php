@@ -2,8 +2,8 @@
 
 namespace backend\controllers;
 
-use common\models\ItemType;
-use common\models\ItemTypeSearch;
+use common\models\Type;
+use common\models\TypeSearch;
 use common\models\Specification;
 use common\models\Yad;
 use Yii;
@@ -15,7 +15,7 @@ use yii\web\NotFoundHttpException;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class ItemTypesController extends Controller
+class TypesController extends Controller
 {
 
     public function behaviors()
@@ -31,12 +31,12 @@ class ItemTypesController extends Controller
     }
 
     /**
-     * Lists all ItemType models.
+     * Lists all Type models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new ItemTypeSearch();
+        $searchModel = new TypeSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -46,7 +46,7 @@ class ItemTypesController extends Controller
     }
 
     /**
-     * Displays a single ItemType model.
+     * Displays a single Type model.
      * @param integer $id
      * @return mixed
      */
@@ -58,13 +58,13 @@ class ItemTypesController extends Controller
     }
 
     /**
-     * Creates a new ItemType model.
+     * Creates a new Type model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new ItemType();
+        $model = new Type();
         $model->brandIdList = $model->specificationIdList = [];
         $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
 
@@ -79,7 +79,7 @@ class ItemTypesController extends Controller
     }
 
     /**
-     * Updates an existing ItemType model.
+     * Updates an existing Type model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -88,9 +88,9 @@ class ItemTypesController extends Controller
     {
         $model = $this->findModel($id);
         $db = Yii::$app->getDb();
-        $model->brandIdList = $db->createCommand('SELECT brand_id FROM {{%item_type_brand}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $model->id)->queryColumn();
+        $model->brandIdList = $db->createCommand('SELECT brand_id FROM {{%type_brand}} WHERE [[type_id]] = :typeId')->bindValue(':typeId', $model->id)->queryColumn();
         $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
-        $model->specificationIdList = $db->createCommand('SELECT specification_id FROM {{%item_type_specification}} WHERE [[item_type_id]] = :itemTypeId')->bindValue(':itemTypeId', $model->id)->queryColumn();
+        $model->specificationIdList = $db->createCommand('SELECT specification_id FROM {{%type_specification}} WHERE [[type_id]] = :typeId')->bindValue(':typeId', $model->id)->queryColumn();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -103,7 +103,7 @@ class ItemTypesController extends Controller
     }
 
     /**
-     * Deletes an existing ItemType model.
+     * Deletes an existing Type model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -116,15 +116,15 @@ class ItemTypesController extends Controller
     }
 
     /**
-     * Finds the ItemType model based on its primary key value.
+     * Finds the Type model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return ItemType the loaded model
+     * @return Type the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = ItemType::findOne($id)) !== null) {
+        if (($model = Type::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

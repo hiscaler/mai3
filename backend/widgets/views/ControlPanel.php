@@ -47,12 +47,12 @@ use yii\helpers\Url;
                     <li><a href="<?= Url::toRoute(['articles/index']) ?>">文章管理</a></li>
                 </ul>
             </li>
-            <li<?= in_array($controllerId, ['brands', 'categories', 'items', 'payment-configs', 'specifications', 'item-types']) ? ' class="active"' : '' ?>>
+            <li<?= in_array($controllerId, ['brands', 'categories', 'items', 'payment-configs', 'specifications', 'types']) ? ' class="active"' : '' ?>>
                 <a href="javascript:;"><i class="fa fa-shopping-cart"></i> <span class="nav-label">店铺管理</span> <span class="fa arrow"></span></a>
                 <ul class="nav nav-second-level">
                     <li<?= $controllerId == 'brands' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['brands/index']) ?>">品牌管理</a></li>
                     <li<?= $controllerId == 'categories' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['categories/index']) ?>">分类管理</a></li>
-                    <li<?= $controllerId == 'item-types' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['item-types/index']) ?>">商品类型管理</a></li>
+                    <li<?= $controllerId == 'types' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['types/index']) ?>">商品类型管理</a></li>
                     <li<?= $controllerId == 'specifications' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['specifications/index']) ?>">商品规格管理</a></li>
                     <li<?= $controllerId == 'payment-configs' ? ' class="active"' : '' ?>><a href="<?= Url::toRoute(['payment-configs/index']) ?>">支付管理</a></li>
                     <li><a href="<?= Url::toRoute(['posts/index']) ?>">邮费模版管理</a></li>

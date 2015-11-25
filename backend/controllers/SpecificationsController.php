@@ -116,7 +116,7 @@ class SpecificationsController extends Controller
         $db = Yii::$app->getDb();
         $specificationId = $db->createCommand('SELECT [[specification_id]] FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId')->bindValues([':id' => (int) $id, ':tenantId' => Yad::getTenantId()])->queryScalar();
         if ($specificationId) {
-            $exists = $db->createCommand('SELECT COUNT(*) FROM {{%item_type_specification}} WHERE [[specification_id]] = :specificationId')->bindValue(':specificationId', $specificationId)->queryScalar();
+            $exists = $db->createCommand('SELECT COUNT(*) FROM {{%type_specification}} WHERE [[specification_id]] = :specificationId')->bindValue(':specificationId', $specificationId)->queryScalar();
             if ($exists) {
                 $errorMessage = '商品类型管理中使用了该规格，禁止删除。';
             } else {

@@ -5,12 +5,12 @@ use yii\db\Migration;
 /**
  * 商品类型
  */
-class m151118_134346_create_item_type_table extends Migration
+class m151118_134346_create_type_table extends Migration
 {
 
     public function up()
     {
-        $this->createTable('{{%item_type}}', [
+        $this->createTable('{{%type}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(30)->notNull(),
             'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
@@ -25,7 +25,7 @@ class m151118_134346_create_item_type_table extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%item_type}}');
+        $this->dropTable('{{%type}}');
     }
 
     /*

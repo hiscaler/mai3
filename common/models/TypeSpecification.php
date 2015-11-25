@@ -5,20 +5,21 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%item_type_specification}}".
+ * This is the model class for table "{{%type_specification}}".
  *
- * @property integer $item_type_id
+ * @property integer $type_id
  * @property integer $specification_id
  * @property integer $ordering
  */
-class ItemTypeSpecification extends \yii\db\ActiveRecord
+class TypeSpecification extends \yii\db\ActiveRecord
 {
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%item_type_specification}}';
+        return '{{%type_specification}}';
     }
 
     /**
@@ -27,8 +28,8 @@ class ItemTypeSpecification extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['item_type_id', 'specification_id'], 'required'],
-            [['item_type_id', 'specification_id', 'ordering'], 'integer']
+            [['type_id', 'specification_id'], 'required'],
+            [['type_id', 'specification_id', 'ordering'], 'integer']
         ];
     }
 
@@ -38,9 +39,10 @@ class ItemTypeSpecification extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'item_type_id' => Yii::t('app', 'Item Type ID'),
+            'type_id' => Yii::t('app', 'Item Type ID'),
             'specification_id' => Yii::t('app', 'Specification ID'),
             'ordering' => Yii::t('app', 'Ordering'),
         ];
     }
+
 }

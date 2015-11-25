@@ -1,7 +1,7 @@
 <?php
 
 /* @var $this yii\web\View */
-/* @var $model common\models\ItemType */
+/* @var $model common\models\Type */
 
 $this->title = Yii::t('app', 'Create Item Type');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Item Types'), 'url' => ['index']];

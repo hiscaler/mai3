@@ -7,13 +7,13 @@ use yii\db\Migration;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class m151118_150436_create_item_type_property_table extends Migration
+class m151118_150436_create_type_property_table extends Migration
 {
 
     public function up()
     {
-        $this->createTable('{{%item_type_property}}', [
-            'item_type_id' => $this->integer()->notNull(),
+        $this->createTable('{{%type_property}}', [
+            'type_id' => $this->integer()->notNull(),
             'name' => $this->string(30)->notNull(),
             'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
             'status' => $this->boolean()->notNull()->defaultValue(1),
@@ -27,7 +27,7 @@ class m151118_150436_create_item_type_property_table extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%item_type_property}}');
+        $this->dropTable('{{%type_property}}');
     }
 
     /*

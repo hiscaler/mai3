@@ -2,15 +2,13 @@
 
 namespace common\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\ItemType;
 
 /**
- * ItemTypeSearch represents the model behind the search form about `common\models\ItemType`.
+ * TypeSearch represents the model behind the search form about `common\models\Type`.
  */
-class ItemTypeSearch extends ItemType
+class TypeSearch extends Type
 {
 
     /**
@@ -42,7 +40,7 @@ class ItemTypeSearch extends ItemType
      */
     public function search($params)
     {
-        $query = ItemType::find();
+        $query = Type::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
