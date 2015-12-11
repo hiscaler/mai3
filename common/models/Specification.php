@@ -84,12 +84,13 @@ class Specification extends BaseActiveRecord
     {
         $list = [];
         $sql = 'SELECT [[id]], [[name]] FROM {{%specification}}';
-        $bindValues = [];
+        $condition = ['tenant_id = :tenantId'];
+        $bindValues = [':tenantId' => Yad::getTenantId()];
         if (!$all) {
-            $sql .= ' WHERE [[status]] = :status';
-            $bindValues = [':status' => Constant::BOOLEAN_TRUE];
+            $condition[] = '[[status]] = :status';
+            $bindValues[':status'] = Constant::BOOLEAN_TRUE;
         }
-        $sql .= ' ORDER BY [[ordering]] ASC';
+        $sql .= 'WHERE ' . implode(' AND ', $condition) . ' ORDER BY [[ordering]] ASC';
 
         $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
         foreach ($rawData as $data) {
