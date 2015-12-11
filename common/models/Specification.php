@@ -90,7 +90,7 @@ class Specification extends BaseActiveRecord
             $condition[] = '[[status]] = :status';
             $bindValues[':status'] = Constant::BOOLEAN_TRUE;
         }
-        $sql .= 'WHERE ' . implode(' AND ', $condition) . ' ORDER BY [[ordering]] ASC';
+        $sql .= ' WHERE ' . implode(' AND ', $condition) . ' ORDER BY [[ordering]] ASC';
 
         $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
         foreach ($rawData as $data) {
