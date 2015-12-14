@@ -153,7 +153,7 @@ class Specification extends BaseActiveRecord
             }
         }
         if ($insertValues) {
-            $db->createCommand()->batchInsert('{{%specification_value}}', array_keys(isset($insertColumns) ? $insertColumns : $insertValues), $insertValues)->execute();
+            $db->createCommand()->batchInsert('{{%specification_value}}', array_keys($insertColumns), $insertValues)->execute();
         }
     }
 
