@@ -111,11 +111,15 @@ class Specification extends BaseActiveRecord
         $userId = Yii::$app->getUser()->getId();
         $insertValues = [];
         if ($insert) {
+            $insertColumns = [];
             foreach ($values as $value) {
-                $insertValues[] = array_merge($value, ['tenant_id' => $tenantId, 'created_at' => $now, 'created_by' => $userId, 'updated_at' => $now, 'updated_by' => $userId]);
+                $value['status'] = $value['status'] == 1 ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE;
+                $insertColumns = array_merge($value, ['specification_id' => $this->id, 'tenant_id' => $tenantId, 'created_at' => $now, 'created_by' => $userId, 'updated_at' => $now, 'updated_by' => $userId]);
+                $insertValues[] = array_values($insertColumns);
             }
         } else {
             foreach ($values as $value) {
+                $value['status'] = $value['status'] == 1 ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE;
                 $valueId = isset($value['id']) && $value['id'] ? $value['id'] : null;
                 if ($valueId) {
                     // Update
@@ -149,7 +153,7 @@ class Specification extends BaseActiveRecord
             }
         }
         if ($insertValues) {
-            $db->createCommand()->batchInsert('{{%specification_value}}', array_keys($insertColumns), $insertValues)->execute();
+            $db->createCommand()->batchInsert('{{%specification_value}}', array_keys(isset($insertColumns) ? $insertColumns : $insertValues), $insertValues)->execute();
         }
     }
 
