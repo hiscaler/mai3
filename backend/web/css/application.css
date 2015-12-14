@@ -160,6 +160,9 @@
     white-space: nowrap;
     color: #999;
 }
+.grid-view table.table td.pk a {
+    color: #999;
+}
 .grid-view table.table td.checkbox {
     width: 20px;
     text-align: center;
@@ -170,9 +173,6 @@
     white-space: nowrap;
     color: #999;
     text-align: center;
-}
-.grid-view table.table td.pk a {
-    color: #999;
 }
 .grid-view table.table td.date {
     width: 65px;
@@ -304,6 +304,10 @@
     background: url(../images/node-tree.png) no-repeat -109px 0;
     display: inline-block;
     width: 20px;
+}
+/* specification */
+.grid-view table.table th.specification-type {
+    width: 60px;
 }
 .grid-view table.table td.node-tree .level-0 {}
 .grid-view table.table td.node-tree .level-1 { margin-left: 24px; }

@@ -28,14 +28,18 @@ $this->params['menus'] = [
             'columns' => [
                 [
                     'attribute' => 'id',
-                    'contentOptions' => ['class' => 'id'],
+                    'contentOptions' => ['class' => 'pk'],
                 ],
                 [
                     'attribute' => 'ordering',
                     'contentOptions' => ['class' => 'ordering'],
                 ],
                 'name',
-                'type',
+                [
+                    'attribute' => 'type_text',
+                    'headerOptions' => ['class' => 'specification-type'],
+                    'contentOptions' => ['class' => 'center'],
+                ],
                 [
                     'attribute' => 'status',
                     'format' => 'boolean',

@@ -56,10 +56,11 @@ class Specification extends BaseActiveRecord
      */
     public function attributeLabels()
     {
-        return [
+        return array_merge(parent::attributeLabels(), [
             'name' => Yii::t('specification', 'Name'),
             'type' => Yii::t('specification', 'Type'),
-        ];
+            'type_text' => Yii::t('specification', 'Type'),
+        ]);
     }
 
     public static function typeOptions()
@@ -68,6 +69,13 @@ class Specification extends BaseActiveRecord
             static::TYPE_TEXT => '文字',
             static::TYPE_ICON => '图标',
         ];
+    }
+
+    public function getType_text()
+    {
+        $options = static::typeOptions();
+
+        return isset($options[$this->type]) ? $options[$this->type] : null;
     }
 
     public function getValues()
