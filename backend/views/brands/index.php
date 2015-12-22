@@ -35,8 +35,8 @@ $this->params['menus'] = [
                     'contentOptions' => ['class' => 'ordering'],
                 ],
                 [
-                    'attribute' => 'slug',
-                    'headerOptions' => ['class' => 'slug'],
+                    'attribute' => 'alias',
+                    'headerOptions' => ['class' => 'alias'],
                 ],
                 'name',
                 'description:ntext',

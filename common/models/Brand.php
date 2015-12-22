@@ -9,7 +9,7 @@ use yii\helpers\Inflector;
  * This is the model class for table "{{%brand}}".
  *
  * @property integer $id
- * @property string $slug
+ * @property string $alias
  * @property string $name
  * @property string $icon_path
  * @property string $description
@@ -42,9 +42,9 @@ class Brand extends BaseActiveRecord
             [['description'], 'string'],
             [['ordering', 'tenant_id', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['ordering'], 'default', 'value' => 1],
-            [['slug', 'name'], 'string', 'max' => 20],
+            [['alias', 'name'], 'string', 'max' => 20],
             [['icon_path'], 'string', 'max' => 100],
-            [['slug'], 'unique'],
+            [['alias'], 'unique'],
             [['name'], 'unique']
         ];
     }
@@ -56,7 +56,7 @@ class Brand extends BaseActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'slug' => Yii::t('app', 'Slug'),
+            'alias' => Yii::t('app', 'Alias'),
             'name' => Yii::t('app', '名称'),
             'icon_path' => Yii::t('app', '品牌标志'),
             'description' => Yii::t('app', '描述'),
@@ -78,17 +78,17 @@ class Brand extends BaseActiveRecord
     public static function getMap($all = false)
     {
         $list = [];
-        $sql = 'SELECT [[id]], [[slug]], [[name]] FROM {{%brand}}';
+        $sql = 'SELECT [[id]], [[alias]], [[name]] FROM {{%brand}}';
         $bindValues = [];
         if (!$all) {
             $sql .= ' WHERE [[status]] = :status';
             $bindValues = [':status' => Constant::BOOLEAN_TRUE];
         }
-        $sql .= ' ORDER BY [[slug]] DESC';
+        $sql .= ' ORDER BY [[alias]] DESC';
 
         $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
         foreach ($rawData as $data) {
-            $list[$data['id']] = "{$data['slug']}: {$data['name']}";
+            $list[$data['id']] = "{$data['alias']}: {$data['name']}";
         }
 
         return $list;
@@ -98,8 +98,8 @@ class Brand extends BaseActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if (empty($this->slug) && !empty($this->name)) {
-                $this->slug = Inflector::slug($this->name);
+            if (empty($this->alias) && !empty($this->name)) {
+                $this->alias = Inflector::alias($this->name);
             }
 
             return true;

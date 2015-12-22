@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
                 ]);
                 ?>
 
-                <?= $form->field($model, 'slug')->textInput(['maxlength' => true]) ?>
+                <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
                 
                 <div class="hr-line-dashed"></div>
 

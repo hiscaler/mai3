@@ -2,7 +2,6 @@
 
 namespace common\models;
 
-use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Brand;
@@ -20,7 +19,7 @@ class BrandSearch extends Brand
     {
         return [
             [['id', 'ordering', 'tenant_id', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['slug', 'name', 'icon_path', 'description'], 'safe'],
+            [['alias', 'name', 'icon_path', 'description'], 'safe'],
         ];
     }
 
@@ -67,7 +66,7 @@ class BrandSearch extends Brand
             'updated_by' => $this->updated_by,
         ]);
 
-        $query->andFilterWhere(['like', 'slug', $this->slug])
+        $query->andFilterWhere(['like', 'alias', $this->alias])
             ->andFilterWhere(['like', 'name', $this->name])
             ->andFilterWhere(['like', 'icon_path', $this->icon_path])
             ->andFilterWhere(['like', 'description', $this->description]);

@@ -22,7 +22,7 @@ $this->params['menus'] = [
         'model' => $model,
         'attributes' => [
             'id',
-            'slug',
+            'alias',
             'name',
             'icon_path',
             'description:ntext',

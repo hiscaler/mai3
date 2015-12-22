@@ -10,7 +10,7 @@ class m151108_142723_create_brand_table extends Migration
     {
         $this->createTable('{{%brand}}', [
             'id' => $this->primaryKey(),
-            'slug' => $this->string(20)->notNull()->unique(),
+            'alias' => $this->string(20)->notNull()->unique(),
             'name' => $this->string(20)->notNull()->unique(),
             'icon_path' => $this->string(100),
             'description' => $this->text(),
