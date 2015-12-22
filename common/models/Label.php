@@ -74,7 +74,7 @@ class Label extends BaseActiveRecord
             $params[':status'] = Option::BOOLEAN_TRUE;
         }
         $sql .= ' ORDER BY [[alias]] ASC, [[ordering]] ASC';
-        $rawData = \Yii::$app->db->createCommand($sql)->bindValues($params)->queryAll();
+        $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($params)->queryAll();
         $groupPrefix = null;
         foreach ($rawData as $data) {
             if ($group) {
@@ -133,7 +133,7 @@ class Label extends BaseActiveRecord
      */
     public static function getEntityAttributeIds($entityId, $entityName)
     {
-        return \Yii::$app->getDb()->createCommand('SELECT [[label_id]] FROM {{%entity_label}} WHERE [[entity_id]] = :entityId AND [[entity_name]] = :entityName')->bindValues([':entityId' => (int) $entityId, ':entityName' => $entityName])->queryColumn();
+        return Yii::$app->getDb()->createCommand('SELECT [[label_id]] FROM {{%entity_label}} WHERE [[entity_id]] = :entityId AND [[entity_name]] = :entityName')->bindValues([':entityId' => (int) $entityId, ':entityName' => $entityName])->queryColumn();
     }
 
     /**
@@ -144,7 +144,7 @@ class Label extends BaseActiveRecord
      */
     public static function getEntityIds($labelId, $entityName)
     {
-        return \Yii::$app->db->createCommand('SELECT [[entity_id]] FROM {{%entity_label}} WHERE [[label_id]] = :labelId AND [[entity_name]] = :entityName')->bindValues([':labelId' => (int) $labelId, ':entityName' => $entityName])->queryColumn();
+        return Yii::$app->getDb()->createCommand('SELECT [[entity_id]] FROM {{%entity_label}} WHERE [[label_id]] = :labelId AND [[entity_name]] = :entityName')->bindValues([':labelId' => (int) $labelId, ':entityName' => $entityName])->queryColumn();
     }
 
     // Events
@@ -164,7 +164,7 @@ class Label extends BaseActiveRecord
     public function afterDelete()
     {
         parent::afterDelete();
-        Yii::$app->db->createCommand()->delete('{{%entity_label}}', 'label_id = :labelId', [':labelId' => $this->id])->execute();
+        Yii::$app->getDb()->createCommand()->delete('{{%entity_label}}', 'label_id = :labelId', [':labelId' => $this->id])->execute();
     }
 
 }
