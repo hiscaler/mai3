@@ -88,8 +88,7 @@ $this->params['menus'] = [
                         return Html::a(Html::img($baseUrl . '/images/auth.png'), $url, ['data-pjax' => 0, 'class' => 'user-auth', 'data-name' => $model['username']]);
                     }
                 ],
-                'headerOptions' => ['class' => 'last'],
-                'contentOptions' => ['class' => 'buttons-2'],
+                'headerOptions' => ['class' => 'buttons-2 last'],
             ],
         ],
     ]);

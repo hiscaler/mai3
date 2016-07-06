@@ -1,7 +1,7 @@
-Date.prototype.fromUnixTimestamp = function(value) {
+Date.prototype.fromUnixTimestamp = function (value) {
     return new Date(parseFloat(value) * 1000);
 };
-Date.prototype.format = function(format) {
+Date.prototype.format = function (format) {
     var o = {
         "M+": this.getMonth() + 1, //month 
         "d+": this.getDate(), //day 
@@ -21,7 +21,7 @@ Date.prototype.format = function(format) {
     }
     return format;
 };
-Number.prototype.toFixed = function(d) {
+Number.prototype.toFixed = function (d) {
     var s = this + "";
     if (!d) {
         d = 0;
@@ -59,9 +59,9 @@ Number.prototype.toFixed = function(d) {
 /**
  * Lock UI
  */
-(function($) {
-    $.fn.lock = function() {
-        return this.unlock().each(function() {
+(function ($) {
+    $.fn.lock = function () {
+        return this.unlock().each(function () {
             if ($.css(this, 'position') === 'static')
                 this.style.position = 'relative';
             if ($.browser.msie)
@@ -69,22 +69,22 @@ Number.prototype.toFixed = function(d) {
             $(this).append('<div id="widget-lock-ui" class="lock-ui" style="position:absolute;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:#000;cursor:wait;opacity:.7;filter: alpha(opacity=70);"><div>');
         });
     };
-    $.fn.unlock = function() {
-        return this.each(function() {
+    $.fn.unlock = function () {
+        return this.each(function () {
             $('#widget-lock-ui', this).remove();
         });
     };
 })(jQuery);
 
-$(function() {
-    $('#header-account-manage li.children a:first').toggle(function() {
+$(function () {
+    $('#header-account-manage li.children a:first').toggle(function () {
         $(this).parent().addClass('drop').find('ul').show();
-    }, function() {
+    }, function () {
         $(this).parent().removeClass('drop').find('ul').hide();
     });
 });
 // Art dialog default settings
-(function(artDialog) {
+(function (artDialog) {
     artDialog['okValue'] = '确定';
     artDialog['cancelValue'] = '取消';
     artDialog['title'] = '提示信息';
@@ -105,175 +105,15 @@ yadjet.urls = {
     }
 };
 yadjet.regions = yadjet.regions || {};
-$(function() {
-    $('#map-render').css({height: $(document).height() - 90}).removeClass('lock-ui');
-    // 短信发送目标设置
-    $(document).on('change', '#smsruleform-target_type', function () {
-        switch (parseInt($(this).val())) {
-            case 1:
-                $('#block-target-type-select').show();
-                $('#block-target-type-query').hide();                
-                break;
-                
-            case 2:
-                $('#block-target-type-select, #block-target-type-query').hide();
-                break;
-                
-            case 3:
-                $('#block-target-type-select').hide();
-                $('#block-target-type-query').show();
-                break;
-        }
-    });
-    
-    // 短信发送时间设置
-    $(document).on('change', '#smsruleform-time_type', function () {
-        switch (parseInt($(this).val())) {
-            case 1:
-                $('#block-time-type-one-off').show();
-                $('#block-time-type-timing-cycle').hide();                
-                break;
-                
-            case 2:
-                 $('#block-time-type-one-off').hide();
-                $('#block-time-type-timing-cycle').show();
-                break;
-        }
-    });
-    
-    // 添加巡查日志图片上传行
-    $(document).on('click', '#btn-add-new-patrol-image-row', function () {
-        var $t = $(this);
-        if (!$t.hasClass('disabled')) {
-            var $row = $('tr#row-0');
-            if ($row.length) {
-                $cloneRow = $row.clone();
-                $cloneRow.find('input').attr('value', '').find(':first').focus();
-                $('#patrol-images table tbody').append($cloneRow);
-
-                // 重新计算行号以及元素 id
-                $('#patrol-images table tbody tr').each(function (i) {
-                    $(this).attr('id', 'row-' + i).find('td:first span').html(i + 1).end().find('td.btns a').addClass('dynamic-inserted');                 
-                });
-               
-            } else {
-                layer.alert('不存在参考行。', {icon: -1});
-            }
-        }
-        
-        return false;
-    });
-    
-    // 删除巡查日志相关图片
-    $(document).on('click', '.btn-delete-image', function () {
-        if (confirm('是否删除该图片？')) {
-            var $t = $(this),
-                id = $t.attr('data-key');
-            $.ajax({
-                type: 'POST',
-                url: yadjet.urls.deletePatrolImage,
-                data: {
-                    id: id
-                },
-                dataType: 'json',
-                beforeSend: function (xhr) {
-                    $.fn.lock();
-                }, success: function (response) {
-                    if (response.success) {
-                        $t.parent().parent().remove();
-                    } else {
-                        layer.alert(response.error.message, {icon: -1});
-                    }
-                    $.fn.unlock();
-                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText, {icon: -1});
-                    $.fn.unlock();
-                }
-            });
-        }
-        
-        return false;
-    });
-    
-    // 更新巡查日志图片描述文字
-    $(document).on('blur', '.update-image-description', function () {
+$(function () {
+    $('ul.tabs-common li a').click(function () {
         var $t = $(this),
-            id = $t.attr('data-key'),
-            originalValue = $t.attr('data-original'),
-            value = $t.val();
-        if (value != originalValue) {
-            $.ajax({
-                type: 'POST',
-                url: yadjet.urls.updatePatrolImageDescription,
-                data: {
-                    id: id,
-                    description: value
-                },
-                dataType: 'json',
-                beforeSend: function (xhr) {
-                    $.fn.lock();
-                }, success: function (response) {
-                    if (!response.success) {
-                        layer.alert(response.error.message, {icon: -1});
-                    }
-                    $.fn.unlock();
-                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText, {icon: -1});
-                    $.fn.unlock();
-                }
-            });
-        }
-        
+            $widget = $t.parent().parent().parent().parent();   
+        $t.parent().siblings().removeClass('active');
+        $t.parent().addClass('active');
+        $widget.find('.tab-pane').hide();
+        $widget.find('#' + $t.attr('data-toggle')).show();
+
         return false;
     });
-    
-    // 百度地图标注
-    jQuery(document).on('click', '.btn-baidu-map-picker', function () {
-        var $t = $(this);
-            $.ajax({
-                type: 'GET',
-                url: $t.attr('href'),
-                data: {
-                    address: $t.attr('data-address'),
-                    geo: $t.attr('data-map')
-                },
-                beforeSend: function (xhr) {
-                    $.fn.lock();
-                }, success: function (response) {
-                    $.dialog({
-                        title: '百度地图',
-                        content: response,
-                        lock: true,
-                        padding: '10px',
-                        ok: function () {
-                            var mapData = $('#geo').val();
-                            if (mapData.indexOf(',') !== -1) {
-                                mapData = mapData.split(',');
-                               $.ajax({
-                                    type: 'POST',
-                                    url: $t.attr('data-update-map-url'),
-                                    data: {
-                                        lon: mapData[0],
-                                        lat: mapData[1]
-                                    }, success: function (response) {
-                                        if (response.success) {
-                                            $t.removeClass('unpick').addClass('is-picked');
-                                        } else {
-                                            $.alert('更新地图数据失败。');
-                                        }
-                                    }
-                                }); 
-                            }
-                        }
-                    });
-                    $.fn.unlock();
-                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    $.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
-                    $.fn.unlock();
-                }
-            });
-
-            return false;
-        });
-    
 });
