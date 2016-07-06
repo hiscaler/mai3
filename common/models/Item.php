@@ -77,7 +77,7 @@ class Item extends BaseActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'category_id' => Yii::t('item', 'Category'),
-            'type_id' => Yii::t('item', 'Type'),
+            'type_id' => Yii::t('item', '商品类型'),
             'brand_id' => Yii::t('item', 'Brand'),
             'sn' => Yii::t('item', 'Sn'),
             'name' => Yii::t('item', 'Name'),

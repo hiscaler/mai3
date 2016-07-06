@@ -1,151 +1,180 @@
+Date.prototype.fromUnixTimestamp = function(value) {
+    return new Date(parseFloat(value) * 1000);
+};
+Date.prototype.format = function(format) {
+    var o = {
+        "M+": this.getMonth() + 1, //month 
+        "d+": this.getDate(), //day 
+        "h+": this.getHours(), //hour 
+        "m+": this.getMinutes(), //minute 
+        "s+": this.getSeconds(), //second 
+        "q+": Math.floor((this.getMonth() + 3) / 3), //quarter 
+        "S": this.getMilliseconds() //millisecond 
+    };
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (var k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length === 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return format;
+};
+Number.prototype.toFixed = function(d) {
+    var s = this + "";
+    if (!d) {
+        d = 0;
+    }
+    if (s.indexOf(".") == -1) {
+        s += ".";
+    }
+    s += new Array(d + 1).join("0");
+    if (new RegExp("^(-|\\+)?(\\d+(\\.\\d{0," + (d + 1) + "})?)\\d*$").test(s)) {
+        var s = "0" + RegExp.$2, pm = RegExp.$1, a = RegExp.$3.length, b = true;
+        if (a == d + 2) {
+            a = s.match(/\d/g);
+            if (parseInt(a[a.length - 1]) > 4) {
+                for (var i = a.length - 2; i >= 0; i--) {
+                    a[i] = parseInt(a[i]) + 1;
+                    if (a[i] == 10) {
+                        a[i] = 0;
+                        b = i != 1;
+                    } else {
+                        break;
+                    }
+                }
+            }
+            s = a.join("").replace(new RegExp("(\\d+)(\\d{" + d + "})\\d$"), "$1.$2");
+
+        }
+        if (b) {
+            s = s.substr(1);
+        }
+        return (pm + s).replace(/\.$/, "");
+    }
+    return this + "";
+};
+
 /**
  * Lock UI
  */
-;
-(function ($) {
-    $.fn.lock = function () {
-        this.unlock();
-        $('body').append('<div id="widget-lock-ui" class="lock-ui" style="position:fixed;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:#000;cursor:wait;opacity:.7;filter: alpha(opacity=70);"><div>');
+(function($) {
+    $.fn.lock = function() {
+        return this.unlock().each(function() {
+            if ($.css(this, 'position') === 'static')
+                this.style.position = 'relative';
+            if ($.browser.msie)
+                this.style.zoom = 1;
+            $(this).append('<div id="widget-lock-ui" class="lock-ui" style="position:absolute;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:#000;cursor:wait;opacity:.7;filter: alpha(opacity=70);"><div>');
+        });
     };
-    $.fn.unlock = function () {
-        $('#widget-lock-ui').remove();
+    $.fn.unlock = function() {
+        return this.each(function() {
+            $('#widget-lock-ui', this).remove();
+        });
     };
 })(jQuery);
 
-$(document).ready(function () {
-    var sparklineCharts = function () {
-        $("#sparkline1").sparkline([34, 43, 43, 35, 44, 32, 44, 52], {
-            type: 'line',
-            width: '100%',
-            height: '50',
-            lineColor: '#1ab394',
-            fillColor: "transparent"
-        });
-
-        $("#sparkline2").sparkline([32, 11, 25, 37, 41, 32, 34, 42], {
-            type: 'line',
-            width: '100%',
-            height: '50',
-            lineColor: '#1ab394',
-            fillColor: "transparent"
-        });
-
-        $("#sparkline3").sparkline([34, 22, 24, 41, 10, 18, 16, 8], {
-            type: 'line',
-            width: '100%',
-            height: '50',
-            lineColor: '#1C84C6',
-            fillColor: "transparent"
-        });
-    };
-
-    var sparkResize;
-
-    $(window).resize(function (e) {
-        clearTimeout(sparkResize);
-        sparkResize = setTimeout(sparklineCharts, 500);
+$(function() {
+    $('#header-account-manage li.children a:first').toggle(function() {
+        $(this).parent().addClass('drop').find('ul').show();
+    }, function() {
+        $(this).parent().removeClass('drop').find('ul').hide();
     });
+});
+// Art dialog default settings
+(function(artDialog) {
+    artDialog['okValue'] = '确定';
+    artDialog['cancelValue'] = '取消';
+    artDialog['title'] = '提示信息';
+})($.dialog.defaults);
 
-    sparklineCharts();
-
-
-
-
-    var data1 = [
-        [0, 4], [1, 8], [2, 5], [3, 10], [4, 4], [5, 16], [6, 5], [7, 11], [8, 6], [9, 11], [10, 20], [11, 10], [12, 13], [13, 4], [14, 7], [15, 8], [16, 12]
-    ];
-    var data2 = [
-        [0, 0], [1, 2], [2, 7], [3, 4], [4, 11], [5, 4], [6, 2], [7, 5], [8, 11], [9, 5], [10, 4], [11, 1], [12, 5], [13, 2], [14, 5], [15, 2], [16, 0]
-    ];
-    $("#flot-dashboard5-chart").length && $.plot($("#flot-dashboard5-chart"), [
-        data1, data2
-    ],
-        {
-            series: {
-                lines: {
-                    show: false,
-                    fill: true
-                },
-                splines: {
-                    show: true,
-                    tension: 0.4,
-                    lineWidth: 1,
-                    fill: 0.4
-                },
-                points: {
-                    radius: 0,
-                    show: true
-                },
-                shadowSize: 2
-            },
-            grid: {
-                hoverable: true,
-                clickable: true,
-                borderWidth: 2,
-                color: 'transparent'
-            },
-            colors: ["#1ab394", "#1C84C6"],
-            xaxis: {
-            },
-            yaxis: {
-            },
-            tooltip: false
+var yadjet = yadjet || {};
+yadjet.urls = yadjet.urls || {};
+yadjet.urls = {
+    'baseUrl': undefined,
+    'enterpriseView': undefined,
+    'deletePatrolImage': undefined,
+    'updatePatrolImageDescription': undefined,
+    api: {
+        enterprise: undefined,
+        accident: undefined,
+        patrol: undefined,
+        rootCheckBase: undefined
+    }
+};
+yadjet.regions = yadjet.regions || {};
+$(function() {
+    $('#map-render').css({height: $(document).height() - 90}).removeClass('lock-ui');
+    // 短信发送目标设置
+    $(document).on('change', '#smsruleform-target_type', function () {
+        switch (parseInt($(this).val())) {
+            case 1:
+                $('#block-target-type-select').show();
+                $('#block-target-type-query').hide();                
+                break;
+                
+            case 2:
+                $('#block-target-type-select, #block-target-type-query').hide();
+                break;
+                
+            case 3:
+                $('#block-target-type-select').hide();
+                $('#block-target-type-query').show();
+                break;
         }
-    );
-
-    $(document).on('click', 'a.btn-search', function () {
+    });
+    
+    // 短信发送时间设置
+    $(document).on('change', '#smsruleform-time_type', function () {
+        switch (parseInt($(this).val())) {
+            case 1:
+                $('#block-time-type-one-off').show();
+                $('#block-time-type-timing-cycle').hide();                
+                break;
+                
+            case 2:
+                 $('#block-time-type-one-off').hide();
+                $('#block-time-type-timing-cycle').show();
+                break;
+        }
+    });
+    
+    // 添加巡查日志图片上传行
+    $(document).on('click', '#btn-add-new-patrol-image-row', function () {
         var $t = $(this);
-        if ($t.attr('data-toggle') === 'show') {
-            $t.attr('data-toggle', 'hide');
-            $('.form-search').hide();
-        } else {
-            $t.attr('data-toggle', 'show');
-            $('.form-search').show();
+        if (!$t.hasClass('disabled')) {
+            var $row = $('tr#row-0');
+            if ($row.length) {
+                $cloneRow = $row.clone();
+                $cloneRow.find('input').attr('value', '').find(':first').focus();
+                $('#patrol-images table tbody').append($cloneRow);
+
+                // 重新计算行号以及元素 id
+                $('#patrol-images table tbody tr').each(function (i) {
+                    $(this).attr('id', 'row-' + i).find('td:first span').html(i + 1).end().find('td.btns a').addClass('dynamic-inserted');                 
+                });
+               
+            } else {
+                layer.alert('不存在参考行。', {icon: -1});
+            }
         }
-
-
+        
         return false;
     });
-
-    // 商品相册图片上传
-    $(document).on('click', '#btn-add-new-goods-image-row', function () {
-        var $t = $(this),
-            $row = $('tr#row-0');
-        if ($row.length) {
-            $cloneRow = $row.clone();
-            $cloneRow
-                .find('input')
-                .val('')
-                .end()
-                .find('.btns')
-                .html('<a href="javascript:;" title="删除" aria-label="删除" class="btn-remove-dynamic-row"><span class="glyphicon glyphicon-trash"></span></a>');
-            $('#grid-goods-images table tbody').append($cloneRow);
-
-            $('#grid-goods-images table tbody tr').each(function (i) {
-                $(this).attr('id', 'row-' + i);
-            });
-        } else {
-            layer.alert('不存在参考行。', {icon: -1});
-        }
-
-        return false;
-    });
-
-    $(document).on('click', 'a.btn-remove-dynamic-row', function () {
-        $(this).parent().parent().remove();
-
-        return false;
-    });
-
-    // 删除商品图片
+    
+    // 删除巡查日志相关图片
     $(document).on('click', '.btn-delete-image', function () {
         if (confirm('是否删除该图片？')) {
             var $t = $(this),
                 id = $t.attr('data-key');
             $.ajax({
                 type: 'POST',
-                url: $t.attr('data-url'),
-                data: {id: id},
+                url: yadjet.urls.deletePatrolImage,
+                data: {
+                    id: id
+                },
                 dataType: 'json',
                 beforeSend: function (xhr) {
                     $.fn.lock();
@@ -162,11 +191,11 @@ $(document).ready(function () {
                 }
             });
         }
-
+        
         return false;
     });
-
-    // 更新商品图片描述文字
+    
+    // 更新巡查日志图片描述文字
     $(document).on('blur', '.update-image-description', function () {
         var $t = $(this),
             id = $t.attr('data-key'),
@@ -175,7 +204,7 @@ $(document).ready(function () {
         if (value != originalValue) {
             $.ajax({
                 type: 'POST',
-                url: $t.attr('data-url'),
+                url: yadjet.urls.updatePatrolImageDescription,
                 data: {
                     id: id,
                     description: value
@@ -194,82 +223,57 @@ $(document).ready(function () {
                 }
             });
         }
-
-        return false;
-    });
-    
-    // 动态添加属性
-    $(document).on('click', '#btn-dynamic-add-specifications-row', function () {
-        var $t = $(this),
-            $tableBody = $t.parent().parent().find('tbody'),
-            $cloneRow = $('#row-0').clone(false),
-            indexCounter = $('#mai3-index-counter').val(),
-            id, name, elements, element, attrs;
-        
-        $cloneRow.find('td.btn-render').html('<a class="btn-delete-dynamic-table-row" href="javascript:;" title="删除"><span class="glyphicon glyphicon-trash"></span></a>');
-        elements = $cloneRow.find('input,select');
-        for (var i = 0, l = elements.length; i < l; i++) {
-            element = $(elements[i]);
-            if (element.attr('id')==='specification-valuesdata-0-id') {
-                element.val(0).attr({
-                    id: 'specification-valuesdata-' + indexCounter + '-id',
-                    name: 'Specification[valuesData][' + indexCounter + '][id]'
-                });
-            } else {
-                attrs = {};
-                if (element.prev().is("input")) {
-                    attrs.value = '';
-                } else if (element.prev().is('select')) {
-                    attrs.index = 0;
-                } else if (element.prev().is('checkbox')) {
-                    attrs.checked = 'checked';
-                }
-                id = element.attr('id')
-                if (typeof id !== typeof undefined && id !== false) {
-                    attrs.id = id.replace('0', indexCounter);
-                }                
-                name = element.attr('name');
-                attrs.name = name.replace('0', indexCounter);
-                $(elements[i]).attr(attrs);
-            }
-        }
-        $tableBody.append('<tr id="row-' + $('#mai3-index-counter').val() + '">' + $cloneRow.html() + '</tr>');
-        $('#mai3-index-counter').val(parseInt(indexCounter) + 1);
         
         return false;
     });
     
-    // 删除表格行记录
-    $(document).on('click', '.btn-delete-table-row', function () {
+    // 百度地图标注
+    jQuery(document).on('click', '.btn-baidu-map-picker', function () {
         var $t = $(this);
-            
-        $.ajax({
-            type: 'POST',
-            url: $t.attr('href'),
-            dataType: 'json',
-            beforeSend: function (xhr) {
-                $.fn.lock();
-            }, success: function (response) {
-                if (response.success) {
-                    $t.parent().parent().remove();
-                } else {
-                    layer.alert(response.error.message, {icon: -1});
+            $.ajax({
+                type: 'GET',
+                url: $t.attr('href'),
+                data: {
+                    address: $t.attr('data-address'),
+                    geo: $t.attr('data-map')
+                },
+                beforeSend: function (xhr) {
+                    $.fn.lock();
+                }, success: function (response) {
+                    $.dialog({
+                        title: '百度地图',
+                        content: response,
+                        lock: true,
+                        padding: '10px',
+                        ok: function () {
+                            var mapData = $('#geo').val();
+                            if (mapData.indexOf(',') !== -1) {
+                                mapData = mapData.split(',');
+                               $.ajax({
+                                    type: 'POST',
+                                    url: $t.attr('data-update-map-url'),
+                                    data: {
+                                        lon: mapData[0],
+                                        lat: mapData[1]
+                                    }, success: function (response) {
+                                        if (response.success) {
+                                            $t.removeClass('unpick').addClass('is-picked');
+                                        } else {
+                                            $.alert('更新地图数据失败。');
+                                        }
+                                    }
+                                }); 
+                            }
+                        }
+                    });
+                    $.fn.unlock();
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    $.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
+                    $.fn.unlock();
                 }
-                $.fn.unlock();
-            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
-                layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText, {icon: -1});
-                $.fn.unlock();
-            }
-        });
-        
-        return false;
-    });
-    
-    // 删除表格动态行
-    $(document).on('click', '.btn-delete-dynamic-table-row', function () {
-        $(this).parent().parent().remove();
-        
-        return false;
-    });
+            });
 
+            return false;
+        });
+    
 });

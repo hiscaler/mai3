@@ -71,7 +71,7 @@ class LoginForm extends Model
                     ':id' => Yii::$app->user->id
                 ])->execute();
                 // Write user login log
-                UserLoginLog::write();
+//                UserLoginLog::write();
             }
 
             return $logined;

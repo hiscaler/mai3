@@ -1,6 +1,5 @@
 <?php
 
-use common\models\Option;
 use common\models\Yad;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -36,16 +35,16 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'timezone')->dropDownList(Yad::getTimezones(), ['prompt' => '']) ?>
 
-        <?= $form->field($model, 'date_format')->textInput(['maxlength' => 20]) ?>
+        <?= $form->field($model, 'date_format')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'time_format')->textInput(['maxlength' => 20]) ?>
+        <?= $form->field($model, 'time_format')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'datetime_format')->textInput(['maxlength' => 20]) ?>
+        <?= $form->field($model, 'datetime_format')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'domain_name')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'domain_name')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'description')->textInput(['maxlength' => 255, 'class' => 'g-text g-text-large']) ?>
-        
+        <?= $form->field($model, 'description')->textInput(['maxlength' => true, 'class' => 'form-control g-text-large']) ?>
+
         <?= $form->field($model, 'status')->checkbox([], false) ?>
 
         <div class="form-group buttons">

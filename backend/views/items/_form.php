@@ -34,8 +34,8 @@ use yii\widgets\ActiveForm;
                             <div class="panel-body">
                                 <?= $form->field($model, 'category_id')->dropDownList(common\models\Category::getMap(), ['prompt' => '']) ?>
 
-                                <?= $form->field($model, 'type_id')->dropDownList(\common\models\Type::getMap(), ['prompt' => '']) ?>
-                                
+                                <?= $form->field($model, 'type_id')->dropDownList(\common\models\Type::getMap(), ['prompt' => '', 'data-url' => yii\helpers\Url::toRoute(['type-raw-data'])]) ?>
+
                                 <?= $form->field($model, 'brand_id')->dropDownList(\common\models\Brand::getMap(), ['prompt' => '']) ?>
 
                                 <?= $form->field($model, 'sn')->textInput(['maxlength' => true]) ?>
@@ -120,25 +120,70 @@ use yii\widgets\ActiveForm;
                             </div>
                         </div>
                         <!-- // 商品图片 -->
-                        
+
                         <!-- 商品规格 -->
                         <div id="tab-specifications" class="tab-pane">
                             <div class="panel-body">
-                                <label for=""></label>
-                                <?= yii\bootstrap\Html::dropDownList('item_type_id', null, \common\models\Type::getMap()) ?>
+                                <div id="mai3-item-specifications">
+                                    <div v-if="specifications.length > 0">                                    
+                                        <ul class="nav nav-tabs">
+                                            <li v-for="spec in specifications" v-bind:class="{active: $index === 0}"><a data-toggle="tab" href="#tab-{{ spec.id }}"> {{ spec.name }}</a></li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div v-for="spec in specifications" id="tab-{{ spec.id }}" class="tab-pane" v-bind:class="{active: $index === 0}">
+                                                <div class="panel-body">
+                                                    <template v-for="value in spec.values">
+                                                        <span>
+                                                            <input v-on:click="checked" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}">
+                                                            <label id="label-{{ value.id }}" for="specification-value-{{ value.id }}">{{ value.text }}</label>
+                                                        </span>
+                                                    </template>                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="mai3-item-specification-values-combination-render">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>属性值</th>
+                                                        <th>零售价</th>
+                                                        <th>会员价</th>
+                                                        <th>优惠价</th>
+                                                        <th>排序</th>
+                                                        <th>状态</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr v-for="item in specificationValueCombinationList">
+                                                        <td>{{ item.name }}</td>
+                                                        <td><input type="text" value="" /></td>
+                                                        <td><input type="text" value="" /></td>
+                                                        <td><input type="text" value="" /></td>
+                                                        <td><input type="text" value="1" /></td>
+                                                        <td><input type="checkbox" value="1" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div v-else>
+                                        <div class="alert alert-info">暂未设定相关分类属性。</div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <!-- // 商品规格 -->
+                            <!-- // 商品规格 -->
 
-                        <div class="form-group">
-                            <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-                        </div>
+                            <div class="form-group">
+                                <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+                            </div>
 
+                        </div>
                     </div>
-                </div>
 
-                <?php ActiveForm::end(); ?>
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
+

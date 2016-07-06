@@ -84,7 +84,7 @@ $this->params['menus'] = [
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'template' => '{update} {delete}',
-                    'headerOptions' => ['class' => 'btns-2 last'],
+                    'headerOptions' => ['class' => 'buttons-2 last'],
                 ],
             ],
         ]);
