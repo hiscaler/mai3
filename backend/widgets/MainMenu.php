@@ -27,12 +27,12 @@ class MainMenu extends Widget
             [
                 'label' => '全局管理',
                 'url' => ['global/index'],
-                'active' => in_array($controllerId, ['global']),
+                'active' => in_array($controllerId, ['global', 'tenants', 'users', 'labels', 'members', 'ads', 'news', 'articles']),
             ],
             [
                 'label' => '店铺管理',
                 'url' => ['shop/index'],
-                'active' => in_array($controllerId, ['shop', 'orders']),
+                'active' => in_array($controllerId, ['shop', 'brands', 'categories', 'types', 'specifications', 'payment-configs', 'posts', 'items', 'orders', 'comments']),
             ],
         ];
     }

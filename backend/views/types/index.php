@@ -6,7 +6,7 @@ use yii\grid\GridView;
 /* @var $searchModel common\models\TypeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Item Types');
+$this->title = Yii::t('app', 'Types');
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->params['menus'] = [
