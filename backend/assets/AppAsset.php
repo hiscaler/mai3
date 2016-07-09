@@ -24,13 +24,11 @@ class AppAsset extends AssetBundle
         'css/common.css',
         'css/widget-grid-view.css',
         'css/form.css',
-        'css/art-dialog-twitter-skin.css',
+        'layer/layer.css',
     ];
     public $js = [
         'js/doT.min.js',
-        'js/jquery.artDialog.min.js',
-        'js/artDialog.plugins.min.js',
-        'js/zbzhuanhuan.js',
+        'layer/layer.js',
         'js/application.js',
     ];
     public $depends = [

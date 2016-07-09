@@ -81,11 +81,11 @@ $(function () {
     });
 });
 // Art dialog default settings
-(function (artDialog) {
-    artDialog['okValue'] = '确定';
-    artDialog['cancelValue'] = '取消';
-    artDialog['title'] = '提示信息';
-})($.dialog.defaults);
+//(function (artDialog) {
+//    artDialog['okValue'] = '确定';
+//    artDialog['cancelValue'] = '取消';
+//    artDialog['title'] = '提示信息';
+//})($.dialog.defaults);
 var yadjet = yadjet || {};
 yadjet.urls = yadjet.urls || {};
 yadjet.urls = {
