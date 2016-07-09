@@ -28,10 +28,6 @@ $this->params['menus'] = [
                 'contentOptions' => ['class' => 'serial-number']
             ],
             [
-                'attribute' => 'id',
-                'contentOptions' => ['class' => 'pk center'],
-            ],
-            [
                 'attribute' => 'ordering',
                 'contentOptions' => ['class' => 'ordering'],
             ],

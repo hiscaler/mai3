@@ -103,7 +103,7 @@ $(function () {
         return false;
     });
 });
-$(document).on('click', 'a.btn-search', function () {
+$(document).on('click', '.search-button a', function () {
     var $t = $(this);
     if ($t.attr('data-toggle') === 'show') {
         $t.attr('data-toggle', 'hide');

@@ -10,32 +10,37 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="item-search">
+<div class="form-outside form-search form-layout-column" style="display: none">
+    <div class="items-search form">
 
-    <?php
-    $form = ActiveForm::begin([
-            'action' => ['index'],
-            'method' => 'get',
-    ]);
-    ?>
+        <?php
+        $form = ActiveForm::begin([
+                'action' => ['index'],
+                'method' => 'get',
+                'id' => 'form-items-search',
+        ]);
+        ?>
 
-    <?= $form->field($model, 'id') ?>
+        <div class="entry">
+            <?= $form->field($model, 'category_id')->dropDownList(Category::getMap(null, true), ['prompt' => '']) ?>
 
-    <?= $form->field($model, 'category_id')->dropDownList(Category::getMap(null, true), ['prompt' => '']) ?>
+            <?= $form->field($model, 'brand_id')->dropDownList(Brand::getMap(), ['prompt' => '']) ?>
+        </div>
 
-    <?= $form->field($model, 'brand_id')->dropDownList(Brand::getMap(), ['prompt' => '']) ?>
+        <div class="entry">
+            <?= $form->field($model, 'sn') ?>
 
-    <?= $form->field($model, 'sn') ?>
+            <?= $form->field($model, 'name') ?>
+        </div>
 
-    <?= $form->field($model, 'name') ?>
+        <?php // echo $form->field($model, 'status') ?>
 
-    <?php // echo $form->field($model, 'status') ?>
+        <div class="form-group buttons">
+            <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        </div>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        <?php ActiveForm::end(); ?>
+
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

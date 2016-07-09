@@ -24,8 +24,8 @@ $this->params['menus'] = [
         'dataProvider' => $dataProvider,
         'columns' => [
             [
-                'attribute' => 'id',
-                'contentOptions' => ['class' => 'pk'],
+                'class' => 'yii\grid\SerialColumn',
+                'contentOptions' => ['class' => 'serial-number']
             ],
             [
                 'attribute' => 'ordering',

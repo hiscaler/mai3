@@ -1,7 +1,8 @@
 <?php
 
-use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ItemSearch */
@@ -23,8 +24,11 @@ $this->params['menus'] = [
 
     <?= $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?=
-    GridView::widget([
+    <?php
+    Pjax::begin([
+        'formSelector' => '#form-items-search',
+    ]);
+    echo GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             [
@@ -44,64 +48,65 @@ $this->params['menus'] = [
                 'value' => function($model) {
                     return Html::a($model['sn'], ['update', 'id' => $model['id']]);
                 },
-                    'contentOptions' => ['class' => 'item-sn'],
-                ],
-                'name',
-                [
-                    'attribute' => 'market_price',
-                    'contentOptions' => ['class' => 'price'],
-                ],
-                [
-                    'attribute' => 'shop_price',
-                    'contentOptions' => ['class' => 'price'],
-                ],
-                [
-                    'attribute' => 'member_price',
-                    'contentOptions' => ['class' => 'price'],
-                ],
-                [
-                    'attribute' => 'clicks_count',
-                    'contentOptions' => ['class' => 'number'],
-                ],
-                [
-                    'attribute' => 'sales_count',
-                    'contentOptions' => ['class' => 'number'],
-                ],
-                [
-                    'attribute' => 'status',
-                    'format' => 'boolean',
-                    'contentOptions' => ['class' => 'boolean pointer'],
-                ],
-                [
-                    'attribute' => 'created_by',
-                    'value' => function($model) {
-//                                return $model['creater']['nickname'];
-                    },
-                    'contentOptions' => ['class' => 'username']
-                ],
-                [
-                    'attribute' => 'created_at',
-                    'format' => 'date',
-                    'contentOptions' => ['class' => 'date']
-                ],
-                [
-                    'attribute' => 'updated_by',
-                    'value' => function($model) {
-//                                return $model['updater']['nickname'];
-                    },
-                    'contentOptions' => ['class' => 'username']
-                ],
-                [
-                    'attribute' => 'updated_at',
-                    'format' => 'date',
-                    'contentOptions' => ['class' => 'date']
-                ],
-                [
-                    'class' => 'yii\grid\ActionColumn',
-                    'headerOptions' => array('class' => 'buttons-3 last'),
-                ],
+                'contentOptions' => ['class' => 'item-sn'],
             ],
-        ]);
-        ?>
+            'name',
+            [
+                'attribute' => 'market_price',
+                'contentOptions' => ['class' => 'price'],
+            ],
+            [
+                'attribute' => 'shop_price',
+                'contentOptions' => ['class' => 'price'],
+            ],
+            [
+                'attribute' => 'member_price',
+                'contentOptions' => ['class' => 'price'],
+            ],
+            [
+                'attribute' => 'clicks_count',
+                'contentOptions' => ['class' => 'number'],
+            ],
+            [
+                'attribute' => 'sales_count',
+                'contentOptions' => ['class' => 'number'],
+            ],
+            [
+                'attribute' => 'status',
+                'format' => 'boolean',
+                'contentOptions' => ['class' => 'boolean pointer'],
+            ],
+            [
+                'attribute' => 'created_by',
+                'value' => function($model) {
+//                                return $model['creater']['nickname'];
+                },
+                'contentOptions' => ['class' => 'username']
+            ],
+            [
+                'attribute' => 'created_at',
+                'format' => 'date',
+                'contentOptions' => ['class' => 'date']
+            ],
+            [
+                'attribute' => 'updated_by',
+                'value' => function($model) {
+//                                return $model['updater']['nickname'];
+                },
+                'contentOptions' => ['class' => 'username']
+            ],
+            [
+                'attribute' => 'updated_at',
+                'format' => 'date',
+                'contentOptions' => ['class' => 'date']
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => array('class' => 'buttons-3 last'),
+            ],
+        ],
+    ]);
+    Pjax::end();
+    ?>
 
 </div>

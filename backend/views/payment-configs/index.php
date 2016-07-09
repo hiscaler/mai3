@@ -24,7 +24,10 @@ $this->params['menus'] = [
     GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            [
+                'class' => 'yii\grid\SerialColumn',
+                'contentOptions' => ['class' => 'serial-number']
+            ],
             [
                 'attribute' => 'ordering',
                 'contentOptions' => ['class' => 'ordering'],
