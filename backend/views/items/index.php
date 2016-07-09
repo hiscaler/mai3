@@ -19,94 +19,89 @@ $this->params['menus'] = [
 ?>
 
 
-<div class="ibox float-e-margins">
+<div class="items-index">
 
-    <div class="ibox-title form-search" style="display: none">
-        <?= $this->render('_search', ['model' => $searchModel]); ?>
-    </div>
+    <?= $this->render('_search', ['model' => $searchModel]); ?>
 
-    <div class="ibox-content">
-
-        <?=
-        GridView::widget([
-            'dataProvider' => $dataProvider,
-            'columns' => [
+    <?=
+    GridView::widget([
+        'dataProvider' => $dataProvider,
+        'columns' => [
+            [
+                'attribute' => 'id',
+                'header' => '#',
+                'contentOptions' => ['class' => 'id'],
+            ],
+            [
+                'attribute' => 'ordering',
+                'contentOptions' => ['class' => 'ordering'],
+            ],
+            'category.name',
+            'brand.name',
+            [
+                'attribute' => 'sn',
+                'format' => 'raw',
+                'value' => function($model) {
+                    return Html::a($model['sn'], ['update', 'id' => $model['id']]);
+                },
+                    'contentOptions' => ['class' => 'item-sn'],
+                ],
+                'name',
                 [
-                    'attribute' => 'id',
-                    'header' => '#',
-                    'contentOptions' => ['class' => 'id'],
+                    'attribute' => 'market_price',
+                    'contentOptions' => ['class' => 'price'],
                 ],
                 [
-                    'attribute' => 'ordering',
-                    'contentOptions' => ['class' => 'ordering'],
+                    'attribute' => 'shop_price',
+                    'contentOptions' => ['class' => 'price'],
                 ],
-                'category.name',
-                'brand.name',
                 [
-                    'attribute' => 'sn',
-                    'format' => 'raw',
+                    'attribute' => 'member_price',
+                    'contentOptions' => ['class' => 'price'],
+                ],
+                [
+                    'attribute' => 'clicks_count',
+                    'contentOptions' => ['class' => 'number'],
+                ],
+                [
+                    'attribute' => 'sales_count',
+                    'contentOptions' => ['class' => 'number'],
+                ],
+                [
+                    'attribute' => 'status',
+                    'format' => 'boolean',
+                    'contentOptions' => ['class' => 'boolean pointer'],
+                ],
+                [
+                    'attribute' => 'created_by',
                     'value' => function($model) {
-                        return Html::a($model['sn'], ['update', 'id' => $model['id']]);
-                    },
-                        'contentOptions' => ['class' => 'item-sn'],
-                    ],
-                    'name',
-                    [
-                        'attribute' => 'market_price',
-                        'contentOptions' => ['class' => 'price'],
-                    ],
-                    [
-                        'attribute' => 'shop_price',
-                        'contentOptions' => ['class' => 'price'],
-                    ],
-                    [
-                        'attribute' => 'member_price',
-                        'contentOptions' => ['class' => 'price'],
-                    ],
-                    [
-                        'attribute' => 'clicks_count',
-                        'contentOptions' => ['class' => 'number'],
-                    ],
-                    [
-                        'attribute' => 'sales_count',
-                        'contentOptions' => ['class' => 'number'],
-                    ],
-                    [
-                        'attribute' => 'status',
-                        'format' => 'boolean',
-                        'contentOptions' => ['class' => 'boolean pointer'],
-                    ],
-                    [
-                        'attribute' => 'created_by',
-                        'value' => function($model) {
 //                                return $model['creater']['nickname'];
-                        },
-                        'contentOptions' => ['class' => 'username']
-                    ],
-                    [
-                        'attribute' => 'created_at',
-                        'format' => 'date',
-                        'contentOptions' => ['class' => 'date']
-                    ],
-                    [
-                        'attribute' => 'updated_by',
-                        'value' => function($model) {
-//                                return $model['updater']['nickname'];
-                        },
-                        'contentOptions' => ['class' => 'username']
-                    ],
-                    [
-                        'attribute' => 'updated_at',
-                        'format' => 'date',
-                        'contentOptions' => ['class' => 'date']
-                    ],
-                    [
-                        'class' => 'yii\grid\ActionColumn',
-                        'headerOptions' => array('class' => 'buttons-3 last'),
-                    ],
+                    },
+                    'contentOptions' => ['class' => 'username']
                 ],
-            ]);
-            ?>
+                [
+                    'attribute' => 'created_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'attribute' => 'updated_by',
+                    'value' => function($model) {
+//                                return $model['updater']['nickname'];
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'updated_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'headerOptions' => array('class' => 'buttons-3 last'),
+                ],
+            ],
+        ]);
+        ?>
 
-    </div>
 </div>

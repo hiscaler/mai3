@@ -18,7 +18,7 @@ $this->params['menus'] = [
     ['label' => Yii::t('app', 'Search'), 'url' => '#'],
 ];
 ?>
-<div class="attribute-index">
+<div class="labels-index">
 
     <?= $this->render('_search', ['model' => $searchModel]) ?>
 
