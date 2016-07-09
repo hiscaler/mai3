@@ -377,3 +377,21 @@ div.form .buttons {
 .form .btn:hover {
     border-color: #3b7fc4;
 }
+/*******************************************************************************
+ * specifications form
+ ******************************************************************************/
+.specifications-form #tab-values table caption .btn {
+    border-color: #E9E9E9;
+    border-bottom: none;
+    border-radius: 0 3px 0 0;
+    margin-left: -5px;
+    background-color: #F5F5F5;
+}
+.specifications-form #tab-values table select {
+    width: 60px;
+}
+.specifications-form #tab-values table .form-group {
+    padding: 0;
+    margin: 0;
+    background: none;
+}

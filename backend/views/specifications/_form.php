@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="form-outside">
-    <div class="tenant-form form">            
+    <div class="specifications-form form">            
 
         <?php $form = ActiveForm::begin(); ?>
         <div class="tabs-container">
@@ -41,15 +41,15 @@ use yii\widgets\ActiveForm;
                         <div class="grid-view">
                             <table class="table">
                                 <caption>
-                                    <a id="btn-dynamic-add-specifications-row" href="javascript:;" class="btn btn-primary btn-xs">添加一行</a>
+                                    <a id="btn-dynamic-add-specifications-row" href="javascript:;" class="btn">添加一行</a>
                                 </caption>
                                 <thead>
                                     <tr>
-                                        <th style="width: 80px;">排序</th>
+                                        <th>排序</th>
                                         <th>规格值名称</th>
                                         <th style="width: 120px">规格图标</th>
                                         <th>状态</th>
-                                        <th class="btns-1 last"></th>
+                                        <th class="button-1 last"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,12 +61,12 @@ use yii\widgets\ActiveForm;
                                             <tr id="row-<?= $index ?>">
                                                 <td class="ordering">
                                                     <?= $form->field($model, "valuesData[$index][id]", ['template' => '{input}'])->hiddenInput()->label(false) ?>
-                                                    <?= $form->field($model, "valuesData[$index][ordering]")->dropDownList(Option::orderingOptions(), ['options' => ['selected' => 'selected']])->label(false) ?>
+                                                    <?= $form->field($model, "valuesData[$index][ordering]", ['template' => '{input}'])->dropDownList(Option::orderingOptions(), ['options' => ['selected' => 'selected']])->label(false) ?>
                                                 </td>
-                                                <td class="text"><?= $form->field($model, "valuesData[$index][text]")->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
-                                                <td><?= $form->field($model, "valuesData[$index][icon_path]")->fileInput()->label(false) ?></td>
+                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
+                                                <td><?= $form->field($model, "valuesData[$index][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
                                                 <td class="boolean">
-                                                    <?= $form->field($model, "valuesData[$index][status]")->checkbox([], false)->label(false) ?>
+                                                    <?= $form->field($model, "valuesData[$index][status]", ['template' => '{input}'])->checkbox([], false)->label(false) ?>
 
                                                 </td>
                                                 <td class="btn-render">
@@ -79,10 +79,10 @@ use yii\widgets\ActiveForm;
                                         echo Html::hiddenInput('mai3-index-counter', 1, ['id' => 'mai3-index-counter']);
                                         ?>
                                         <tr id="row-0">
-                                            <td><?= $form->field($model, "valuesData[0][ordering]")->dropDownList(Option::orderingOptions())->label(false) ?></td>
-                                            <td><?= $form->field($model, "valuesData[0][text]")->textInput(['maxlength' => 20])->label(false) ?></td>
-                                            <td><?= $form->field($model, "valuesData[0][icon_path]")->fileInput()->label(false) ?></td>
-                                            <td class="boolean"><?= $form->field($model, "valuesData[0][status]")->checkbox([], false)->label(false) ?></td>
+                                            <td class="ordering"><?= $form->field($model, "valuesData[0][ordering]", ['template' => '{input}'])->dropDownList(Option::orderingOptions())->label(false) ?></td>
+                                            <td><?= $form->field($model, "valuesData[0][text]", ['template' => '{input}'])->textInput(['maxlength' => 20])->label(false) ?></td>
+                                            <td><?= $form->field($model, "valuesData[0][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
+                                            <td class="boolean"><?= $form->field($model, "valuesData[0][status]", ['template' => '{input}'])->checkbox([], false)->label(false) ?></td>
 
                                             <td class="btn-render"></td>
                                         </tr>

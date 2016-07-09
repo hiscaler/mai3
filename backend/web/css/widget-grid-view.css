@@ -412,7 +412,7 @@
 .grid-view table.table td a.float-update:hover {
     background: url(../images/update.png) no-repeat right center;
 }
-.grid-view table.table th.button { width: 20px; _width: 30px; }
+.grid-view table.table th.button-1 { width: 20px; _width: 30px; }
 .grid-view table.table th.buttons-2 { width: 40px; _width: 40px; }
 .grid-view table.table th.buttons-3 { width: 60px; _width: 70px; }
 .grid-view table.table th.buttons-4 { width: 80px; _widht: 90px; }
