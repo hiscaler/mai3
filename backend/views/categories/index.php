@@ -1,6 +1,7 @@
 <?php
 
 use yii\grid\GridView;
+use yii\helpers\Html;
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\CategorySearch */
@@ -24,15 +25,19 @@ $this->params['menus'] = [
     GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
             [
-                'attribute' => 'id',
-                'contentOptions' => ['class' => 'id'],
+                'class' => 'yii\grid\SerialColumn',
+                'contentOptions' => ['class' => 'serial-number']
             ],
             'type',
             'alias',
-            'name',
-            'parent_id',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function ($model)  {
+                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . Html::a($model['name'], ['update', 'id' => $model['id']]);
+                },
+            ],
             // 'level',
             // 'parent_ids',
             // 'parent_names',

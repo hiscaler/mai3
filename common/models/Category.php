@@ -58,17 +58,17 @@ class Category extends BaseActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'type' => Yii::t('app', 'Type'),
-            'alias' => Yii::t('app', 'Alias'),
-            'name' => Yii::t('app', 'Name'),
-            'parent_id' => Yii::t('app', 'Parent ID'),
-            'level' => Yii::t('app', 'Level'),
-            'parent_ids' => Yii::t('app', 'Parent Ids'),
-            'parent_names' => Yii::t('app', 'Parent Names'),
-            'icon_path' => Yii::t('app', 'Icon Path'),
-            'description' => Yii::t('app', 'Description'),
-        ];
+        return array_merge(parent::attributeLabels(), [
+            'type' => Yii::t('category', 'Type'),
+            'alias' => Yii::t('category', 'Alias'),
+            'name' => Yii::t('category', 'Name'),
+            'parent_id' => Yii::t('category', 'Parent ID'),
+            'level' => Yii::t('category', 'Level'),
+            'parent_ids' => Yii::t('category', 'Parent Ids'),
+            'parent_names' => Yii::t('category', 'Parent Names'),
+            'icon_path' => Yii::t('category', 'Icon Path'),
+            'description' => Yii::t('category', 'Description'),
+        ]);
     }
 
     /**
