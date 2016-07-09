@@ -13,7 +13,7 @@ use yii\filters\VerbFilter;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class PaymentConfigsController extends Controller
+class PaymentConfigsController extends ShopController
 {
 
     public function behaviors()

@@ -25,7 +25,7 @@ use yii\web\Response;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class UsersController extends Controller
+class UsersController extends GlobalController
 {
 
     public function behaviors()

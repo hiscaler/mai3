@@ -16,7 +16,7 @@ use yii\web\Response;
 /**
  * TenantAccessTokensController implements the CRUD actions for TenantAccessToken model.
  */
-class TenantAccessTokensController extends Controller
+class TenantAccessTokensController extends GlobalController
 {
 
     public function behaviors()

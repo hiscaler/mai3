@@ -14,20 +14,25 @@ class MainMenu extends Widget
 
     public function getItems()
     {
-       
+
         $controller = $this->view->context;
         $controllerId = $controller->id;
         $actionId = $controller->action->id;
         return [
             [
                 'label' => '首页',
-                'url' => ['site/index'],
-                'active' => $controllerId == 'site',
+                'url' => ['default/index'],
+                'active' => $controllerId == 'default',
+            ],
+            [
+                'label' => '全局管理',
+                'url' => ['global/index'],
+                'active' => in_array($controllerId, ['global']),
             ],
             [
                 'label' => '店铺管理',
-                'url' => ['orders/index'],
-                'active' => $controllerId == 'orders',
+                'url' => ['shop/index'],
+                'active' => in_array($controllerId, ['shop', 'orders']),
             ],
         ];
     }

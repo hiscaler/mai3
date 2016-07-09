@@ -13,7 +13,7 @@ use yii\web\NotFoundHttpException;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class BrandsController extends Controller
+class BrandsController extends ShopController
 {
 
     public function behaviors()

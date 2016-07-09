@@ -15,7 +15,7 @@ use yii\web\Response;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class SpecificationsController extends Controller
+class SpecificationsController extends ShopController
 {
 
     public function behaviors()

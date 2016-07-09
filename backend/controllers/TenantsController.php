@@ -18,7 +18,7 @@ use yii\web\Response;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class TenantsController extends Controller
+class TenantsController extends GlobalController
 {
 
     public function behaviors()

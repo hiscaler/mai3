@@ -13,7 +13,7 @@ use yii\filters\VerbFilter;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class CategoriesController extends Controller
+class CategoriesController extends ShopController
 {
 
     public function behaviors()

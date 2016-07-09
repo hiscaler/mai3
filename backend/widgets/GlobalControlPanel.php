@@ -2,27 +2,15 @@
 
 namespace backend\widgets;
 
-use common\models\Yad;
-use yii\db\Query;
+use yii\base\Widget;
 
 /**
- * 控制面板
+ * 全局管理控制面板
  *
  * @author hiscaler <hiscaler@gmail.com>
  */
-class ControlPanel extends \yii\base\Widget
+class GlobalControlPanel extends Widget
 {
-
-    public function getTenants()
-    {
-        $tenantId = Yad::getTenantId();
-        return (new Query())
-                ->select('name')
-                ->from('{{%tenant}}')
-                ->where($tenantId ? ['<>', 'id', $tenantId] : [])
-                ->indexBy('id')
-                ->column();
-    }
 
     public function getItems()
     {
@@ -75,6 +63,8 @@ class ControlPanel extends \yii\base\Widget
 
     public function run()
     {
+        $controller = $this->view->context;
+
         return $this->render('ControlPanel', [
                 'items' => $this->getItems(),
         ]);
