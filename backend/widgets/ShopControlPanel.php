@@ -25,14 +25,14 @@ class ShopControlPanel extends \yii\base\Widget
                 'active' => $controllerId == 'categories',
             ],
             [
-                'label' => '商品类型管理',
-                'url' => ['types/index'],
-                'active' => $controllerId == 'types',
-            ],
-            [
                 'label' => '商品规格管理',
                 'url' => ['specifications/index'],
                 'active' => $controllerId == 'specifications',
+            ],
+            [
+                'label' => '商品类型管理',
+                'url' => ['types/index'],
+                'active' => $controllerId == 'types',
             ],
             [
                 'label' => '支付管理',
