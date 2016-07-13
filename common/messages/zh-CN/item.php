@@ -10,5 +10,6 @@ return [
     'Name' => '品名',
     'Price' => '价格',
     'Content' => '商品详细介绍',
+    'Picture Path' => '大图',
     'Pictures Count' => '图片数量',
 ];

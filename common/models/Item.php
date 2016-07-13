@@ -84,9 +84,9 @@ class Item extends BaseActiveRecord
             'market_price' => Yii::t('app', '市场价'),
             'shop_price' => Yii::t('app', '店铺价'),
             'member_price' => Yii::t('app', '会员价'),
-            'picture_path' => Yii::t('app', 'Picture Path'),
-            'keywords' => Yii::t('app', 'Keywords'),
-            'description' => Yii::t('app', 'Description'),
+            'picture_path' => Yii::t('item', 'Picture Path'),
+            'keywords' => Yii::t('app', 'Page Keywords'),
+            'description' => Yii::t('app', 'Page Description'),
             'ordering' => Yii::t('app', '排序'),
             'clicks_count' => Yii::t('app', '点击量'),
             'sales_count' => Yii::t('app', '销售量'),
@@ -96,6 +96,7 @@ class Item extends BaseActiveRecord
             'created_by' => Yii::t('app', 'Created By'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'updated_by' => Yii::t('app', 'Updated By'),
+            'content' => Yii::t('item', 'Content'),
         ];
     }
 

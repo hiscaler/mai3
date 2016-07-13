@@ -18,10 +18,10 @@ $this->params['menus'] = [
 ?>
 
 <div class="tabs-container">
-    <ul class="nav nav-tabs">
-        <li class="active"><a data-toggle="tab" href="#tab-base"> 基础资料</a></li>
-        <li><a data-toggle="tab" href="#tab-content">详情描述</a></li>
-        <li><a data-toggle="tab" href="#tab-images">商品图片</a></li>
+    <ul class="tabs-common">
+        <li class="active"><a data-toggle="tab-base" href="#tab-base"> 基础资料</a></li>
+        <li><a data-toggle="tab-content" href="#tab-content">详情描述</a></li>
+        <li><a data-toggle="tab-images" href="#tab-images">商品图片</a></li>
     </ul>
 
     <div class="tab-content">
@@ -63,7 +63,7 @@ $this->params['menus'] = [
         <!-- // 基础资料 -->
 
         <!-- 详情描述 -->
-        <div id="tab-content" class="tab-pane active">
+        <div id="tab-content" class="tab-pane" style="display: none;">
             <div class="panel-body">
                 <?= $model['content'] ?>
             </div>
@@ -71,7 +71,7 @@ $this->params['menus'] = [
         <!-- // 详情描述 -->
 
         <!-- 商品图片 -->
-        <div id="tab-images" class="tab-pane active">
+        <div id="tab-images" class="tab-pane" style="display: none;">
             <div class="panel-body">
                 <?php if ($model->images): ?>
                     <div class="well">

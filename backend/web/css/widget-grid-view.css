@@ -428,3 +428,10 @@
 .ip-access-rule-type {
     width: 60px;
 }
+#grid-goods-images table .btn {
+    border-color: #E9E9E9;
+    border-bottom: none;
+    border-radius: 0 3px 0 0;
+    margin-left: -5px;
+    background-color: #F5F5F5;
+}

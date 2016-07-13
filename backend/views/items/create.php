@@ -3,7 +3,7 @@
 /* @var $this yii\web\View */
 /* @var $model common\models\Item */
 
-$this->title = Yii::t('app', 'Create Item');
+$this->title = Yii::t('app', 'Create');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Items'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 

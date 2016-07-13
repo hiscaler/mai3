@@ -169,6 +169,19 @@ class ItemsController extends ShopController
     }
 
     /**
+     * 获取商品类型关联数据
+     * @param integer $typeId
+     * @return Response
+     */
+    public function actionTypeRawData($typeId)
+    {
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => \common\models\Type::getRawData($typeId),
+        ]);
+    }
+
+    /**
      * Finds the Item model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
