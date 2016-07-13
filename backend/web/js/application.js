@@ -169,8 +169,8 @@ $(document).on('click', '.btn-delete-image', function () {
 
     return false;
 });
--// 更新商品图片描述文字
-    $(document).on('blur', '.update-image-description', function () {
+// 更新商品图片描述文字
+$(document).on('blur', '.update-image-description', function () {
     var $t = $(this),
         id = $t.attr('data-key'),
         originalValue = $t.attr('data-original'),
