@@ -191,7 +191,7 @@ table.detail-view tr.even th {
 ul.list {}
 ul.list li {
     line-height: 30px;
-    background: url(../item-images/bullet-blue.png) no-repeat left center;
+    background: url(../images/bullet-blue.png) no-repeat left center;
     padding-left: 16px;
     border-bottom: #F5F5F5 solid 1px;
 }
@@ -371,7 +371,7 @@ ul.list li em {
     right: 0;
 }
 #header-account-manage .header-settings {
-    background: url(../item-images/icons.png) no-repeat -1776px -16px!important;
+    background: url(../images/icons.png) no-repeat -1776px -16px!important;
     margin: 17px 0;
 }
 #header-account-manage li a {
@@ -436,7 +436,7 @@ ul.list li em {
     margin: 0;
     border-bottom: #E9E9E9 solid 1px;
     padding: 0 15px;
-    background: #F5F5F5 url(../item-images/grid-view-header-bg.gif) no-repeat right center;
+    background: #F5F5F5 url(../images/grid-view-header-bg.gif) no-repeat right center;
 }
 #menu-buttons ul.misc li.first a,
 #menu-buttons ul.misc li.first-last a {
@@ -460,7 +460,7 @@ ul.list li em {
 .breadcrumbs {
     border-bottom: #E9E9E9 solid 1px;
     padding: 10px 10px 10px 40px;
-    background: #F5F5F5 url(../item-images/logo-16x16.png) no-repeat 10px 50%;
+    background: #F5F5F5 url(../images/logo-16x16.png) no-repeat 10px 50%;
     font-size: 14px;
     display: block;
 }
@@ -504,7 +504,7 @@ ul.list li em {
     overflow: hidden;
 }
 .control-panel .shortcut {
-    background: url("../item-images/khotkeys.png") no-repeat left center;
+    background: url("../images/khotkeys.png") no-repeat left center;
     padding-left: 25px;
 }
 .control-panel .shortcuts {
@@ -516,7 +516,7 @@ ul.list li em {
     line-height: 30px;
     display: block;
     text-align: left;
-    background-image: url("../item-images/shortcut-small.png");
+    background-image: url("../images/shortcut-small.png");
     background-repeat: no-repeat;
     background-position: 0 7px;
     padding-left: 20px;
@@ -551,11 +551,11 @@ ul.list li em {
     font-weight: normal;
 }
 .control-panel .shortcuts li ul li {
-    background: url("../item-images/bullet-blue.png") no-repeat 0 12px!important;
+    background: url("../images/bullet-blue.png") no-repeat 0 12px!important;
     padding-left: 10px;
 }
 .control-panel .shortcuts li ul li.active {
-    background: url("../item-images/right-arrow.png") no-repeat 0 7px!important;
+    background: url("../images/right-arrow.png") no-repeat 0 7px!important;
 }
 .control-panel .shortcuts li ul li.active {
     border: none;
@@ -588,12 +588,12 @@ ul.list li em {
 #form-account-reg-login .errorMessage {
     border: none;
     padding-left: 130px;
-    background: #FFF url(../item-images/error.png) no-repeat 110px center;
+    background: #FFF url(../images/error.png) no-repeat 110px center;
 }
 #form-account-reg-login .hd {
     border-bottom: #ccc solid 1px;
     margin-bottom: 10px;
-    background: url(../item-images/account-reg-login.png) no-repeat left center;
+    background: url(../images/account-reg-login.png) no-repeat left center;
     padding-left: 40px;
 }
 #form-account-reg-login .hd h1 {
@@ -669,7 +669,7 @@ ul.list li em {
     padding-left: 30px;
     font-weight: bold;
     font-size: 16px;
-    background: #ececec url(../item-images/notice.png) no-repeat 5px center;
+    background: #ececec url(../images/notice.png) no-repeat 5px center;
 }
 .widget-common .bd {
     padding: 10px;
@@ -728,7 +728,7 @@ ul.list li em {
 .widget-user-login-logs .time-lines .day {
     font-size: 16px;
     color: #4362BF;
-    background: #FFF url(../item-images/timeline.png) no-repeat 0 50%;
+    background: #FFF url(../images/timeline.png) no-repeat 0 50%;
     padding: 5px 0 5px 30px;
     margin-left: -18px;
 }
@@ -772,6 +772,34 @@ ul.list li em {
     border: #d2d6de solid 1px;
     border-top: none;
     margin-top: -4px;
+}
+/*******************************************************************************
+ * 商品类型规格组合表单
+ ******************************************************************************/
+#mai3-item-specifications .specifications-values {
+    display: block;
+}
+#mai3-item-specifications .specifications-values li {
+    display: block;
+    border-bottom: #F5F5F5 solid 1px;
+    line-height: 36px;
+    clear: both;
+}
+#mai3-item-specifications .specifications-values li.last {
+    border-bottom: none;
+}
+#mai3-item-specifications .specifications-values li em {
+    display: block;
+    width: 80px;
+    float: left;
+    font-weight: bold;
+    text-align: right;
+}
+#mai3-item-specifications .specifications-values li span {
+    margin: 0 10px;
+    border-radius: 4px;
+    padding: 3px 6px;
+    border: #ccc solid 1px;
 }
 /*******************************************************************************
  * Footer

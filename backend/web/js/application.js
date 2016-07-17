@@ -93,7 +93,7 @@ yadjet.urls = {
 };
 yadjet.regions = yadjet.regions || {};
 $(function () {
-    $('ul.tabs-common li a').click(function () {
+    $('ul.tabs-common li a').on('click', function () {
         var $t = $(this),
             $widget = $t.parent().parent().parent().parent();
         $t.parent().siblings().removeClass('active');
@@ -266,3 +266,36 @@ $(document).on('click', '.btn-delete-dynamic-table-row', function () {
     $(this).parent().parent().remove();
     return false;
 });
+var vm = new Vue({
+    el: '#mai3-item-specifications',
+    data: {
+        original: {},
+        specifications: [],
+        specificationValueCombinationList: []
+    },
+    methods: {
+        checkSpecificationValue: function (event) {
+            var $obj = $(event.target),
+                value = $obj.val();
+            if ($obj.prop('checked') === true) {
+                var exists = this.specificationValueCombinationList.find(function (data) {
+                    return data.id == value ? true : false;
+                });
+                if (!exists) {
+                    this.specificationValueCombinationList.push({id: value, text: $('#label-' + value).text(), price: {member: 1, market: 0.3}});
+                }
+            } else {
+                var index = _.findIndex(this.specificationValueCombinationList, function (data) {
+                    return data.id == value;
+                });
+                if (index !== -1) {
+                    this.specificationValueCombinationList.splice(index, 1);
+                }
+            }
+        }    
+    }
+    
+});
+
+Vue.http.options.root = '/root';
+Vue.http.headers.common['Authorization'] = 'Basic YXBpOnBhc3N3b3Jk';

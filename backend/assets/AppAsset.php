@@ -24,12 +24,15 @@ class AppAsset extends AssetBundle
         'css/common.css',
         'css/widget-grid-view.css',
         'css/form.css',
-        'layer/layer.css',
+        'layer/skin/layer.css',
     ];
     public $js = [
         'js/doT.min.js',
         'layer/layer.js',
+        'js/vue/vue.js',
+        'js/vue/vue-resource.min.js',
         'js/application.js',
+        'js/underscore-min.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',

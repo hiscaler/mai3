@@ -124,22 +124,20 @@ use yii\widgets\ActiveForm;
                     <div class="panel-body">
                         <div id="mai3-item-specifications">
                             <div v-if="specifications.length > 0">                                    
-                                <ul class="nav nav-tabs">
-                                    <li v-for="spec in specifications" v-bind:class="{active: $index === 0}"><a data-toggle="tab" href="#tab-{{ spec.id }}"> {{ spec.name }}</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <div v-for="spec in specifications" id="tab-{{ spec.id }}" class="tab-pane" v-bind:class="{active: $index === 0}">
-                                        <div class="panel-body">
+                                <ul class="specifications-values">
+                                    <li v-for="spec in specifications" v-bind:class="{active: $index === 0}">
+                                        <em>{{ spec.name }}</em>
+                                        <div class="list">
                                             <template v-for="value in spec.values">
                                                 <span>
-                                                    <input v-on:click="checked" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}">
-                                                    <label id="label-{{ value.id }}" for="specification-value-{{ value.id }}">{{ value.text }}</label>
+                                                    <input v-on:click="checkSpecificationValue" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}">
+                                                    <label id="label-{{ value.id }}" for="specification-value-{{ value.id }}">{{ value.value }}</label>
                                                 </span>
-                                            </template>                    
+                                            </template>
                                         </div>
-                                    </div>
-                                </div>
-                                <div id="mai3-item-specification-values-combination-render">
+                                    </li>
+                                </ul>
+                                <div class="grid-view" id="mai3-item-specification-values-combination-render">
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>
@@ -148,14 +146,14 @@ use yii\widgets\ActiveForm;
                                                 <th>会员价</th>
                                                 <th>优惠价</th>
                                                 <th>排序</th>
-                                                <th>状态</th>
+                                                <th class="last button-1">状态</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="item in specificationValueCombinationList">
-                                                <td>{{ item.name }}</td>
-                                                <td><input type="text" value="" /></td>
-                                                <td><input type="text" value="" /></td>
+                                                <td>{{ item.text }}</td>
+                                                <td><input type="text" value="{{ item.price.market }}" /></td>
+                                                <td><input type="text" value="{{ item.price.member }}" /></td>
                                                 <td><input type="text" value="" /></td>
                                                 <td><input type="text" value="1" /></td>
                                                 <td><input type="checkbox" value="1" /></td>
@@ -182,4 +180,69 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 </div>
+ 数据:<input name="s" size="30" id="s" value="[1,2,3,4,5]">
+        取值量:<input id="n" name="n" size="2" value="3"/>
+        <button onclick="com()">计算</button>
+        <div id="r"></div>
+<?php backend\components\JsBlock::begin() ?>
+<script type="text/javascript">
+    var url = '<?= \yii\helpers\Url::toRoute(['api/type', 'id' => $model['id']]) ?>';
+    Vue.http.get(url).then((res) => {
+        vm.original = res.data;
+        vm.specifications = _.toArray(res.data.specifications);
+    });
 
+            function com(){
+                var s = eval(document.getElementById('s').value);
+                var n = document.getElementById('n').value;
+                var r = document.getElementById('r');
+                r.innerHTML = "";
+                for (var i=0;i<Math.pow(2, s.length);i++){
+                    var a = 0;
+                    var b = "";
+                    for (var j=0;j<s.length;j++){
+                        if (i>>j&1){
+                            a++;
+                            b += s[j];
+                        }
+                    }
+                    if (a==n){
+                        r.innerHTML += (b+"<br/>");
+                    }
+                }
+            }
+            
+            var res = [];
+            if (vm.specifications.length > 0) {
+            console.info('fff');
+            } else {
+            console.info('d');
+            }
+            
+      var specArr = [{"specid":"20111201180241703974","specname":"颜色","showtype":1,"showway":0,"selvalues":[{"valueid":"1","valtext":"黑色","specimg":"/_B/2011-12-01/2159112965553.gif","ctmtext":"黑色","ctmimg":"/_B/2011-12-01/2159112965553.gif","productpics":[]},{"valueid":"6","valtext":"黄色","specimg":"/_B/2011-12-01/2217398598572.gif","ctmtext":"黄色","ctmimg":"/_B/2011-12-01/2217398598572.gif","productpics":[]}]},{"specid":"20111201185422843990","specname":"尺码","showtype":0,"showway":1,"selvalues":[{"valueid":"7","valtext":"均码","specimg":"","ctmtext":"均码","ctmimg":"","productpics":[]},{"valueid":"8","valtext":"XXS","specimg":"","ctmtext":"XXS","ctmimg":"","productpics":[]}]},{"specid":"20111201180241703999","specname":"产地","showtype":1,"showway":0,"selvalues":[{"valueid":"1001","valtext":"美国","specimg":"/_B/2011-12-01/2159112965553.gif","ctmtext":"美国","ctmimg":"/_B/2011-12-01/2159112965553.gif","productpics":[]},{"valueid":"1002","valtext":"法国","specimg":"/_B/2011-12-01/2217398598572.gif","ctmtext":"法国","ctmimg":"/_B/2011-12-01/2217398598572.gif","productpics":[]},{"valueid":"1003","valtext":"英国","specimg":"/_B/2011-12-01/2159112965553.gif","ctmtext":"英国","ctmimg":"/_B/2011-12-01/2159112965553.gif","productpics":[]}]}];
+  
+  var arrResult = new Array();
+  console.info(specArr[0]);
+  for(var z=0; z<specArr[0].selvalues.length; z++) {
+    arrResult[arrResult.length] = specArr[0].selvalues[z].valtext;
+  }
+
+  for(var i=1; i<specArr.length; i++) {
+    arrResult = CombineArray(arrResult, specArr[i].selvalues);
+  }  
+
+  function CombineArray(arr1, arr2) {
+    var arrResultSub = new Array();
+    for(var i=0; i<arr1.length; i++) {
+        for(var k=0; k<arr2.length; k++) {
+            arrResultSub[arrResultSub.length] = arr1[i] + "," + arr2[k].valtext;
+        }
+    }
+    return arrResultSub;
+  }
+
+  for(var j=0; j<arrResult.length; j++) {
+    document.writeln(arrResult[j]);
+  }
+</script>
+<?php backend\components\JsBlock::end() ?>
