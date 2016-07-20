@@ -99,7 +99,7 @@ class Brand extends BaseActiveRecord
     {
         if (parent::beforeSave($insert)) {
             if (empty($this->alias) && !empty($this->name)) {
-                $this->alias = Inflector::alias($this->name);
+                $this->alias = Inflector::slug($this->name);
             }
 
             return true;
