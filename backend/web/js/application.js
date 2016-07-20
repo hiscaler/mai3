@@ -266,32 +266,59 @@ $(document).on('click', '.btn-delete-dynamic-table-row', function () {
     $(this).parent().parent().remove();
     return false;
 });
+var Mai = {};
+Mai.reference = {
+    item: {
+        snPrefix: null,
+        name: null,
+        price: {
+            member: 0,
+            market: 0
+        }
+    }
+};
 var vm = new Vue({
     el: '#mai3-item-specifications',
     data: {
         original: {},
         specifications: [],
+        checkedSpecificationValues: [],
         specificationValueCombinationList: []
     },
     methods: {
         checkSpecificationValue: function (event) {
             var $obj = $(event.target),
-                value = $obj.val();
+                value = $obj.val(),
+                specificationValueCombinationList = [];
             if ($obj.prop('checked') === true) {
-                var exists = this.specificationValueCombinationList.find(function (data) {
+                var exists = this.checkedSpecificationValues.find(function (data) {
                     return data.id == value ? true : false;
                 });
                 if (!exists) {
-                    this.specificationValueCombinationList.push({id: value, text: $('#label-' + value).text(), price: {member: 1, market: 0.3}});
+                    this.checkedSpecificationValues.push({
+                        id: value,
+                        sn: Mai.reference.item.snPrefix + (this.specificationValueCombinationList.length + 1),
+                        name: Mai.reference.item.name + $('#label-' + value).text(),
+                        text: $('#label-' + value).text(),
+                        price: {
+                            member: Mai.reference.item.price.member,
+                            market: Mai.reference.item.price.market
+                        }});
                 }
             } else {
-                var index = _.findIndex(this.specificationValueCombinationList, function (data) {
+                var index = _.findIndex(this.checkedSpecificationValues, function (data) {
                     return data.id == value;
                 });
                 if (index !== -1) {
-                    this.specificationValueCombinationList.splice(index, 1);
+                    this.checkedSpecificationValues.splice(index, 1);
                 }
             }
+            
+            for (var i = 0, len = this.checkedSpecificationValues.length; i < len; i++) {
+                var v = this.checkedSpecificationValues[i];
+                specificationValueCombinationList.push(v);
+            }
+            this.specificationValueCombinationList = specificationValueCombinationList;
         }    
     }
     

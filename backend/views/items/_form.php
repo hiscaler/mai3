@@ -144,23 +144,24 @@ use yii\widgets\ActiveForm;
                                                 <th>属性值</th>
                                                 <th class="item-sn">品号</th>
                                                 <th>品名</th>
-                                                <th class="price">零售价</th>
+                                                <th class="price">市场价</th>
                                                 <th class="price">会员价</th>
-                                                <th class="price">优惠价</th>
-                                                <th class="ordering">排序</th>
+                                                <th class="button-1">默认</th>
                                                 <th class="last button-1">状态</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="item in specificationValueCombinationList">
-                                                <td>{{ item.text }}</td>
-                                                <td><input class="sn" type="text" value="{{ item.sn }}" /></td>
-                                                <td><input class="name" type="text" value="{{ item.name }}" /></td>
-                                                <td><input class="price" type="text" value="{{ item.price.market }}" /></td>
-                                                <td><input class="price" type="text" value="{{ item.price.member }}" /></td>
-                                                <td><input class="price" type="text" value="" /></td>
-                                                <td><input class="ordering" type="text" value="1" /></td>
-                                                <td><input type="checkbox" value="1" /></td>
+                                                <td>
+                                                    {{ item.text }}
+                                                    <input type="hidden" name="Item[skuItems][specification_value_ids][]" value="{{ item.id }}" />
+                                                </td>
+                                                <td><input class="sn" type="text" name="Item[skuItems][sn][]" value="{{ item.sn }}" /></td>
+                                                <td><input class="name" type="text" name="Item[skuItems][name][]" value="{{ item.name }}" /></td>
+                                                <td><input class="price" type="text" name="Item[skuItems][market_price][]" value="{{ item.price.market }}" /></td>
+                                                <td><input class="price" type="text" name="Item[skuItems][member_price][]" value="{{ item.price.member }}" /></td>
+                                                <td><input type="radio" name="Item[skuItems][default][]" value="1" /></td>
+                                                <td><input type="checkbox" name="Item[skuItems][enabled][]" value="1" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -171,82 +172,91 @@ use yii\widgets\ActiveForm;
                             </div>
                         </div>
                     </div>
-                    <!-- // 商品规格 -->
-
-                    <div class="form-group buttons">
-                        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
-                    </div>
+                    <!-- // 商品规格 -->                   
 
                 </div>
             </div>
-
+            <div class="form-group buttons">
+                <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+            </div>
+            
             <?php ActiveForm::end(); ?>
+            
         </div>
     </div>
 </div>
- 数据:<input name="s" size="30" id="s" value="[1,2,3,4,5]">
-        取值量:<input id="n" name="n" size="2" value="3"/>
-        <button onclick="com()">计算</button>
-        <div id="r"></div>
+数据:<input name="s" size="30" id="s" value="[1,2,3,4,5]">
+取值量:<input id="n" name="n" size="2" value="3"/>
+<button onclick="com()">计算</button>
+<div id="r"></div>
 <?php backend\components\JsBlock::begin() ?>
 <script type="text/javascript">
     var url = '<?= \yii\helpers\Url::toRoute(['api/type', 'id' => $model['id']]) ?>';
-    Vue.http.get(url).then((res) => {
+        Vue.http.get(url).then((res) => {
         vm.original = res.data;
         vm.specifications = _.toArray(res.data.specifications);
     });
-
-            function com(){
-                var s = eval(document.getElementById('s').value);
-                var n = document.getElementById('n').value;
-                var r = document.getElementById('r');
-                r.innerHTML = "";
+    function com(){
+    var s = eval(document.getElementById('s').value);
+    var n = document.getElementById('n').value;
+    var r = document.getElementById('r');
+    r.innerHTML = "";
                 for (var i=0;i<Math.pow(2, s.length);i++){
-                    var a = 0;
-                    var b = "";
+    var a = 0;
+    var b = "";
                     for (var j=0;j<s.length;j++){
                         if (i>>j&1){
-                            a++;
-                            b += s[j];
-                        }
-                    }
+    a++;
+    b += s[j];
+    }
+    }
                     if (a==n){
                         r.innerHTML += (b+"<br/>");
-                    }
-                }
-            }
-            
-            var res = [];
-            if (vm.specifications.length > 0) {
-            console.info('fff');
-            } else {
-            console.info('d');
-            }
-            
+    }
+    }
+    }
+
+    var res = [];
+    if (vm.specifications.length > 0) {
+    console.info('fff');
+    } else {
+    console.info('d');
+    }
+
       var specArr = [{"specid":"20111201180241703974","specname":"颜色","showtype":1,"showway":0,"selvalues":[{"valueid":"1","valtext":"黑色","specimg":"/_B/2011-12-01/2159112965553.gif","ctmtext":"黑色","ctmimg":"/_B/2011-12-01/2159112965553.gif","productpics":[]},{"valueid":"6","valtext":"黄色","specimg":"/_B/2011-12-01/2217398598572.gif","ctmtext":"黄色","ctmimg":"/_B/2011-12-01/2217398598572.gif","productpics":[]}]},{"specid":"20111201185422843990","specname":"尺码","showtype":0,"showway":1,"selvalues":[{"valueid":"7","valtext":"均码","specimg":"","ctmtext":"均码","ctmimg":"","productpics":[]},{"valueid":"8","valtext":"XXS","specimg":"","ctmtext":"XXS","ctmimg":"","productpics":[]}]},{"specid":"20111201180241703999","specname":"产地","showtype":1,"showway":0,"selvalues":[{"valueid":"1001","valtext":"美国","specimg":"/_B/2011-12-01/2159112965553.gif","ctmtext":"美国","ctmimg":"/_B/2011-12-01/2159112965553.gif","productpics":[]},{"valueid":"1002","valtext":"法国","specimg":"/_B/2011-12-01/2217398598572.gif","ctmtext":"法国","ctmimg":"/_B/2011-12-01/2217398598572.gif","productpics":[]},{"valueid":"1003","valtext":"英国","specimg":"/_B/2011-12-01/2159112965553.gif","ctmtext":"英国","ctmimg":"/_B/2011-12-01/2159112965553.gif","productpics":[]}]}];
   
-  var arrResult = new Array();
-  console.info(specArr[0]);
+    var arrResult = new Array();
+    console.info(specArr[0]);
   for(var z=0; z<specArr[0].selvalues.length; z++) {
     arrResult[arrResult.length] = specArr[0].selvalues[z].valtext;
-  }
+    }
 
   for(var i=1; i<specArr.length; i++) {
     arrResult = CombineArray(arrResult, specArr[i].selvalues);
-  }  
+    }
 
-  function CombineArray(arr1, arr2) {
+    function CombineArray(arr1, arr2) {
     var arrResultSub = new Array();
     for(var i=0; i<arr1.length; i++) {
         for(var k=0; k<arr2.length; k++) {
-            arrResultSub[arrResultSub.length] = arr1[i] + "," + arr2[k].valtext;
-        }
+    arrResultSub[arrResultSub.length] = arr1[i] + "," + arr2[k].valtext;
+    }
     }
     return arrResultSub;
-  }
+    }
 
-  for(var j=0; j<arrResult.length; j++) {
+    for (var j = 0; j < arrResult.length; j++) {
     document.writeln(arrResult[j]);
-  }
+    }
+<?php if (!$model->isNewRecord): ?>
+        Mai.reference.item = {
+            name: '<?= $model->name ?>',
+            snPrefix: '<?= $model->sn ?>',
+            price: {
+                member: <?= $model->member_price ?>,
+                market: <?= $model->market_price ?>
+            }
+        };
+<?php endif; ?>
 </script>
 <?php backend\components\JsBlock::end() ?>

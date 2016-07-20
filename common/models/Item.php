@@ -38,8 +38,25 @@ use yii\web\UploadedFile;
 class Item extends BaseActiveRecord
 {
 
+    private $_content = null;
+
+    /**
+     * 商品描述
+     * @var string
+     */
     public $content;
+
+    /**
+     * 商品图片
+     * @var array
+     */
     public $imageFiles;
+
+    /**
+     * SKU 列表
+     * @var array
+     */
+    public $skuItems;
 
     /**
      * @inheritdoc
@@ -65,7 +82,7 @@ class Item extends BaseActiveRecord
             ['sn', 'unique', 'targetAttribute' => ['sn', 'tenant_id']],
             [['name'], 'string', 'max' => 50],
             [['picture_path', 'keywords'], 'string', 'max' => 100],
-            [['imageFiles'], 'safe'],
+            [['imageFiles', 'skuItems'], 'safe'],
         ];
     }
 
@@ -132,7 +149,7 @@ class Item extends BaseActiveRecord
     {
         parent::afterFind();
         if (!$this->isNewRecord) {
-            $this->content = Yii::$app->getDb()->createCommand('SELECT [[content]] FROM {{%item_content}} WHERE [[item_id]] = :itemId')->bindValue(':itemId', $this->id, PDO::PARAM_INT)->queryScalar();
+            $this->content = $this->_content = Yii::$app->getDb()->createCommand('SELECT [[content]] FROM {{%item_content}} WHERE [[item_id]] = :itemId')->bindValue(':itemId', $this->id, PDO::PARAM_INT)->queryScalar();
         }
     }
 
@@ -141,8 +158,9 @@ class Item extends BaseActiveRecord
         parent::afterSave($insert, $changedAttributes);
         $userId = Yii::$app->getUser()->getId();
         $now = time();
+        $db = Yii::$app->getDb();
         if ($insert) {
-            Yii::$app->getDb()->createCommand()->insert('{{%item_content}}', [
+            $db->createCommand()->insert('{{%item_content}}', [
                 'item_id' => $this->id,
                 'content' => $this->content,
                 'created_at' => $now,
@@ -151,13 +169,14 @@ class Item extends BaseActiveRecord
                 'updated_by' => $userId,
             ])->execute();
         } else {
-            Yii::$app->getDb()->createCommand()->update('{{%item_content}}', [
-                'content' => $this->content,
-                'updated_at' => $now,
-                'updated_by' => $userId
-                ], ['item_id' => $this->id])->execute();
+            if ($this->content != $this->_content) {
+                $db->createCommand()->update('{{%item_content}}', [
+                    'content' => $this->content,
+                    'updated_at' => $now,
+                    'updated_by' => $userId
+                    ], ['item_id' => $this->id])->execute();
+            }
         }
-
 
         // 处理上传的图片
         $images = $this->imageFiles;
@@ -203,7 +222,52 @@ class Item extends BaseActiveRecord
             }
 
             if ($batchRows) {
-                Yii::$app->getDb()->createCommand()->batchInsert('{{%item_image}}', array_keys($columns), $batchRows)->execute();
+                $db->createCommand()->batchInsert('{{%item_image}}', array_keys($columns), $batchRows)->execute();
+            }
+        }
+
+        // SKU 处理
+        $skuItems = $this->skuItems;
+        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item_sku}} WHERE [[sku_sn]] = :sn');
+        if (isset($skuItems['specification_value_ids']) && $skuItems['specification_value_ids']) {
+            foreach ($skuItems['specification_value_ids'] as $key => $values) {
+                $skuSn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : $this->sn . ($key + 1));
+                $columns = [
+                    'item_id' => $this->id,
+                    'sku_sn' => $skuSn,
+                    'name' => isset($skuItems['name'][$key]) ? $skuItems['name'][$key] : $this->name,
+                    'market_price' => isset($skuItems['market_price'][$key]) ? $skuItems['name'][$key] : $this->market_price,
+                    'member_price' => isset($skuItems['member_price'][$key]) ? $skuItems['name'][$key] : $this->member_price,
+                    'cost_price' => 0,
+                    'default' => isset($skuItems['default'][$key]) && $skuItems['default'][$key] ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE,
+                    'created_at' => $now,
+                    'created_by' => $userId,
+                    'updated_at' => $now,
+                    'updated_by' => $userId,
+                ];
+                $skuId = $skuCmd->bindValue(':sn', $skuSn)->queryScalar();
+                if ($skuId) {
+                    // update
+                    unset($columns['created_at'], $columns['created_by']);
+                    $db->createCommand()->update('{{%item_sku}}', $columns, ['id' => $skuId])->execute();
+                } else {
+                    $db->createCommand()->insert('{{%item_sku}}', $columns)->execute();
+                    $skuId = $db->getLastInsertID();
+                }
+
+                $batchRows = [];
+                foreach (explode(',', $values) as $value) {
+                    $value = abs((int) $value);
+                    if ($value) {
+                        $batchRows[] = [
+                            'sku_id' => $skuId,
+                            'specfication_value_id' => $value,
+                        ];
+                    }
+                }
+                if ($batchRows) {
+                    $db->createCommand()->batchInsert('{{%item_sku_specification_value}}', ['sku_id', 'specfication_value_id'], $batchRows)->execute();
+                }
             }
         }
     }
