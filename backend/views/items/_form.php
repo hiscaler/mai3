@@ -142,20 +142,24 @@ use yii\widgets\ActiveForm;
                                         <thead>
                                             <tr>
                                                 <th>属性值</th>
-                                                <th>零售价</th>
-                                                <th>会员价</th>
-                                                <th>优惠价</th>
-                                                <th>排序</th>
+                                                <th class="item-sn">品号</th>
+                                                <th>品名</th>
+                                                <th class="price">零售价</th>
+                                                <th class="price">会员价</th>
+                                                <th class="price">优惠价</th>
+                                                <th class="ordering">排序</th>
                                                 <th class="last button-1">状态</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr v-for="item in specificationValueCombinationList">
                                                 <td>{{ item.text }}</td>
-                                                <td><input type="text" value="{{ item.price.market }}" /></td>
-                                                <td><input type="text" value="{{ item.price.member }}" /></td>
-                                                <td><input type="text" value="" /></td>
-                                                <td><input type="text" value="1" /></td>
+                                                <td><input class="sn" type="text" value="{{ item.sn }}" /></td>
+                                                <td><input class="name" type="text" value="{{ item.name }}" /></td>
+                                                <td><input class="price" type="text" value="{{ item.price.market }}" /></td>
+                                                <td><input class="price" type="text" value="{{ item.price.member }}" /></td>
+                                                <td><input class="price" type="text" value="" /></td>
+                                                <td><input class="ordering" type="text" value="1" /></td>
                                                 <td><input type="checkbox" value="1" /></td>
                                             </tr>
                                         </tbody>

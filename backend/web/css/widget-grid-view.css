@@ -435,3 +435,37 @@
     margin-left: -5px;
     background-color: #F5F5F5;
 }
+/*******************************************************************************
+ * 商品规格选择表单
+ ******************************************************************************/
+#mai3-item-specification-values-combination-render td {
+    text-align: center;
+}
+#mai3-item-specification-values-combination-render input {
+    background: none;
+    border: none;
+    border-bottom: #4362BF solid 1px;
+    border-radius: 0;
+    text-align: center;
+}
+#mai3-item-specification-values-combination-render th.item-sn {
+    width: 150px;
+}
+#mai3-item-specification-values-combination-render input.sn {
+    text-align: left;
+    width: 130px;
+}
+#mai3-item-specification-values-combination-render input.name {
+    text-align: left;
+    width: 100%;
+}
+#mai3-item-specification-values-combination-render input.ordering {
+    width: 30px;
+}
+#mai3-item-specification-values-combination-render th.price {
+    width: 80px;
+}
+#mai3-item-specification-values-combination-render input.price {
+    width: 60px;
+    margin: 0 auto;
+}
