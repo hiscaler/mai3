@@ -282,43 +282,76 @@ var vm = new Vue({
     data: {
         original: {},
         specifications: [],
-        checkedSpecificationValues: [],
-        specificationValueCombinationList: []
+        specificationValueCombinationList: [],
+        rawSpecificationValues: []
     },
     methods: {
         checkSpecificationValue: function (event) {
             var $obj = $(event.target),
-                value = $obj.val(),
-                specificationValueCombinationList = [];
+                specificationId = $obj.attr('data-specification'),
+                valueId = $obj.val(),
+                rawSpecificationValues = [];
             if ($obj.prop('checked') === true) {
-                var exists = this.checkedSpecificationValues.find(function (data) {
-                    return data.id == value ? true : false;
+                console.info(this.rawSpecificationValues[specificationId]);
+                if (this.rawSpecificationValues[specificationId] === undefined) {
+                    this.rawSpecificationValues[specificationId] = {
+                        id: specificationId,
+                        values: []
+                    };
+                }               
+                this.rawSpecificationValues[specificationId]['values'].push({
+                    id: valueId,
+                    name: $('#label-' + valueId).text()
                 });
-                if (!exists) {
-                    this.checkedSpecificationValues.push({
-                        id: value,
-                        sn: Mai.reference.item.snPrefix + (this.specificationValueCombinationList.length + 1),
-                        name: Mai.reference.item.name + $('#label-' + value).text(),
-                        text: $('#label-' + value).text(),
-                        price: {
-                            member: Mai.reference.item.price.member,
-                            market: Mai.reference.item.price.market
-                        }});
-                }
             } else {
-                var index = _.findIndex(this.checkedSpecificationValues, function (data) {
-                    return data.id == value;
+                var index = _.findIndex(this.rawSpecificationValues[specificationId]['values'], function (data) {
+                    return data.id == valueId;
                 });
                 if (index !== -1) {
-                    this.checkedSpecificationValues.splice(index, 1);
+                    this.rawSpecificationValues[specificationId]['values'].splice(index, 1);
                 }
             }
             
-            for (var i = 0, len = this.checkedSpecificationValues.length; i < len; i++) {
-                var v = this.checkedSpecificationValues[i];
-                specificationValueCombinationList.push(v);
+            arrResult = [];
+            for (var z = 0; z < this.rawSpecificationValues[specificationId].values.length; z++) {
+                arrResult[arrResult.length] = {
+                    id: this.rawSpecificationValues[specificationId].values[z].id,
+                    name: this.rawSpecificationValues[specificationId].values[z].name
+                };
             }
-            this.specificationValueCombinationList = specificationValueCombinationList;
+
+            for (var i in this.rawSpecificationValues) {
+                if (this.rawSpecificationValues[i].id == specificationId) {
+                    continue;
+                }
+                arrResult = CombineArray(arrResult, this.rawSpecificationValues[i].values);
+            }
+
+            function CombineArray(arr1, arr2) {
+                var arrResultSub = new Array();
+                for (var i = 0; i < arr1.length; i++) {
+                    for (var k = 0; k < arr2.length; k++) {
+                        arrResultSub[arrResultSub.length] = {
+                            id: arr1[i]['id'] + "," + arr2[k].id,
+                            name: arr1[i]['name'] + "、" + arr2[k].name
+                        };
+                    }
+                }
+                return arrResultSub;
+            }
+            console.info(arrResult);
+            this.specificationValueCombinationList = [];
+            for (i in arrResult) {
+                this.specificationValueCombinationList.push({
+                    id: arrResult[i].id,
+                    sn: Mai.reference.item.snPrefix + (this.specificationValueCombinationList.length + 1),
+                    name: Mai.reference.item.name + ' ' + arrResult[i].name,
+                    text: arrResult[i].name,
+                    price: {
+                        member: Mai.reference.item.price.member,
+                        market: Mai.reference.item.price.market
+                    }});
+            }
         }    
     }
     

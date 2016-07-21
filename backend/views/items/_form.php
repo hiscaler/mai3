@@ -130,7 +130,7 @@ use yii\widgets\ActiveForm;
                                         <div class="list">
                                             <template v-for="value in spec.values">
                                                 <span>
-                                                    <input v-on:click="checkSpecificationValue" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}">
+                                                    <input v-on:click="checkSpecificationValue" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}" data-specification="{{ spec.id }}">
                                                     <label id="label-{{ value.id }}" for="specification-value-{{ value.id }}">{{ value.value }}</label>
                                                 </span>
                                             </template>
