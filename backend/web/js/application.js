@@ -313,7 +313,7 @@ var vm = new Vue({
             }
             
             arrResult = [];
-            for (var z = 0; z < this.rawSpecificationValues[specificationId].values.length; z++) {
+            for (var z = 0, l = this.rawSpecificationValues[specificationId].values.length; z < l; z++) {
                 arrResult[arrResult.length] = {
                     id: this.rawSpecificationValues[specificationId].values[z].id,
                     name: this.rawSpecificationValues[specificationId].values[z].name
@@ -343,6 +343,7 @@ var vm = new Vue({
             this.specificationValueCombinationList = [];
             for (i in arrResult) {
                 this.specificationValueCombinationList.push({
+                    _id: null,
                     id: arrResult[i].id,
                     sn: Mai.reference.item.snPrefix + (this.specificationValueCombinationList.length + 1),
                     name: Mai.reference.item.name + ' ' + arrResult[i].name,
@@ -350,7 +351,8 @@ var vm = new Vue({
                     price: {
                         member: Mai.reference.item.price.member,
                         market: Mai.reference.item.price.market
-                    }});
+                    }
+                });
             }
         }    
     }
