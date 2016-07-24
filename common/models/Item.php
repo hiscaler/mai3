@@ -232,7 +232,15 @@ class Item extends BaseActiveRecord
         $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item_sku}} WHERE [[sku_sn]] = :sn AND item_id = ' . $this->id);
         if (isset($skuItems['id']) && $skuItems['id']) {
             foreach ($skuItems['id'] as $key => $id) {
-                $skuSn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : $this->sn . (sprintf('%03d', $key + 1)));
+                $skuSn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : null);
+                if (empty($skuSn)) {
+                    if (!$insert) {
+                        $cmd->delete('{{%item_sku_specification_value}}', ['sku_id' => $id])->execute();
+                        $cmd->delete('{{%item_sku}}', ['id' => $id])->execute();
+                    }
+                    continue;
+                }
+
                 $columns = [
                     'item_id' => $this->id,
                     'sku_sn' => $skuSn,
@@ -256,10 +264,12 @@ class Item extends BaseActiveRecord
                     $skuId = $db->getLastInsertID();
                 }
 
-                $existsSpecificationValueIds = $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_sku_specification_value}} WHERE [[sku_id]] = :skuId', [':skuId' => $skuId])->queryColumn();
+                $existsSpecificationValueIds = $insert ? [] : $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_sku_specification_value}} WHERE [[sku_id]] = :skuId', [':skuId' => $skuId])->queryColumn();
                 $newSpecificationValueIds = explode(',', $skuItems['specification_value_ids'][$key]);
                 if (empty($existsSpecificationValueIds) || array_diff($existsSpecificationValueIds, $newSpecificationValueIds)) {
-                    $cmd->delete('{{%item_sku_specification_value}}', ['sku_id' => $skuId])->execute();
+                    if (!$insert) {
+                        $cmd->delete('{{%item_sku_specification_value}}', ['sku_id' => $skuId])->execute();
+                    }
                     $batchInsertRows = [];
                     foreach ($newSpecificationValueIds as $value) {
                         $value = abs((int) $value);
