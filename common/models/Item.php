@@ -185,7 +185,7 @@ class Item extends BaseActiveRecord
             $imageUrls = $images['url'];
             $imageDescriptions = $images['description'];
 
-            $batchRows = [];
+            $batchInsertRows = [];
             $urlValidator = new UrlValidator();
             $imageSavePath = '/uploads/' . date('Ymd') . '/';
             $checkDirectory = true;
@@ -216,28 +216,29 @@ class Item extends BaseActiveRecord
                             'created_at' => $now,
                             'created_by' => $userId
                         ];
-                        $batchRows[] = array_values($columns);
+                        $batchInsertRows[] = array_values($columns);
                     }
                 }
             }
 
-            if ($batchRows) {
-                $db->createCommand()->batchInsert('{{%item_image}}', array_keys($columns), $batchRows)->execute();
+            if ($batchInsertRows) {
+                $db->createCommand()->batchInsert('{{%item_image}}', array_keys($columns), $batchInsertRows)->execute();
             }
         }
 
         // SKU 处理
         $skuItems = $this->skuItems;
-        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item_sku}} WHERE [[sku_sn]] = :sn');
-        if (isset($skuItems['specification_value_ids']) && $skuItems['specification_value_ids']) {
-            foreach ($skuItems['specification_value_ids'] as $key => $values) {
-                $skuSn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : $this->sn . ($key + 1));
+        $cmd = $db->createCommand();
+        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item_sku}} WHERE [[sku_sn]] = :sn AND item_id = ' . $this->id);
+        if (isset($skuItems['id']) && $skuItems['id']) {
+            foreach ($skuItems['id'] as $key => $id) {
+                $skuSn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : $this->sn . (sprintf('%03d', $key + 1)));
                 $columns = [
                     'item_id' => $this->id,
                     'sku_sn' => $skuSn,
                     'name' => isset($skuItems['name'][$key]) ? $skuItems['name'][$key] : $this->name,
-                    'market_price' => isset($skuItems['market_price'][$key]) ? $skuItems['name'][$key] : $this->market_price,
-                    'member_price' => isset($skuItems['member_price'][$key]) ? $skuItems['name'][$key] : $this->member_price,
+                    'market_price' => isset($skuItems['market_price'][$key]) ? $skuItems['market_price'][$key] : $this->market_price,
+                    'member_price' => isset($skuItems['member_price'][$key]) ? $skuItems['member_price'][$key] : $this->member_price,
                     'cost_price' => 0,
                     'default' => isset($skuItems['default'][$key]) && $skuItems['default'][$key] ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE,
                     'created_at' => $now,
@@ -249,24 +250,29 @@ class Item extends BaseActiveRecord
                 if ($skuId) {
                     // update
                     unset($columns['created_at'], $columns['created_by']);
-                    $db->createCommand()->update('{{%item_sku}}', $columns, ['id' => $skuId])->execute();
+                    $cmd->update('{{%item_sku}}', $columns, ['id' => $skuId])->execute();
                 } else {
-                    $db->createCommand()->insert('{{%item_sku}}', $columns)->execute();
+                    $cmd->insert('{{%item_sku}}', $columns)->execute();
                     $skuId = $db->getLastInsertID();
                 }
 
-                $batchRows = [];
-                foreach (explode(',', $values) as $value) {
-                    $value = abs((int) $value);
-                    if ($value) {
-                        $batchRows[] = [
-                            'sku_id' => $skuId,
-                            'specification_value_id' => $value,
-                        ];
+                $existsSpecificationValueIds = $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_sku_specification_value}} WHERE [[sku_id]] = :skuId', [':skuId' => $skuId])->queryColumn();
+                $newSpecificationValueIds = explode(',', $skuItems['specification_value_ids'][$key]);
+                if (empty($existsSpecificationValueIds) || array_diff($existsSpecificationValueIds, $newSpecificationValueIds)) {
+                    $cmd->delete('{{%item_sku_specification_value}}', ['sku_id' => $skuId])->execute();
+                    $batchInsertRows = [];
+                    foreach ($newSpecificationValueIds as $value) {
+                        $value = abs((int) $value);
+                        if ($value) {
+                            $batchInsertRows[] = [
+                                'sku_id' => $skuId,
+                                'specification_value_id' => $value,
+                            ];
+                        }
                     }
-                }
-                if ($batchRows) {
-                    $db->createCommand()->batchInsert('{{%item_sku_specification_value}}', ['sku_id', 'specification_value_id'], $batchRows)->execute();
+                    if ($batchInsertRows) {
+                        $cmd->batchInsert('{{%item_sku_specification_value}}', ['sku_id', 'specification_value_id'], $batchInsertRows)->execute();
+                    }
                 }
             }
         }

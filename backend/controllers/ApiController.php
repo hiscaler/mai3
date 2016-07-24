@@ -79,11 +79,11 @@ class ApiController extends \yii\rest\Controller
                             'id' => $data['id'],
                             'values' => []
                         ];
-                        $checkedSpecificationValues[$data['id']]['values'][] = [
-                            'id' => $data['value_id'],
-                            'name' => $data['type'] == Specification::TYPE_TEXT ? $data['text'] : $data['icon_path'],
-                        ];
                     }
+                    $checkedSpecificationValues[$data['id']]['values'][] = [
+                        'id' => $data['value_id'],
+                        'name' => $data['type'] == Specification::TYPE_TEXT ? $data['text'] : $data['icon_path'],
+                    ];
                 }
             }
             $res['specifications'] = $specifications;
@@ -113,7 +113,7 @@ class ApiController extends \yii\rest\Controller
                     $skuList[$key]['specificationValueString'] = implode(',', $skuList[$key]['values']);
                     $skuList[$key]['price'] = [
                         'market' => $item['market_price'],
-                        'mebmer' => $item['member_price'],
+                        'member' => $item['member_price'],
                     ];
                     unset($skuList[$key]['market_price'], $skuList[$key]['member_price']);
 
