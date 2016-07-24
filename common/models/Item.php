@@ -261,12 +261,12 @@ class Item extends BaseActiveRecord
                     if ($value) {
                         $batchRows[] = [
                             'sku_id' => $skuId,
-                            'specfication_value_id' => $value,
+                            'specification_value_id' => $value,
                         ];
                     }
                 }
                 if ($batchRows) {
-                    $db->createCommand()->batchInsert('{{%item_sku_specification_value}}', ['sku_id', 'specfication_value_id'], $batchRows)->execute();
+                    $db->createCommand()->batchInsert('{{%item_sku_specification_value}}', ['sku_id', 'specification_value_id'], $batchRows)->execute();
                 }
             }
         }

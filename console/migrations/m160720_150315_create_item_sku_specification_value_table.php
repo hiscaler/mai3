@@ -13,7 +13,7 @@ class m160720_150315_create_item_sku_specification_value_table extends Migration
         $this->createTable('{{%item_sku_specification_value}}', [
             'id' => $this->primaryKey(),
             'sku_id' => $this->integer()->notNull(),
-            'specfication_value_id' => $this->integer()->notNull(),
+            'specification_value_id' => $this->integer()->notNull(),
         ]);
     }
 
