@@ -281,8 +281,9 @@ var vm = new Vue({
     el: '#mai3-item-specifications',
     data: {
         original: {},
+        _sku: [],
+        sku: [],
         specifications: [],
-        specificationValueCombinationList: [],
         rawSpecificationValues: []
     },
     methods: {
@@ -292,7 +293,6 @@ var vm = new Vue({
                 valueId = $obj.val(),
                 rawSpecificationValues = [];
             if ($obj.prop('checked') === true) {
-                console.info(this.rawSpecificationValues[specificationId]);
                 if (this.rawSpecificationValues[specificationId] === undefined) {
                     this.rawSpecificationValues[specificationId] = {
                         id: specificationId,
@@ -315,6 +315,7 @@ var vm = new Vue({
             arrResult = [];
             for (var z = 0, l = this.rawSpecificationValues[specificationId].values.length; z < l; z++) {
                 arrResult[arrResult.length] = {
+                    _id: [this.rawSpecificationValues[specificationId].values[z].id],
                     id: this.rawSpecificationValues[specificationId].values[z].id,
                     name: this.rawSpecificationValues[specificationId].values[z].name
                 };
@@ -332,6 +333,7 @@ var vm = new Vue({
                 for (var i = 0; i < arr1.length; i++) {
                     for (var k = 0; k < arr2.length; k++) {
                         arrResultSub[arrResultSub.length] = {
+                            _id: arr1[i]['_id'].concat([arr2[k].id]),
                             id: arr1[i]['id'] + "," + arr2[k].id,
                             name: arr1[i]['name'] + "、" + arr2[k].name
                         };
@@ -340,12 +342,46 @@ var vm = new Vue({
                 return arrResultSub;
             }
             console.info(arrResult);
-            this.specificationValueCombinationList = [];
+            function generateSkuSn(prefix) {
+                var sn = '';
+                prefix = prefix === undefined || prefix === null ? '' : prefix;
+                for (var i = 1, l = 100; i <= l; i++) {
+                    
+                }
+                
+                return sn;
+            }
+            
+            // 添加前导零
+            function zeroFill(number, width)
+            {
+                width -= number.toString().length;
+                if (width > 0)
+                {
+                    return new Array(width + (/\./.test(number) ? 2 : 1)).join('0') + number;
+                }
+                return number + ""; // always return a string
+            }
+            
+            this.sku = [];
             for (i in arrResult) {
-                this.specificationValueCombinationList.push({
-                    _id: null,
-                    id: arrResult[i].id,
-                    sn: Mai.reference.item.snPrefix + (this.specificationValueCombinationList.length + 1),
+                var exists = false;
+                for (j in this._sku) {
+                    if (_.difference(this._sku[j].specificationValueString.split(','), arrResult[i]._id).length === 0) {
+                        this.sku.push(this._sku[j]);
+                        exists = true;
+                        break;
+                    }
+                }
+                console.info(exists);
+                if (exists) {
+                    continue;
+                }
+                
+                this.sku.push({
+                    specificationValueArray: arrResult[i]._id,
+                    specificationValueString: arrResult[i].id,
+                    sn: Mai.reference.item.snPrefix + zeroFill(_.uniqueId(), 3),
                     name: Mai.reference.item.name + ' ' + arrResult[i].name,
                     text: arrResult[i].name,
                     price: {

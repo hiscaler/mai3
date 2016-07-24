@@ -151,10 +151,11 @@ use yii\widgets\ActiveForm;
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="item in specificationValueCombinationList">
+                                            <tr v-for="item in sku">
                                                 <td>
                                                     {{ item.text }}
-                                                    <input type="hidden" name="Item[skuItems][specification_value_ids][]" value="{{ item.id }}" />
+                                                    <input type="hidden" name="Item[skuItems][id][]" value="{{ item.id }}" />
+                                                    <input type="hidden" name="Item[skuItems][specification_value_ids][]" value="{{ item.specificationValueString }}" />
                                                 </td>
                                                 <td><input class="sn" type="text" name="Item[skuItems][sn][]" value="{{ item.sn }}" /></td>
                                                 <td><input class="name" type="text" name="Item[skuItems][name][]" value="{{ item.name }}" /></td>
@@ -192,6 +193,9 @@ use yii\widgets\ActiveForm;
     Vue.http.get(url).then((res) => {
         vm.original = res.data;
         vm.specifications = _.toArray(res.data.specifications);
+        vm._sku = _.toArray(res.data.sku);
+        vm.sku = vm._sku;
+        vm.rawSpecificationValues = res.data.checkedSpecificationValues;
     });
     <?php if (!$model->isNewRecord): ?>
     Mai.reference.item = {
