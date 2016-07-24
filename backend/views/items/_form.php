@@ -198,11 +198,11 @@ use yii\widgets\ActiveForm;
         vm.rawSpecificationValues = res.data.checkedSpecificationValues;
     });
     <?php if (!$model->isNewRecord): ?>
-    Mai.reference.item = {
-    name: '<?= $model->name ?>',
+    Mai3.reference.item = {
+        name: '<?= $model->name ?>',
         snPrefix: '<?= $model->sn ?>',
         price: {
-        member: <?= $model->member_price ?>,
+            member: <?= $model->member_price ?>,
             market: <?= $model->market_price ?>
         }
     };

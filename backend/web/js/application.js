@@ -73,6 +73,7 @@ Number.prototype.toFixed = function (d) {
         });
     };
 })(jQuery);
+
 $(function () {
     $('#header-account-manage li.children a:first').toggle(function () {
         $(this).parent().addClass('drop').find('ul').show();
@@ -80,18 +81,27 @@ $(function () {
         $(this).parent().removeClass('drop').find('ul').hide();
     });
 });
-// Art dialog default settings
-//(function (artDialog) {
-//    artDialog['okValue'] = '确定';
-//    artDialog['cancelValue'] = '取消';
-//    artDialog['title'] = '提示信息';
-//})($.dialog.defaults);
-var yadjet = yadjet || {};
-yadjet.urls = yadjet.urls || {};
-yadjet.urls = {
-    'baseUrl': undefined
+
+var Mai3 = Mai3 || {};
+Mai3.urls = Mai3.urls || {};
+Mai3.urls = {
+    baseUrl: undefined,
+    sku: {
+        delete: undefined
+    }
 };
-yadjet.regions = yadjet.regions || {};
+Mai3.reference = Mai3.reference || {};
+Mai3.reference = {
+    item: {
+        snPrefix: null,
+        name: null,
+        price: {
+            member: 0,
+            market: 0
+        }
+    }
+};
+
 $(function () {
     $('ul.tabs-common li a').on('click', function () {
         var $t = $(this),
@@ -266,17 +276,7 @@ $(document).on('click', '.btn-delete-dynamic-table-row', function () {
     $(this).parent().parent().remove();
     return false;
 });
-var Mai = {};
-Mai.reference = {
-    item: {
-        snPrefix: null,
-        name: null,
-        price: {
-            member: 0,
-            market: 0
-        }
-    }
-};
+
 var vm = new Vue({
     el: '#mai3-item-specifications',
     data: {
@@ -381,12 +381,12 @@ var vm = new Vue({
                 this.sku.push({
                     specificationValueArray: arrResult[i]._id,
                     specificationValueString: arrResult[i].id,
-                    sn: Mai.reference.item.snPrefix + zeroFill(_.uniqueId(), 3),
-                    name: Mai.reference.item.name + ' ' + arrResult[i].name,
+                    sn: Mai3.reference.item.snPrefix + zeroFill(_.uniqueId(), 3),
+                    name: Mai3.reference.item.name + ' ' + arrResult[i].name,
                     text: arrResult[i].name,
                     price: {
-                        member: Mai.reference.item.price.member,
-                        market: Mai.reference.item.price.market
+                        member: Mai3.reference.item.price.member,
+                        market: Mai3.reference.item.price.market
                     }
                 });
             }
