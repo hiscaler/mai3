@@ -109,6 +109,7 @@ class ApiController extends \yii\rest\Controller
 
                 // 处理格式
                 foreach ($skuList as $key => $item) {
+                    $skuList[$key]['_isNew'] = false;
                     $skuList[$key]['text'] = implode(',', $skuList[$key]['values']);
                     $skuList[$key]['specificationValueString'] = implode(',', $skuList[$key]['values']);
                     $skuList[$key]['price'] = [

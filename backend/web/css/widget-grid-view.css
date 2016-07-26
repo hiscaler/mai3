@@ -65,6 +65,9 @@
 .grid-view table.table tr.disabled {
     background: #F5F5F5;
 }
+.grid-view table.table tr.new {
+    background: #FFF6BF;
+}
 .grid-view table.table tr.even {
     background: #FFF;
 }

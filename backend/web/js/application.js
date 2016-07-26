@@ -379,6 +379,7 @@ var vm = new Vue({
                 }
 
                 this.sku.push({
+                    _isNew: true,
                     specificationValueArray: arrResult[i]._id,
                     specificationValueString: arrResult[i].id,
                     sn: Mai3.reference.item.snPrefix + zeroFill(_.uniqueId(), 3),
