@@ -91,7 +91,7 @@ class ApiController extends \yii\rest\Controller
 
             if ($itemId) {
                 $skuList = (new \yii\db\Query())
-                    ->select(['id', 'sku_sn AS sn', 'name', 'market_price', 'member_price', 'picture_path', 'enabled', 'status'])
+                    ->select(['id', 'sku_sn AS sn', 'name', 'market_price', 'member_price', 'picture_path', 'default', 'enabled', 'status'])
                     ->from('{{%item_sku}}')
                     ->where(['item_id' => $itemId])
                     ->indexBy('id')
@@ -115,6 +115,8 @@ class ApiController extends \yii\rest\Controller
                         'market' => $item['market_price'],
                         'member' => $item['member_price'],
                     ];
+                    $skuList[$key]['default'] = $item['default'] ? true : false;
+                    $skuList[$key]['enabled'] = $item['enabled'] ? true : false;
                     unset($skuList[$key]['market_price'], $skuList[$key]['member_price']);
 
                     if (!isset($skuList[$key]['text'])) {

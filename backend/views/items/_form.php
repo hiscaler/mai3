@@ -147,11 +147,11 @@ use yii\widgets\ActiveForm;
                                                 <th class="price">市场价</th>
                                                 <th class="price">会员价</th>
                                                 <th class="button-1">默认</th>
-                                                <th class="last button-1">状态</th>
+                                                <th class="last button-1">激活</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="item in sku">
+                                            <tr v-for="item in sku" v-bind:class="{'disabled': !item.enabled, 'enabled': item.enabled}">
                                                 <td>
                                                     {{ item.text }}
                                                     <input type="hidden" name="Item[skuItems][id][]" value="{{ item.id }}" />
@@ -161,8 +161,8 @@ use yii\widgets\ActiveForm;
                                                 <td><input class="name" type="text" name="Item[skuItems][name][]" value="{{ item.name }}" /></td>
                                                 <td><input class="price" type="text" name="Item[skuItems][market_price][]" value="{{ item.price.market }}" /></td>
                                                 <td><input class="price" type="text" name="Item[skuItems][member_price][]" value="{{ item.price.member }}" /></td>
-                                                <td><input type="radio" name="Item[skuItems][default][]" value="1" /></td>
-                                                <td><input type="checkbox" name="Item[skuItems][enabled][]" value="1" /></td>
+                                                <td><input type="radio" name="Item[skuItems][default][]" v-model="item.default" value="{{ $index }}" /></td>
+                                                <td><input type="checkbox" name="Item[skuItems][enabled][]" v-model="item.enabled" value="{{ $index }}" /></td>
                                             </tr>
                                         </tbody>
                                     </table>

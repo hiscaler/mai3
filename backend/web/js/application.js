@@ -298,7 +298,7 @@ var vm = new Vue({
                         id: specificationId,
                         values: []
                     };
-                }               
+                }
                 this.rawSpecificationValues[specificationId]['values'].push({
                     id: valueId,
                     name: $('#label-' + valueId).text()
@@ -311,7 +311,7 @@ var vm = new Vue({
                     this.rawSpecificationValues[specificationId]['values'].splice(index, 1);
                 }
             }
-            
+
             arrResult = [];
             for (var z = 0, l = this.rawSpecificationValues[specificationId].values.length; z < l; z++) {
                 arrResult[arrResult.length] = {
@@ -346,12 +346,12 @@ var vm = new Vue({
                 var sn = '';
                 prefix = prefix === undefined || prefix === null ? '' : prefix;
                 for (var i = 1, l = 100; i <= l; i++) {
-                    
+
                 }
-                
+
                 return sn;
             }
-            
+
             // 添加前导零
             function zeroFill(number, width)
             {
@@ -362,7 +362,7 @@ var vm = new Vue({
                 }
                 return number + ""; // always return a string
             }
-            
+
             this.sku = [];
             for (i in arrResult) {
                 var exists = false;
@@ -377,7 +377,7 @@ var vm = new Vue({
                 if (exists) {
                     continue;
                 }
-                
+
                 this.sku.push({
                     specificationValueArray: arrResult[i]._id,
                     specificationValueString: arrResult[i].id,
@@ -387,12 +387,14 @@ var vm = new Vue({
                     price: {
                         member: Mai3.reference.item.price.member,
                         market: Mai3.reference.item.price.market
-                    }
+                    },
+                    default: false,
+                    enabled: true
                 });
             }
-        }    
+        }
     }
-    
+
 });
 
 Vue.http.options.root = '/root';

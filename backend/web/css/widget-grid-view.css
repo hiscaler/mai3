@@ -59,6 +59,12 @@
     background: url(../images/down.gif) right center no-repeat;
     padding-right: 10px;
 }
+.grid-view table.table tr.enabled {
+    background: #FFF;
+}
+.grid-view table.table tr.disabled {
+    background: #F5F5F5;
+}
 .grid-view table.table tr.even {
     background: #FFF;
 }
