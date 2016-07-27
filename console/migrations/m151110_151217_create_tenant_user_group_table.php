@@ -14,13 +14,13 @@ class m151110_151217_create_tenant_user_group_table extends Migration
     {
         $this->createTable('{{%tenant_user_group}}', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(30)->notNull(),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
-            'tenant_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'name' => $this->string(30)->notNull()->comment('组名'),
+            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

@@ -14,16 +14,16 @@ class m151110_140123_create_label_table extends Migration
     {
         $this->createTable('{{%label}}', [
             'id' => $this->primaryKey(),
-            'alias' => $this->string(20)->notNull()->unique(),
-            'name' => $this->string(20)->notNull(),
-            'frequency' => $this->integer()->notNull()->defaultValue(0),
-            'ordering' => $this->integer()->notNull()->defaultValue(0),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
-            'tenant_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'alias' => $this->string(20)->notNull()->unique()->comment('别名'),
+            'name' => $this->string(20)->notNull()->comment('推送位名称'),
+            'frequency' => $this->integer()->notNull()->defaultValue(0)->comment('权重'),
+            'ordering' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
+            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'tenant_id' => $this->integer()->notNull()->comment('所属站点'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

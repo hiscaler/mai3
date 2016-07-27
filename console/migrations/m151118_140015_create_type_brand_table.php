@@ -11,8 +11,8 @@ class m151118_140015_create_type_brand_table extends Migration
     public function up()
     {
         $this->createTable('{{%type_brand}}', [
-            'type_id' => $this->integer()->notNull(),
-            'brand_id' => $this->integer()->notNull(),
+            'type_id' => $this->integer()->notNull()->comment('商品类型 id'),
+            'brand_id' => $this->integer()->notNull()->comment('品牌 id'),
         ]);
     }
 

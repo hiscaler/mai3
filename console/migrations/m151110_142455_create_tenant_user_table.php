@@ -14,16 +14,16 @@ class m151110_142455_create_tenant_user_table extends Migration
     {
         $this->createTable('{{%tenant_user}}', [
             'id' => $this->primaryKey(),
-            'user_id' => $this->integer()->notNull(),
-            'role' => $this->integer()->notNull()->defaultValue(0),
-            'rule_id' => $this->integer()->notNull()->defaultValue(0),
-            'user_group_id' => $this->integer()->notNull()->defaultValue(0),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
-            'tenant_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'user_id' => $this->integer()->notNull()->comment('用户 id'),
+            'role' => $this->integer()->notNull()->defaultValue(0)->comment('角色'),
+            'rule_id' => $this->integer()->notNull()->defaultValue(0)->comment('规则'),
+            'user_group_id' => $this->integer()->notNull()->defaultValue(0)->comment('用户分组'),
+            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

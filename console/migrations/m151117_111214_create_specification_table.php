@@ -12,15 +12,15 @@ class m151117_111214_create_specification_table extends Migration
     {
         $this->createTable('{{%specification}}', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(20)->notNull(),
-            'type' => $this->smallInteger()->notNull()->defaultValue(0),
-            'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
-            'tenant_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'name' => $this->string(20)->notNull()->comment('规格名称'),
+            'type' => $this->smallInteger()->notNull()->defaultValue(0)->comment('显示类型'),
+            'ordering' => $this->smallInteger()->notNull()->defaultValue(1)->comment('排序'),
+            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

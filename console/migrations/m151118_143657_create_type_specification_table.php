@@ -13,9 +13,9 @@ class m151118_143657_create_type_specification_table extends Migration
     public function up()
     {
         $this->createTable('{{%type_specification}}', [
-            'type_id' => $this->integer()->notNull(),
-            'specification_id' => $this->integer()->notNull(),
-            'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
+            'type_id' => $this->integer()->notNull()->comment('商品类型 id'),
+            'specification_id' => $this->integer()->notNull()->comment('商品规格 id'),
+            'ordering' => $this->smallInteger()->notNull()->defaultValue(1)->comment('排序'),
         ]);
     }
 

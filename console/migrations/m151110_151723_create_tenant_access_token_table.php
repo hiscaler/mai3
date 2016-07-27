@@ -15,14 +15,14 @@ class m151110_151723_create_tenant_access_token_table extends Migration
     {
         $this->createTable('{{%tenant_access_token}}', [
             'id' => $this->primaryKey(),
-            'name' => $this->string(30)->notNull(),
-            'access_token' => $this->string(32)->notNull(),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
-            'tenant_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'name' => $this->string(30)->notNull()->comment('名称'),
+            'access_token' => $this->string(32)->notNull()->comment('Access Token'),
+            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

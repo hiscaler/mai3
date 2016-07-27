@@ -12,15 +12,15 @@ class m151114_152655_create_item_image_table extends Migration
     {
         $this->createTable('{{%item_image}}', [
             'id' => $this->primaryKey(),
-            'item_id' => $this->integer()->notNull(),
-            'url' => $this->string(100),
-            'path' => $this->string(100),
-            'description' => $this->string(50)->notNull(),
-            'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'item_id' => $this->integer()->notNull()->comment('商品 id'),
+            'url' => $this->string(100)->comment('外部 URL 地址'),
+            'path' => $this->string(100)->comment('图片'),
+            'description' => $this->string(50)->notNull()->comment('描述'),
+            'ordering' => $this->smallInteger()->notNull()->defaultValue(1)->comment('排序'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

@@ -10,17 +10,17 @@ class m151108_142723_create_brand_table extends Migration
     {
         $this->createTable('{{%brand}}', [
             'id' => $this->primaryKey(),
-            'alias' => $this->string(20)->notNull()->unique(),
-            'name' => $this->string(20)->notNull()->unique(),
-            'icon_path' => $this->string(100),
-            'description' => $this->text(),
-            'ordering' => $this->integer()->notNull()->defaultValue(0),
-            'tenant_id' => $this->integer()->notNull(),
-            'status' => $this->boolean()->defaultValue(1)->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'alias' => $this->string(20)->notNull()->unique()->comment('品牌别名'),
+            'name' => $this->string(20)->notNull()->unique()->comment('品牌名称'),
+            'icon_path' => $this->string(100)->comment('图标'),
+            'description' => $this->text()->comment('描述'),
+            'ordering' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
+            'tenant_id' => $this->integer()->notNull()->comment('所属站点'),
+            'status' => $this->boolean()->defaultValue(1)->notNull()->comment('状态'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 
