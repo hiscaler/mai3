@@ -5,15 +5,15 @@ use yii\db\Migration;
 /**
  * 单品表
  */
-class m160720_122704_create_item_sku_table extends Migration
+class m160720_122704_create_item_table extends Migration
 {
 
     public function up()
     {
-        $this->createTable('{{%item_sku}}', [
+        $this->createTable('{{%item}}', [
             'id' => $this->primaryKey(),
-            'item_id' => $this->integer()->notNull(),
-            'sku_sn' => $this->string(20)->notNull()->unique(),
+            'product_id' => $this->integer()->notNull(),
+            'sn' => $this->string(20)->notNull()->unique(),
             'name' => $this->string(50)->notNull(),
             'market_price' => $this->integer()->notNull(), // 市场价
             'member_price' => $this->integer()->notNull(), // 会员价
@@ -35,7 +35,7 @@ class m160720_122704_create_item_sku_table extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%item_sku}');
+        $this->dropTable('{{%item}');
     }
 
 }

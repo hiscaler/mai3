@@ -5,10 +5,10 @@ namespace common\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%item_image}}".
+ * This is the model class for table "{{%product_image}}".
  *
  * @property integer $id
- * @property integer $item_id
+ * @property integer $product_id
  * @property string $url
  * @property string $path
  * @property string $description
@@ -16,7 +16,7 @@ use Yii;
  * @property integer $created_at
  * @property integer $created_by
  */
-class ItemImage extends \yii\db\ActiveRecord
+class ProductImage extends \yii\db\ActiveRecord
 {
 
     /**
@@ -24,7 +24,7 @@ class ItemImage extends \yii\db\ActiveRecord
      */
     public static function tableName()
     {
-        return '{{%item_image}}';
+        return '{{%product_image}}';
     }
 
     /**
@@ -33,8 +33,8 @@ class ItemImage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['item_id', 'description'], 'required'],
-            [['item_id', 'ordering', 'created_at', 'created_by'], 'integer'],
+            [['product_id', 'description'], 'required'],
+            [['product_id', 'ordering', 'created_at', 'created_by'], 'integer'],
             [['url', 'path'], 'string', 'max' => 100],
             [['description'], 'string', 'max' => 50]
         ];
@@ -47,7 +47,7 @@ class ItemImage extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'item_id' => Yii::t('app', 'Item ID'),
+            'product_id' => Yii::t('app', 'Item ID'),
             'url' => Yii::t('app', 'Url'),
             'path' => Yii::t('app', 'Path'),
             'description' => Yii::t('app', 'Description'),

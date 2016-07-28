@@ -49,7 +49,7 @@ backend\assets\AppAsset::register($this);
 
         <?php $this->endBody() ?>
         <script type="text/javascript">
-            Mai3.urls.sku.delete = '<?= \yii\helpers\Url::toRoute(['items/delete-sku', 'id' => 0]) ?>';
+            Mai3.urls.item.delete = '<?= \yii\helpers\Url::toRoute(['items/delete-sku', 'id' => 0]) ?>';
         </script>
     </body>
 </html>

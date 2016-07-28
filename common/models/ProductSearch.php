@@ -5,12 +5,12 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use common\models\Item;
+use common\models\Product;
 
 /**
- * ItemSearch represents the model behind the search form about `common\models\Item`.
+ * ProductSearch represents the model behind the search form about `common\models\Product`.
  */
-class ItemSearch extends Item
+class ProductSearch extends Product
 {
 
     /**
@@ -42,7 +42,7 @@ class ItemSearch extends Item
      */
     public function search($params)
     {
-        $query = Item::find();
+        $query = Product::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

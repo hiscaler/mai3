@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\Item */
+/* @var $model common\models\Product */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
@@ -107,9 +107,9 @@ use yii\widgets\ActiveForm;
                                 </thead>
                                 <tbody>
                                     <tr id="row-0">
-                                        <td><input name="Item[imageFiles][]" type="file"></td>
-                                        <td><input name="Item[imageFiles][url][]" class="form-control" type="text" placeholder="外部图片地址（http 开头）"></td>
-                                        <td><input name="Item[imageFiles][description][]" class="form-control" type="text" placeholder="图片简短描述文字"></td>
+                                        <td><input name="Product[imageFiles][]" type="file"></td>
+                                        <td><input name="Product[imageFiles][url][]" class="form-control" type="text" placeholder="外部图片地址（http 开头）"></td>
+                                        <td><input name="Product[imageFiles][description][]" class="form-control" type="text" placeholder="图片简短描述文字"></td>
                                         <td class="btns"></td>
                                     </tr>
                                 </tbody>
@@ -151,18 +151,18 @@ use yii\widgets\ActiveForm;
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="item in sku" v-bind:class="{'disabled': !item.enabled, 'enabled': item.enabled, 'new': item._isNew}">
+                                            <tr v-for="item in items" v-bind:class="{'disabled': !item.enabled, 'enabled': item.enabled, 'new': item._isNew}">
                                                 <td>
                                                     {{ item.text }}
-                                                    <input type="hidden" name="Item[skuItems][id][]" value="{{ item.id }}" />
-                                                    <input type="hidden" name="Item[skuItems][specification_value_ids][]" value="{{ item.specificationValueString }}" />
+                                                    <input type="hidden" name="Product[skuItems][id][]" value="{{ item.id }}" />
+                                                    <input type="hidden" name="Product[skuItems][specification_value_ids][]" value="{{ item.specificationValueString }}" />
                                                 </td>
-                                                <td><input class="sn" type="text" name="Item[skuItems][sn][]" value="{{ item.sn }}" /></td>
-                                                <td><input class="name" type="text" name="Item[skuItems][name][]" value="{{ item.name }}" /></td>
-                                                <td><input class="price" type="text" name="Item[skuItems][market_price][]" value="{{ item.price.market }}" /></td>
-                                                <td><input class="price" type="text" name="Item[skuItems][member_price][]" value="{{ item.price.member }}" /></td>
-                                                <td><input type="radio" name="Item[skuItems][default][]" v-model="item.default" value="{{ $index }}" /></td>
-                                                <td><input type="checkbox" name="Item[skuItems][enabled][]" v-model="item.enabled" value="{{ $index }}" /></td>
+                                                <td><input class="sn" type="text" name="Product[skuItems][sn][]" value="{{ item.sn }}" /></td>
+                                                <td><input class="name" type="text" name="Product[skuItems][name][]" value="{{ item.name }}" /></td>
+                                                <td><input class="price" type="text" name="Product[skuItems][market_price][]" value="{{ item.price.market }}" /></td>
+                                                <td><input class="price" type="text" name="Product[skuItems][member_price][]" value="{{ item.price.member }}" /></td>
+                                                <td><input type="radio" name="Product[skuItems][default][]" v-model="item.default" value="{{ $index }}" /></td>
+                                                <td><input type="checkbox" name="Product[skuItems][enabled][]" v-model="item.enabled" value="{{ $index }}" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -189,16 +189,16 @@ use yii\widgets\ActiveForm;
 
 <?php backend\components\JsBlock::begin() ?>
 <script type="text/javascript">
-    var url = '<?= \yii\helpers\Url::toRoute(['api/type', 'id' => $model['type_id'], 'itemId' => $model['id']]) ?>';
+    var url = '<?= \yii\helpers\Url::toRoute(['api/type', 'id' => $model['type_id'], 'productId' => $model['id']]) ?>';
     Vue.http.get(url).then((res) => {
         vm.original = res.data;
         vm.specifications = _.toArray(res.data.specifications);
-        vm._sku = _.toArray(res.data.sku);
-        vm.sku = vm._sku;
+        vm._items = _.toArray(res.data.items);
+        vm.items = vm._items;
         vm.rawSpecificationValues = res.data.checkedSpecificationValues;
     });
     <?php if (!$model->isNewRecord): ?>
-    Mai3.reference.item = {
+    Mai3.reference.product = {
         name: '<?= $model->name ?>',
         snPrefix: '<?= $model->sn ?>',
         price: {

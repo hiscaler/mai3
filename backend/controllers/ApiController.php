@@ -19,13 +19,13 @@ class ApiController extends \yii\rest\Controller
      * @param integer $id
      * @return Response
      */
-    public function actionItem($id)
+    public function actionProduct($id)
     {
         $db = Yii::$app->getDb();
-        $res = $db->createCommand('SELECT [[id]], [[name]] FROM {{%item}} WHERE id = :id', [':id' => (int) $id])->queryOne();
+        $res = $db->createCommand('SELECT [[id]], [[name]] FROM {{%product}} WHERE id = :id', [':id' => (int) $id])->queryOne();
         if ($res) {
-            $skuItems = $db->createCommand('SELECT [[id]], [[sku_sn]], [[name]], [[market_price]], [[member_price]], [[picture_path]], [[clicks_count]], [[favorites_count]], [[sales_count]], [[stocks_count]], [[default]] FROM {{%item_sku}} WHERE [[item_id]] = :itemId', [':itemId' => $res['id']])->queryAll();
-            $res['sku'] = $skuItems;
+            $items = $db->createCommand('SELECT [[id]], [[sku_sn]], [[name]], [[market_price]], [[member_price]], [[picture_path]], [[clicks_count]], [[favorites_count]], [[sales_count]], [[stocks_count]], [[default]] FROM {{%item}} WHERE [[product_id]] = :productId', [':productId' => $res['id']])->queryAll();
+            $res['items'] = $items;
         }
 
         return new Response([
@@ -37,10 +37,10 @@ class ApiController extends \yii\rest\Controller
     /**
      * 类型接口
      * @param integer $id 商品类型id
-     * @param integer $itemId 商品id
+     * @param integer $productId 商品id
      * @return Response
      */
-    public function actionType($id, $itemId = null)
+    public function actionType($id, $productId = null)
     {
         $db = Yii::$app->getDb();
         $res = $db->createCommand('SELECT [[id]], [[name]] FROM {{%type}} WHERE id = :id', [':id' => (int) $id])->queryOne();
@@ -50,10 +50,10 @@ class ApiController extends \yii\rest\Controller
             $res['brands'] = $brands;
 
             // 规格
-            $itemId = (int) $itemId;
+            $productId = (int) $productId;
             $checkedSpecificationValues = [];
-            if ($itemId) {
-                $itemSpecificationValues = $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_sku_specification_value}} WHERE [[sku_id]] IN (SELECT [[id]] FROM {{%item_sku}} WHERE [[item_id]] = :itemId)', [':itemId' => $itemId])->queryColumn();
+            if ($productId) {
+                $itemSpecificationValues = $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_specification_value}} WHERE [[item_id]] IN (SELECT [[id]] FROM {{%item}} WHERE [[product_id]] = :productId)', [':productId' => $productId])->queryColumn();
             } else {
                 $itemSpecificationValues = [];
             }
@@ -89,50 +89,48 @@ class ApiController extends \yii\rest\Controller
             $res['specifications'] = $specifications;
             $res['checkedSpecificationValues'] = $checkedSpecificationValues;
 
-            if ($itemId) {
-                $skuList = (new \yii\db\Query())
-                    ->select(['id', 'sku_sn AS sn', 'name', 'market_price', 'member_price', 'picture_path', 'default', 'enabled', 'status'])
-                    ->from('{{%item_sku}}')
-                    ->where(['item_id' => $itemId])
+            if ($productId) {
+                $items = (new \yii\db\Query())
+                    ->select(['id', 'sn', 'name', 'market_price', 'member_price', 'picture_path', 'default', 'enabled', 'status'])
+                    ->from('{{%item}}')
+                    ->where(['product_id' => $productId])
                     ->indexBy('id')
                     ->all();
 
                 $itemSpecificationTexts = [];
-                $itemSpecificationValues = $db->createCommand('SELECT [[t.sku_id]], [[t.specification_value_id]], [[v.text]] FROM {{%item_sku_specification_value}} t LEFT JOIN {{%specification_value}} v ON [[t.specification_value_id]] = [[v.id]] WHERE [[t.sku_id]] IN (SELECT [[id]] FROM {{%item_sku}} WHERE [[item_id]] = :itemId)', [':itemId' => $itemId])->queryAll();
+                $itemSpecificationValues = $db->createCommand('SELECT [[t.item_id]], [[t.specification_value_id]], [[v.text]] FROM {{%item_specification_value}} t LEFT JOIN {{%specification_value}} v ON [[t.specification_value_id]] = [[v.id]] WHERE [[t.item_id]] IN (SELECT [[id]] FROM {{%item}} WHERE [[product_id]] = :productId)', [':productId' => $productId])->queryAll();
                 foreach ($itemSpecificationValues as $v) {
-                    if (!isset($skuList[$v['sku_id']]['values'])) {
-                        $skuList[$v['sku_id']]['values'] = [];
+                    if (!isset($items[$v['item_id']]['values'])) {
+                        $items[$v['item_id']]['values'] = [];
                     }
-                    $skuList[$v['sku_id']]['values'][] = $v['specification_value_id'];
-                    $itemSpecificationTexts[$v['sku_id']][] = $v['text'];
+                    $items[$v['item_id']]['values'][] = $v['specification_value_id'];
+                    $itemSpecificationTexts[$v['item_id']][] = $v['text'];
                 }
 
                 // 处理格式
-                foreach ($skuList as $key => $item) {
-                    $skuList[$key]['_isNew'] = false;
-                    $skuList[$key]['text'] = implode(',', $skuList[$key]['values']);
-                    $skuList[$key]['specificationValueString'] = implode(',', $skuList[$key]['values']);
-                    $skuList[$key]['price'] = [
+                foreach ($items as $key => $item) {
+                    $items[$key]['_isNew'] = false;
+                    $items[$key]['text'] = implode(',', $items[$key]['values']);
+                    $items[$key]['specificationValueString'] = implode(',', $items[$key]['values']);
+                    $items[$key]['price'] = [
                         'market' => $item['market_price'],
                         'member' => $item['member_price'],
                     ];
-                    $skuList[$key]['default'] = $item['default'] ? true : false;
-                    $skuList[$key]['enabled'] = $item['enabled'] ? true : false;
-                    unset($skuList[$key]['market_price'], $skuList[$key]['member_price']);
+                    $items[$key]['default'] = $item['default'] ? true : false;
+                    $items[$key]['enabled'] = $item['enabled'] ? true : false;
+                    unset($items[$key]['market_price'], $items[$key]['member_price']);
 
-                    if (!isset($skuList[$key]['text'])) {
-                        $skuList[$key]['text'] = '';
+                    if (!isset($items[$key]['text'])) {
+                        $items[$key]['text'] = '';
                     } elseif (isset($itemSpecificationTexts[$key])) {
-                        $skuList[$key]['text'] = implode(',', $itemSpecificationTexts[$key]);
+                        $items[$key]['text'] = implode(',', $itemSpecificationTexts[$key]);
                     }
                 }
             } else {
-                $skuList = [];
+                $items = [];
             }
-            $res['sku'] = $skuList;
+            $res['items'] = $items;
         }
-
-
 
         return new Response([
             'format' => Response::FORMAT_JSON,

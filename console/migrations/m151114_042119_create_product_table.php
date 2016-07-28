@@ -7,12 +7,12 @@ use yii\db\Migration;
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class m151114_042119_create_item_table extends Migration
+class m151114_042119_create_product_table extends Migration
 {
 
     public function up()
     {
-        $this->createTable('{{%item}}', [
+        $this->createTable('{{%product}}', [
             'id' => $this->primaryKey(),
             'category_id' => $this->integer()->notNull()->defaultValue(0)->comment('分类 id'),
             'type_id' => $this->integer()->notNull()->defaultValue(0)->comment('类型 id'),
@@ -39,7 +39,7 @@ class m151114_042119_create_item_table extends Migration
 
     public function down()
     {
-        $this->dropTable('{{%item}}');
+        $this->dropTable('{{%product}}');
     }
 
     /*

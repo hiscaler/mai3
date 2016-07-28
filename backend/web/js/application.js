@@ -86,13 +86,19 @@ var Mai3 = Mai3 || {};
 Mai3.urls = Mai3.urls || {};
 Mai3.urls = {
     baseUrl: undefined,
-    sku: {
+    product: {
+        create: undefined,
+        view: undefined,
+        update: undefined,
+        delete: undefined        
+    },
+    item: {
         delete: undefined
     }
 };
 Mai3.reference = Mai3.reference || {};
 Mai3.reference = {
-    item: {
+    product: {
         snPrefix: null,
         name: null,
         price: {
@@ -281,8 +287,8 @@ var vm = new Vue({
     el: '#mai3-item-specifications',
     data: {
         original: {},
-        _sku: [],
-        sku: [],
+        _items: [],
+        items: [],
         specifications: [],
         rawSpecificationValues: []
     },
@@ -363,12 +369,12 @@ var vm = new Vue({
                 return number + ""; // always return a string
             }
 
-            this.sku = [];
+            this.items = [];
             for (i in arrResult) {
                 var exists = false;
-                for (j in this._sku) {
-                    if (_.difference(this._sku[j].specificationValueString.split(','), arrResult[i]._id).length === 0) {
-                        this.sku.push(this._sku[j]);
+                for (j in this._items) {
+                    if (_.difference(this._items[j].specificationValueString.split(','), arrResult[i]._id).length === 0) {
+                        this.items.push(this._items[j]);
                         exists = true;
                         break;
                     }
@@ -378,16 +384,16 @@ var vm = new Vue({
                     continue;
                 }
 
-                this.sku.push({
+                this.items.push({
                     _isNew: true,
                     specificationValueArray: arrResult[i]._id,
                     specificationValueString: arrResult[i].id,
-                    sn: Mai3.reference.item.snPrefix + zeroFill(_.uniqueId(), 3),
-                    name: Mai3.reference.item.name + ' ' + arrResult[i].name,
+                    sn: Mai3.reference.product.snPrefix + zeroFill(_.uniqueId(), 3),
+                    name: Mai3.reference.product.name + ' ' + arrResult[i].name,
                     text: arrResult[i].name,
                     price: {
-                        member: Mai3.reference.item.price.member,
-                        market: Mai3.reference.item.price.market
+                        member: Mai3.reference.product.price.member,
+                        market: Mai3.reference.product.price.market
                     },
                     default: false,
                     enabled: true

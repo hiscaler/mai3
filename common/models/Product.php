@@ -11,7 +11,7 @@ use yii\validators\UrlValidator;
 use yii\web\UploadedFile;
 
 /**
- * This is the model class for table "{{%item}}".
+ * This is the model class for table "{{%product}}".
  *
  * @property integer $id
  * @property integer $category_id
@@ -35,7 +35,7 @@ use yii\web\UploadedFile;
  * @property integer $updated_at
  * @property integer $updated_by
  */
-class Item extends BaseActiveRecord
+class Product extends BaseActiveRecord
 {
 
     private $_content = null;
@@ -63,7 +63,7 @@ class Item extends BaseActiveRecord
      */
     public static function tableName()
     {
-        return '{{%item}}';
+        return '{{%product}}';
     }
 
     /**
@@ -93,15 +93,15 @@ class Item extends BaseActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'category_id' => Yii::t('item', 'Category'),
-            'type_id' => Yii::t('item', '商品类型'),
-            'brand_id' => Yii::t('item', 'Brand'),
-            'sn' => Yii::t('item', 'Sn'),
-            'name' => Yii::t('item', 'Name'),
+            'category_id' => Yii::t('product', 'Category'),
+            'type_id' => Yii::t('product', '商品类型'),
+            'brand_id' => Yii::t('product', 'Brand'),
+            'sn' => Yii::t('product', 'Sn'),
+            'name' => Yii::t('product', 'Name'),
             'market_price' => Yii::t('app', '市场价'),
             'shop_price' => Yii::t('app', '店铺价'),
             'member_price' => Yii::t('app', '会员价'),
-            'picture_path' => Yii::t('item', 'Picture Path'),
+            'picture_path' => Yii::t('product', 'Picture Path'),
             'keywords' => Yii::t('app', 'Page Keywords'),
             'description' => Yii::t('app', 'Page Description'),
             'ordering' => Yii::t('app', '排序'),
@@ -113,7 +113,7 @@ class Item extends BaseActiveRecord
             'created_by' => Yii::t('app', 'Created By'),
             'updated_at' => Yii::t('app', 'Updated At'),
             'updated_by' => Yii::t('app', 'Updated By'),
-            'content' => Yii::t('item', 'Content'),
+            'content' => Yii::t('product', 'Content'),
         ];
     }
 
@@ -141,7 +141,7 @@ class Item extends BaseActiveRecord
      */
     public function getImages()
     {
-        return $this->hasMany(ItemImage::className(), ['item_id' => 'id']);
+        return $this->hasMany(ProductImage::className(), ['product_id' => 'id']);
     }
 
     // 事件
@@ -149,7 +149,7 @@ class Item extends BaseActiveRecord
     {
         parent::afterFind();
         if (!$this->isNewRecord) {
-            $this->content = $this->_content = Yii::$app->getDb()->createCommand('SELECT [[content]] FROM {{%item_content}} WHERE [[item_id]] = :itemId')->bindValue(':itemId', $this->id, PDO::PARAM_INT)->queryScalar();
+            $this->content = $this->_content = Yii::$app->getDb()->createCommand('SELECT [[content]] FROM {{%product_content}} WHERE [[product_id]] = :productId')->bindValue(':productId', $this->id, PDO::PARAM_INT)->queryScalar();
         }
     }
 
@@ -160,8 +160,8 @@ class Item extends BaseActiveRecord
         $now = time();
         $db = Yii::$app->getDb();
         if ($insert) {
-            $db->createCommand()->insert('{{%item_content}}', [
-                'item_id' => $this->id,
+            $db->createCommand()->insert('{{%product_content}}', [
+                'product_id' => $this->id,
                 'content' => $this->content,
                 'created_at' => $now,
                 'created_by' => $userId,
@@ -170,11 +170,11 @@ class Item extends BaseActiveRecord
             ])->execute();
         } else {
             if ($this->content != $this->_content) {
-                $db->createCommand()->update('{{%item_content}}', [
+                $db->createCommand()->update('{{%product_content}}', [
                     'content' => $this->content,
                     'updated_at' => $now,
                     'updated_by' => $userId
-                    ], ['item_id' => $this->id])->execute();
+                    ], ['product_id' => $this->id])->execute();
             }
         }
 
@@ -209,7 +209,7 @@ class Item extends BaseActiveRecord
                     }
                     if ($imgUrl || $imgPath) {
                         $columns = [
-                            'item_id' => $this->id,
+                            'product_id' => $this->id,
                             'url' => $imgUrl,
                             'path' => $imgPath,
                             'description' => $imageDescriptions[$key] ? : ($file ? $file->getBaseName() : null),
@@ -222,67 +222,67 @@ class Item extends BaseActiveRecord
             }
 
             if ($batchInsertRows) {
-                $db->createCommand()->batchInsert('{{%item_image}}', array_keys($columns), $batchInsertRows)->execute();
+                $db->createCommand()->batchInsert('{{%product_image}}', array_keys($columns), $batchInsertRows)->execute();
             }
         }
 
         // SKU 处理
         $skuItems = $this->skuItems;
         $cmd = $db->createCommand();
-        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item_sku}} WHERE [[sku_sn]] = :sn AND item_id = ' . $this->id);
+        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item}} WHERE [[sn]] = :sn AND product_id = ' . $this->id);
         if (isset($skuItems['id']) && $skuItems['id']) {
             foreach ($skuItems['id'] as $key => $id) {
-                $skuSn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : null);
-                if (empty($skuSn)) {
+                $sn = trim(isset($skuItems['sn'][$key]) ? $skuItems['sn'][$key] : null);
+                if (empty($sn)) {
                     if (!$insert) {
-                        $cmd->delete('{{%item_sku_specification_value}}', ['sku_id' => $id])->execute();
-                        $cmd->delete('{{%item_sku}}', ['id' => $id])->execute();
+                        $cmd->delete('{{%item_specification_value}}', ['item_id' => $id])->execute();
+                        $cmd->delete('{{%item}}', ['id' => $id])->execute();
                     }
                     continue;
                 }
 
                 $columns = [
-                    'item_id' => $this->id,
-                    'sku_sn' => $skuSn,
+                    'product_id' => $this->id,
+                    'sn' => $sn,
                     'name' => isset($skuItems['name'][$key]) ? $skuItems['name'][$key] : $this->name,
                     'market_price' => isset($skuItems['market_price'][$key]) ? $skuItems['market_price'][$key] : $this->market_price,
                     'member_price' => isset($skuItems['member_price'][$key]) ? $skuItems['member_price'][$key] : $this->member_price,
                     'cost_price' => 0,
-                    'default' => in_array($key, $skuItems['default']) ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE,
+                    'default' => isset($skuItems['default']) && in_array($key, $skuItems['default']) ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE,
                     'enabled' => in_array($key, $skuItems['enabled']) ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE,
                     'created_at' => $now,
                     'created_by' => $userId,
                     'updated_at' => $now,
                     'updated_by' => $userId,
                 ];
-                $skuId = $skuCmd->bindValue(':sn', $skuSn)->queryScalar();
-                if ($skuId) {
+                $itemId = $skuCmd->bindValue(':sn', $sn)->queryScalar();
+                if ($itemId) {
                     // update
                     unset($columns['created_at'], $columns['created_by']);
-                    $cmd->update('{{%item_sku}}', $columns, ['id' => $skuId])->execute();
+                    $cmd->update('{{%item}}', $columns, ['id' => $itemId])->execute();
                 } else {
-                    $cmd->insert('{{%item_sku}}', $columns)->execute();
-                    $skuId = $db->getLastInsertID();
+                    $cmd->insert('{{%item}}', $columns)->execute();
+                    $itemId = $db->getLastInsertID();
                 }
 
-                $existsSpecificationValueIds = $insert ? [] : $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_sku_specification_value}} WHERE [[sku_id]] = :skuId', [':skuId' => $skuId])->queryColumn();
+                $existsSpecificationValueIds = $insert ? [] : $db->createCommand('SELECT [[specification_value_id]] FROM {{%item_specification_value}} WHERE [[item_id]] = :itemId', [':itemId' => $itemId])->queryColumn();
                 $newSpecificationValueIds = explode(',', $skuItems['specification_value_ids'][$key]);
                 if (empty($existsSpecificationValueIds) || array_diff($existsSpecificationValueIds, $newSpecificationValueIds)) {
                     if (!$insert) {
-                        $cmd->delete('{{%item_sku_specification_value}}', ['sku_id' => $skuId])->execute();
+                        $cmd->delete('{{%item_specification_value}}', ['item_id' => $itemId])->execute();
                     }
                     $batchInsertRows = [];
                     foreach ($newSpecificationValueIds as $value) {
                         $value = abs((int) $value);
                         if ($value) {
                             $batchInsertRows[] = [
-                                'sku_id' => $skuId,
+                                'item_id' => $itemId,
                                 'specification_value_id' => $value,
                             ];
                         }
                     }
                     if ($batchInsertRows) {
-                        $cmd->batchInsert('{{%item_sku_specification_value}}', ['sku_id', 'specification_value_id'], $batchInsertRows)->execute();
+                        $cmd->batchInsert('{{%item_specification_value}}', ['item_id', 'specification_value_id'], $batchInsertRows)->execute();
                     }
                 }
             }
