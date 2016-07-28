@@ -187,5 +187,15 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+    
+    public function attributeLabels()
+    {
+        return [
+            'username' => Yii::t('user', 'Username'),
+            'nickname' => Yii::t('user', 'Nickname'),
+            'email' => Yii::t('user', 'Email'),
+            'enabled' => Yii::t('app', 'Enabled'),
+        ];
+    }
 
 }
