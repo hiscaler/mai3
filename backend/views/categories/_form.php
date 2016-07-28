@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'parent_id')->dropDownList(Category::getMap('顶级分类')) ?>
+        <?= $form->field($model, 'parent_id')->dropDownList(Category::getTree('顶级分类')) ?>
 
         <?= $form->field($model, 'icon_path')->fileInput() ?>
 

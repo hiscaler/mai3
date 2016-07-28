@@ -75,10 +75,10 @@ class Brand extends BaseActiveRecord
      * @param boolean $all
      * @return array
      */
-    public static function getMap($all = false)
+    public static function getList($all = false)
     {
         $list = [];
-        $sql = 'SELECT [[id]], [[alias]], [[name]] FROM {{%brand}}';
+        $sql = 'SELECT [[id]], [[name]] FROM {{%brand}}';
         $bindValues = [];
         if (!$all) {
             $sql .= ' WHERE [[status]] = :status';
@@ -88,7 +88,7 @@ class Brand extends BaseActiveRecord
 
         $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
         foreach ($rawData as $data) {
-            $list[$data['id']] = "{$data['alias']}: {$data['name']}";
+            $list[$data['id']] = $data['name'];
         }
 
         return $list;

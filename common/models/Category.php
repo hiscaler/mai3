@@ -75,7 +75,7 @@ class Category extends BaseActiveRecord
      * 获取分类项目
      * @return array
      */
-    public static function getMap($top = null, $all = false)
+    public static function getTree($top = null, $all = false)
     {
         $items = [];
         if ($top) {

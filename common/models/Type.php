@@ -76,7 +76,7 @@ class Type extends BaseActiveRecord
         return $this->hasMany(TypeSpecification::className(), ['type_id' => 'id']);
     }
 
-    public static function getMap()
+    public static function getList()
     {
         return (new Query())->select('name')->from(static::tableName())->indexBy('id')->column();
     }

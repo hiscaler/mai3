@@ -37,7 +37,7 @@ use yii\widgets\ActiveForm;
 
                 <div id="tab-brands" class="tab-pane" style="display: none;">
                     <div class="panel-body">
-                        <?= $form->field($model, 'brandIdList')->checkboxList(Brand::getMap(false))->label(false) ?>
+                        <?= $form->field($model, 'brandIdList')->checkboxList(Brand::getList(false))->label(false) ?>
                     </div>
                 </div>
 

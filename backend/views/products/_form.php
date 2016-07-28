@@ -30,11 +30,11 @@ use yii\widgets\ActiveForm;
 
                 <div id="tab-base" class="tab-pane active">
                     <div class="panel-body">
-                        <?= $form->field($model, 'category_id')->dropDownList(common\models\Category::getMap(), ['prompt' => '']) ?>
+                        <?= $form->field($model, 'category_id')->dropDownList(common\models\Category::getTree(), ['prompt' => '']) ?>
 
-                        <?= $form->field($model, 'type_id')->dropDownList(\common\models\Type::getMap(), ['prompt' => '', 'data-url' => yii\helpers\Url::toRoute(['type-raw-data'])]) ?>
+                        <?= $form->field($model, 'type_id')->dropDownList(\common\models\Type::getList(), ['prompt' => '', 'data-url' => yii\helpers\Url::toRoute(['type-raw-data'])]) ?>
 
-                        <?= $form->field($model, 'brand_id')->dropDownList(\common\models\Brand::getMap(), ['prompt' => '']) ?>
+                        <?= $form->field($model, 'brand_id')->dropDownList(\common\models\Brand::getList(), ['prompt' => '']) ?>
 
                         <?= $form->field($model, 'sn')->textInput(['maxlength' => true]) ?>
 

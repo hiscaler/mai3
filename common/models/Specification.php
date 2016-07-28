@@ -88,7 +88,7 @@ class Specification extends BaseActiveRecord
      * @param boolean $all
      * @return array
      */
-    public static function getMap($all = false)
+    public static function getList($all = false)
     {
         $list = [];
         $sql = 'SELECT [[id]], [[name]] FROM {{%specification}}';

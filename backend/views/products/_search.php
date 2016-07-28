@@ -22,9 +22,9 @@ use yii\widgets\ActiveForm;
         ?>
 
         <div class="entry">
-            <?= $form->field($model, 'category_id')->dropDownList(Category::getMap(null, true), ['prompt' => '']) ?>
+            <?= $form->field($model, 'category_id')->dropDownList(Category::getTree(null, true), ['prompt' => '']) ?>
 
-            <?= $form->field($model, 'brand_id')->dropDownList(Brand::getMap(), ['prompt' => '']) ?>
+            <?= $form->field($model, 'brand_id')->dropDownList(Brand::getList(), ['prompt' => '']) ?>
         </div>
 
         <div class="entry">

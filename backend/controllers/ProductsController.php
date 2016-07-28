@@ -85,7 +85,7 @@ class ProductsController extends ShopController
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-        $specifications = Specification::getMap(true);
+        $specifications = Specification::getList(true);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);

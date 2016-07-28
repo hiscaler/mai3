@@ -94,7 +94,7 @@ class Product extends BaseActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'category_id' => Yii::t('product', 'Category'),
-            'type_id' => Yii::t('product', '商品类型'),
+            'type_id' => Yii::t('product', 'Type'),
             'brand_id' => Yii::t('product', 'Brand'),
             'sn' => Yii::t('product', 'Sn'),
             'name' => Yii::t('product', 'Name'),
