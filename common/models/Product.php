@@ -144,6 +144,15 @@ class Product extends BaseActiveRecord
         return $this->hasMany(ProductImage::className(), ['product_id' => 'id']);
     }
 
+    /**
+     * 商品单品
+     * @return array
+     */
+    public function getItems()
+    {
+        return $this->hasMany(Item::className(), ['product_id' => 'id']);
+    }
+
     // 事件
     public function afterFind()
     {

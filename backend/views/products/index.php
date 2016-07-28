@@ -20,7 +20,7 @@ $this->params['menus'] = [
 ?>
 
 
-<div class="items-index">
+<div class="products-index">
 
     <?= $this->render('_search', ['model' => $searchModel]); ?>
 

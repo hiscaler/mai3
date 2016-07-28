@@ -398,6 +398,10 @@
     width: 100px;
 }
 
+.grid-view table.table td.price {
+    width: 60px;
+    text-align: center;
+}
 .grid-view table.table td a.preview {
     padding-left: 20px;
     background: url(../images/preview.gif) no-repeat;

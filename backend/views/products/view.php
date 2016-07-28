@@ -22,6 +22,7 @@ $this->params['menus'] = [
         <li class="active"><a data-toggle="tab-base" href="#tab-base"> 基础资料</a></li>
         <li><a data-toggle="tab-content" href="#tab-content">详情描述</a></li>
         <li><a data-toggle="tab-images" href="#tab-images">商品图片</a></li>
+        <li><a data-toggle="tab-items" href="#tab-items">商品规格</a></li>
     </ul>
 
     <div class="tab-content">
@@ -95,6 +96,43 @@ $this->params['menus'] = [
         </div>
         <!-- // 商品图片 -->
 
+        <!-- 商品规格 -->
+        <div id="tab-items" class="tab-pane" style="display: none;">
+            <div class="panel-body">
+                <div class="grid-view">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>序号</th>
+                                <th>品号</th>
+                                <th>品名</th>
+                                <th>市场价</th>
+                                <th>会员价</th>
+                                <th>默认</th>
+                                <th class="last">激活</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $formatter = Yii::$app->getFormatter();
+                            foreach ($model['items'] as $key => $item):
+                                ?>
+                                <tr>
+                                    <td class="serial-number"><?= $key + 1 ?></td>
+                                    <td class="sn"><?= $item['sn'] ?></td>
+                                    <td><?= $item['name'] ?></td>
+                                    <td class="price"><?= $item['market_price'] ?></td>
+                                    <td class="price"><?= $item['member_price'] ?></td>
+                                    <td class="boolean"><?= $formatter->asBoolean($item['default']) ?></td>
+                                    <td class="boolean"><?= $formatter->asBoolean($item['enabled']) ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- // 商品规格 -->
+
     </div>
 </div>
-

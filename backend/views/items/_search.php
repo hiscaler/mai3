@@ -1,30 +1,27 @@
 <?php
 
-use common\models\Brand;
-use common\models\Category;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\ProductSearch */
+/* @var $model common\models\ItemSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
 <div class="form-outside form-search form-layout-column" style="display: none">
-    <div class="products-search form">
+    <div class="items-search form">
 
         <?php
         $form = ActiveForm::begin([
                 'action' => ['index'],
                 'method' => 'get',
-                'id' => 'form-items-search',
         ]);
         ?>
 
         <div class="entry">
-            <?= $form->field($model, 'category_id')->dropDownList(Category::getTree(null, true), ['prompt' => '']) ?>
+            <?= $form->field($model, 'id') ?>
 
-            <?= $form->field($model, 'brand_id')->dropDownList(Brand::getList(), ['prompt' => '']) ?>
+            <?= $form->field($model, 'product_id') ?>
         </div>
 
         <div class="entry">
@@ -32,6 +29,10 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'name') ?>
         </div>
+
+        <?php // echo $form->field($model, 'default') ?>
+
+        <?php // echo $form->field($model, 'enabled') ?>
 
         <?php // echo $form->field($model, 'status') ?>
 

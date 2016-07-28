@@ -47,7 +47,19 @@ class ShopControlPanel extends \yii\base\Widget
             [
                 'label' => '商品管理',
                 'url' => ['products/index'],
-                'active' => $controllerId == 'products',
+                'active' => in_array($controllerId, ['products', 'items']),
+                'items' => [
+                    [
+                        'label' => '商品管理',
+                        'url' => ['products/index'],
+                        'active' => $controllerId == 'products',
+                    ],
+                    [
+                        'label' => '单品管理',
+                        'url' => ['items/index'],
+                        'active' => $controllerId == 'items',
+                    ],
+                ]
             ],
             [
                 'label' => '订单管理',
