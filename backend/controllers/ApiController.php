@@ -110,7 +110,7 @@ class ApiController extends \yii\rest\Controller
                 // 处理格式
                 foreach ($items as $key => $item) {
                     $items[$key]['_isNew'] = false;
-                    $items[$key]['text'] = implode(',', $items[$key]['values']);
+                    $items[$key]['text'] = implode('、', $items[$key]['values']);
                     $items[$key]['specificationValueString'] = implode(',', $items[$key]['values']);
                     $items[$key]['price'] = [
                         'market' => $item['market_price'],
@@ -123,7 +123,7 @@ class ApiController extends \yii\rest\Controller
                     if (!isset($items[$key]['text'])) {
                         $items[$key]['text'] = '';
                     } elseif (isset($itemSpecificationTexts[$key])) {
-                        $items[$key]['text'] = implode(',', $itemSpecificationTexts[$key]);
+                        $items[$key]['text'] = implode('、', $itemSpecificationTexts[$key]);
                     }
                 }
             } else {

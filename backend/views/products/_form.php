@@ -152,7 +152,7 @@ use yii\widgets\ActiveForm;
                                         </thead>
                                         <tbody>
                                             <tr v-for="item in items" v-bind:class="{'disabled': !item.enabled, 'enabled': item.enabled, 'new': item._isNew}">
-                                                <td>
+                                                <td class="item-specification-values">
                                                     {{ item.text }}
                                                     <input type="hidden" name="Product[skuItems][id][]" value="{{ item.id }}" />
                                                     <input type="hidden" name="Product[skuItems][specification_value_ids][]" value="{{ item.specificationValueString }}" />

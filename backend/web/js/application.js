@@ -233,15 +233,17 @@ $(document).on('click', '#btn-dynamic-add-specifications-row', function () {
                 name: 'Specification[valuesData][' + indexCounter + '][id]'
             });
         } else {
+            var elementType = $(elements[i]).attr('type');
             attrs = {};
-            if (element.prev().is("input")) {
+            if (elementType === 'text') {
                 attrs.value = '';
-            } else if (element.prev().is('select')) {
-                attrs.index = 0;
-            } else if (element.prev().is('checkbox')) {
+            } else if (elements[i].tagName.toLowerCase() == 'select') {
+                // @todo
+                // $(elements[i])[0].selectedIndex = 5;
+            } else if (elementType === 'checkbox') {
                 attrs.checked = 'checked';
             }
-            id = element.attr('id')
+            id = element.attr('id');
             if (typeof id !== typeof undefined && id !== false) {
                 attrs.id = id.replace('0', indexCounter);
             }

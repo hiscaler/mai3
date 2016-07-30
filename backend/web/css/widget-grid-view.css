@@ -461,6 +461,10 @@
     border-radius: 0;
     text-align: center;
 }
+#mai3-item-specification-values-combination-render td.item-specification-values {
+    width: 160px;
+    text-align: left;
+}
 #mai3-item-specification-values-combination-render th.item-sn {
     width: 150px;
 }
