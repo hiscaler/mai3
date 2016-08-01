@@ -13,15 +13,19 @@ class m151118_150436_create_type_property_table extends Migration
     public function up()
     {
         $this->createTable('{{%type_property}}', [
-            'type_id' => $this->integer()->notNull(),
-            'name' => $this->string(30)->notNull(),
-            'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
-            'tenant_id' => $this->integer()->notNull(),
-            'created_at' => $this->integer()->notNull(),
-            'created_by' => $this->integer()->notNull(),
-            'updated_at' => $this->integer()->notNull(),
-            'updated_by' => $this->integer()->notNull(),
+            'id' => $this->primaryKey(),
+            'type_id' => $this->integer()->notNull()->comment('商品类型 id'),
+            'name' => $this->string(30)->notNull()->comment('属性名称'),
+            'return_type' => $this->smallInteger()->notNull()->defaultValue(0)->comment('返回值类型'),
+            'input_method' => $this->string(12)->notNull()->comment('录入方式'),
+            'input_values' => $this->string()->comment('录入选项'),
+            'input_default_value' => $this->string()->comment('默认值'),
+            'ordering' => $this->smallInteger()->notNull()->defaultValue(1)->comment('排序'),
+            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'created_at' => $this->integer()->notNull()->comment('添加时间'),
+            'created_by' => $this->integer()->notNull()->comment('添加人'),
+            'updated_at' => $this->integer()->notNull()->comment('更新时间'),
+            'updated_by' => $this->integer()->notNull()->comment('更新人'),
         ]);
     }
 

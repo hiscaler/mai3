@@ -43,7 +43,44 @@ use yii\widgets\ActiveForm;
 
                 <div id="tab-properties" class="tab-pane" style="display: none;">
                     <div class="panel-body">
-                        properties
+                        <div class="grid-view">
+                            <table class="table">
+                                <thead>
+                                <caption>
+                                    <a id="btn-add-type-property" href="javascript:;" class="btn">添加属性</a>
+                                </caption>
+                                <tr>
+                                    <th class="type-property-name">属性名称</th>
+                                    <th style="type-property-return-type">返回值类型</th>
+                                    <th style="type-property-input-method">输入方式</th>
+                                    <th class="last">默认值</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <?php if ($model->properties): ?>
+                                        <?php foreach ($model->properties as $key => $property): ?>
+                                            <tr class="property-<?= $key ?>">
+                                                <td>
+                                                    <?= Html::checkbox('Type[specificationIdList][]', in_array($property->id, $model->specificationIdList), ['value' => $spec->id]) ?>
+                                                </td>
+                                                <td><?= $property['name'] ?></td>
+                                                <td>
+                                                    <?php foreach ($property->values as $value): ?>
+                                                        <?= $value['text'] ?>　
+                                                    <?php endforeach; ?>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    <?php else: ?>
+                                        <tr class="property-0">
+                                            <td><?= $form->field($model, 'properties[name][]', ['template' => '{input}'])->textInput(['maxlength' => true]) ?></td>
+                                            <td><?= $form->field($model, 'properties[return_type][]', ['template' => '{input}'])->dropDownList(\common\models\TypeProperty::returnTypeOptions()) ?></td>
+
+                                        </tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
