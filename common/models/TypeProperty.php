@@ -53,7 +53,7 @@ class TypeProperty extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['type_id', 'name', 'input_method', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'required'],
+            [['type_id', 'name', 'input_method'], 'required'],
             [['type_id', 'return_type', 'ordering', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 30],
             [['input_method'], 'string', 'max' => 12],
@@ -114,6 +114,24 @@ class TypeProperty extends \yii\db\ActiveRecord
         $options = self::inputMethodOptions();
 
         return isset($options[$this->input_method]) ? $options[$this->input_method] : null;
+    }
+
+    // Events
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if ($insert) {
+                $this->created_at = $this->updated_at = time();
+                $this->created_by = $this->updated_by = Yii::$app->getUser()->getId();
+            } else {
+                $this->updated_at = time();
+                $this->updated_by = Yii::$app->getUser()->getId();
+            }
+            
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

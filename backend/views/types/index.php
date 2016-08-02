@@ -31,7 +31,13 @@ $this->params['menus'] = [
                 'attribute' => 'ordering',
                 'contentOptions' => ['class' => 'ordering'],
             ],
-            'name',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return yii\helpers\Html::a($model['name'], ['update', 'id' => $model['id']]);
+                }
+            ],
             [
                 'attribute' => 'status',
                 'format' => 'boolean',

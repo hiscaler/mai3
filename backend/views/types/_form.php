@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
                             <table class="table">
                                 <thead>
                                 <caption>
-                                    <a id="btn-add-type-property" href="javascript:;" class="btn">添加属性</a>
+                                    <a id="btn-add-type-property" href="<?= yii\helpers\Url::toRoute(['create-property', 'typeId' => $model['id']]) ?>" class="btn">添加属性</a>
                                 </caption>
                                 <tr>
                                     <th class="type-property-name">属性名称</th>
@@ -57,27 +57,12 @@ use yii\widgets\ActiveForm;
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if ($model->properties): ?>
-                                        <?php foreach ($model->properties as $key => $property): ?>
-                                            <tr class="property-<?= $key ?>">
-                                                <td>
-                                                    <?= Html::checkbox('Type[specificationIdList][]', in_array($property->id, $model->specificationIdList), ['value' => $spec->id]) ?>
-                                                </td>
-                                                <td><?= $property['name'] ?></td>
-                                                <td>
-                                                    <?php foreach ($property->values as $value): ?>
-                                                        <?= $value['text'] ?>　
-                                                    <?php endforeach; ?>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr class="property-0">
-                                            <td><?= $form->field($model, 'properties[name][]', ['template' => '{input}'])->textInput(['maxlength' => true]) ?></td>
-                                            <td><?= $form->field($model, 'properties[return_type][]', ['template' => '{input}'])->dropDownList(\common\models\TypeProperty::returnTypeOptions()) ?></td>
-
-                                        </tr>
-                                    <?php endif; ?>
+                                    <tr v-for="item in type.properties">
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.return_type }}</td>
+                                        <td>{{ item.input_method }}</td>
+                                        <td>{{ item.input_default_value }}</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -131,3 +116,12 @@ use yii\widgets\ActiveForm;
 
     </div>
 </div>
+
+<?php backend\components\JsBlock::begin() ?>
+<script type="text/javascript">
+    var url = '<?= \yii\helpers\Url::toRoute(['api/type-properties', 'typeId' => $model['id']]) ?>';
+    Vue.http.get(url).then((res) => {
+        vm.type.properties = res.data;
+    });
+</script>
+<?php backend\components\JsBlock::end() ?>

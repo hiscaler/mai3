@@ -18,7 +18,7 @@ backend\assets\AppAsset::register($this);
         <title><?= Html::encode($this->title) ?> - <?= Yii::$app->name ?></title>
         <?php $this->head() ?>
     </head>
-    <body>
+    <body id="mai3-app">
         <?php $this->beginBody() ?>
 
         <div id="page-hd">

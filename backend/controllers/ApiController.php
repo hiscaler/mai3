@@ -138,4 +138,19 @@ class ApiController extends \yii\rest\Controller
         ]);
     }
 
+    /**
+     * 获取商品类型属性值
+     * @param integer $typeId
+     * @return Response
+     */
+    public function actionTypeProperties($typeId)
+    {
+        $data = Yii::$app->getDb()->createCommand('SELECT * FROM {{%type_property}} WHERE [[type_id]] = :typeId', [':typeId' => (int) $typeId])->queryAll();
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $data,
+        ]);
+    }
+
 }

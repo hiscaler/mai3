@@ -286,13 +286,16 @@ $(document).on('click', '.btn-delete-dynamic-table-row', function () {
 });
 
 var vm = new Vue({
-    el: '#mai3-item-specifications',
+    el: '#mai3-app',
     data: {
         original: {},
         _items: [],
         items: [],
         specifications: [],
-        rawSpecificationValues: []
+        rawSpecificationValues: [],
+        type: {
+            properties: []
+        }
     },
     methods: {
         checkSpecificationValue: function (event) {
@@ -408,3 +411,19 @@ var vm = new Vue({
 
 Vue.http.options.root = '/root';
 Vue.http.headers.common['Authorization'] = 'Basic YXBpOnBhc3N3b3Jk';
+
+// 打开商品属性处理表单
+$('a#btn-add-type-property').on('click', function () {
+    var $t = $(this);
+    layer.open({
+        type: 2,
+        area: ['500px', '500px'],
+        content: [$t.attr('href'), 'no'],
+        btn: ['保存', '关闭'],
+        yes: function (index, layero) {
+        }, btn2: function (index, layero) {
+        }
+    });
+    
+    return false;
+});

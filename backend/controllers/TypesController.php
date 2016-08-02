@@ -116,6 +116,27 @@ class TypesController extends ShopController
     }
 
     /**
+     * 添加商品属性
+     * @param integer $typeId
+     * @return mixed
+     */
+    public function actionCreateProperty($typeId)
+    {
+        $this->layout = 'ajax';
+        $type = $this->findModel($typeId);
+        $model = new \common\models\TypeProperty();
+        $model->type_id = $type['id'];
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create-property', [
+                    'model' => $model,
+            ]);
+        }
+    }
+
+    /**
      * Finds the Type model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
