@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'input_method')->dropDownList(\common\models\TypeProperty::inputMethodOptions()) ?>
 
-        <?= $form->field($model, 'input_values')->textInput(['maxlength' => true]) ?>
+        <?= $form->field($model, 'input_values')->textarea() ?>
 
         <?= $form->field($model, 'input_default_value')->textInput(['maxlength' => true]) ?>
 

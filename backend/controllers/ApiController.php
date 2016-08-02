@@ -146,10 +146,55 @@ class ApiController extends \yii\rest\Controller
     public function actionTypeProperties($typeId)
     {
         $data = Yii::$app->getDb()->createCommand('SELECT * FROM {{%type_property}} WHERE [[type_id]] = :typeId', [':typeId' => (int) $typeId])->queryAll();
+        foreach ($data as $key => $item) {
+            $item['value'] = null;
+            if ($item['input_method'] == \common\models\TypeProperty::INPUT_METHOD_DROPDOWNLIST) {
+                $inputValues = [];
+                foreach (explode(PHP_EOL, $item['input_values']) as $row) {
+                    $row = explode(':', $row);
+                    if (count($row) == 2) {
+                        $inputValues[$row[0]] = $row[1];
+                    }
+                }
+                $item['input_values'] = $inputValues;
+            }
+            $data[$key] = $item;
+        }
 
         return new Response([
             'format' => Response::FORMAT_JSON,
             'data' => $data,
+        ]);
+    }
+
+    public function actionProductProperties($productId, $typeId)
+    {
+        $typeProperties = (new \yii\db\Query())->select('*')->from('{{%type_property}}')
+            ->where(['type_id' => (int) $typeId])
+            ->indexBy('id')
+            ->all();
+        $productPropertyValues = (new \yii\db\Query())->select('value')->from('{{%product_property}}')
+            ->where(['product_id' => (int) $productId])
+            ->indexBy('property_id')
+            ->column();
+        foreach ($typeProperties as $key => $item) {
+            $item['value'] = isset($productPropertyValues[$key]) ? $productPropertyValues[$key] : null;
+            if ($item['input_method'] == \common\models\TypeProperty::INPUT_METHOD_DROPDOWNLIST) {
+                $inputValues = [];
+                foreach (explode(PHP_EOL, $item['input_values']) as $row) {
+                    $row = explode(':', $row);
+                    if (count($row) == 2) {
+                        $inputValues[$row[0]] = $row[1];
+                    }
+                }
+                $item['input_values'] = $inputValues;
+            }
+            $typeProperties[$key] = $item;
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $typeProperties,
         ]);
     }
 

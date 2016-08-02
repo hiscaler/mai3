@@ -24,6 +24,7 @@ use yii\widgets\ActiveForm;
                 <li><a data-toggle="tab-content" href="#tab-content">详情描述</a></li>
                 <li><a data-toggle="tab-images" href="#tab-images">商品图片</a></li>
                 <li><a data-toggle="tab-specifications" href="#tab-specifications">商品规格</a></li>
+                <li><a data-toggle="tab-properties" href="#tab-properties">商品属性</a></li>
             </ul>
 
             <div class="tab-content">
@@ -173,9 +174,24 @@ use yii\widgets\ActiveForm;
                             </div>
                         </div>
                     </div>
-                    <!-- // 商品规格 -->                   
-
+                    <!-- // 商品规格 -->
                 </div>
+                
+                <!-- 商品属性 -->
+                <div id="tab-properties" class="tab-pane" style="display: none;">
+                    <div class="panel-body">
+                        <div class="form-group" v-for="item in product.properties">
+                            <label class="control-label" for="product-type-property-{{ item.id }}">{{ item.name }}</label>
+                            <input type="hidden" name="Product[propertyItems][id][]" v-model="item.id" />
+                            <input v-if="item.input_method == 0" type="text" name="Product[propertyItems][value][]" v-model="item.value" />
+                            <select v-if="item.input_method == 2" name="Product[propertyItems][value][]" v-model="item.value">
+                                <option v-model="{{ v }}" v-for="v in item.input_values">{{ v }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <!-- // 商品属性 -->
+                
             </div>
             <div class="form-group buttons">
                 <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -198,6 +214,10 @@ use yii\widgets\ActiveForm;
         vm.rawSpecificationValues = res.data.checkedSpecificationValues;
     });
     <?php if (!$model->isNewRecord): ?>
+    url = '<?= \yii\helpers\Url::toRoute(['api/product-properties', 'productId' => $model['id'], 'typeId' => $model['type_id']]) ?>';
+    Vue.http.get(url).then((res) => {
+        vm.product.properties = res.data;
+    });
     Mai3.reference.product = {
         name: '<?= $model->name ?>',
         snPrefix: '<?= $model->sn ?>',

@@ -57,6 +57,7 @@ class Product extends BaseActiveRecord
      * @var array
      */
     public $skuItems;
+    public $propertyItems;
 
     /**
      * @inheritdoc
@@ -82,7 +83,7 @@ class Product extends BaseActiveRecord
             ['sn', 'unique', 'targetAttribute' => ['sn', 'tenant_id']],
             [['name'], 'string', 'max' => 50],
             [['picture_path', 'keywords'], 'string', 'max' => 100],
-            [['imageFiles', 'skuItems'], 'safe'],
+            [['imageFiles', 'skuItems', 'propertyItems'], 'safe'],
         ];
     }
 
@@ -294,6 +295,28 @@ class Product extends BaseActiveRecord
                         $cmd->batchInsert('{{%item_specification_value}}', ['item_id', 'specification_value_id'], $batchInsertRows)->execute();
                     }
                 }
+            }
+        }
+
+        // 商品属性处理
+        $propertyItems = $this->propertyItems;
+        if (isset($propertyItems['id']) && $propertyItems['value'] && $propertyItems['id'] && count($propertyItems['id']) == count($propertyItems['value'])) {
+            // @todo 需要优化
+            if (!$insert) {
+                $db->createCommand()->delete('{{%product_property}}', ['product_id' => $this->id])->execute();
+            }
+            $propertyItems = array_combine($propertyItems['id'], $propertyItems['value']);
+            $batchInsertRows = [];
+            foreach ($propertyItems as $id => $value) {
+                $columns = [
+                    'product_id' => $this->id,
+                    'property_id' => $id,
+                    'value' => $value,
+                ];
+                $batchInsertRows[] = array_values($columns);
+            }
+            if ($batchInsertRows) {
+                $db->createCommand()->batchInsert('{{%product_property}}', array_keys($columns), $batchInsertRows)->execute();
             }
         }
     }

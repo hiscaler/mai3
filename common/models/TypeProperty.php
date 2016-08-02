@@ -57,7 +57,8 @@ class TypeProperty extends \yii\db\ActiveRecord
             [['type_id', 'return_type', 'ordering', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 30],
             [['input_method'], 'string', 'max' => 12],
-            [['input_values', 'input_default_value'], 'string', 'max' => 255],
+            [['input_default_value'], 'string', 'max' => 255],
+            [['input_values'], 'safe'],
         ];
     }
 
@@ -127,7 +128,7 @@ class TypeProperty extends \yii\db\ActiveRecord
                 $this->updated_at = time();
                 $this->updated_by = Yii::$app->getUser()->getId();
             }
-            
+
             return true;
         } else {
             return false;

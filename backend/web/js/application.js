@@ -295,6 +295,9 @@ var vm = new Vue({
         rawSpecificationValues: [],
         type: {
             properties: []
+        },
+        product: {
+            properties: []
         }
     },
     methods: {
