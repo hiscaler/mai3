@@ -23,6 +23,8 @@ use Yii;
 class PaymentConfig extends BaseActiveRecord
 {
 
+    public $configs = [];
+
     /**
      * @inheritdoc
      */
@@ -41,7 +43,9 @@ class PaymentConfig extends BaseActiveRecord
             [['config', 'description'], 'string'],
             [['ordering', 'status', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['key'], 'string', 'max' => 16],
-            [['name'], 'string', 'max' => 100]
+            ['key', 'unique', 'targetAttribute' => ['key', 'tenant_id']],
+            [['name'], 'string', 'max' => 100],
+            [['configs'], 'safe'],
         ];
     }
 
@@ -66,11 +70,74 @@ class PaymentConfig extends BaseActiveRecord
         ];
     }
 
+    /**
+     * 支付方式
+     * @return array
+     */
+    public static function keyOptions()
+    {
+        $options = [];
+        $rawData = isset(Yii::$app->params['pay']) ? Yii::$app->params['pay'] : [];
+        foreach ($rawData as $key => $value) {
+            $options[$key] = $key;
+        }
+
+        return $options;
+    }
+
+    /**
+     * 检测支付配置是否有效
+     * 
+     * @param string $key
+     * @return boolean
+     */
+    public static function validateConfig($key)
+    {
+        $valid = true;
+        if (isset(Yii::$app->params['pay'][$key]) && $config = Yii::$app->params['pay'][$key]) {
+            foreach ($config as $conf) {
+                if (
+                    !isset($conf['name']) ||
+                    !isset($conf['type']) ||
+                    !in_array($conf['type'], ['text', 'select', 'radio']) ||
+                    ($conf['type'] == 'select' && !isset($conf['items']) || ($conf['type'] == 'select' && !$conf['items']))
+                ) {
+                    $valid = false;
+                    break;
+                }
+            }
+        } else {
+            $valid = false;
+        }
+
+        return $valid;
+    }
+
     // 事件
+    public function afterFind()
+    {
+        parent::afterFind();
+        if ($this->config) {
+            $config = unserialize($this->config);
+            if (is_array($config)) {
+                $this->configs = $config;
+            }
+        } else {
+            $this->configs = [];
+        }
+    }
+
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            $this->config = serialize($this->config);
+            $this->key = strtolower($this->key);
+            $paymentDataFormat = isset(Yii::$app->params['pay'][$this->key]) ? Yii::$app->params['pay'][$this->key] : [];
+            foreach ($paymentDataFormat as $key => $value) {
+                if (isset($this->configs[$key])) {
+                    $paymentDataFormat[$key]['value'] = $this->configs[$key];
+                }
+            }
+            $this->config = serialize($paymentDataFormat);
 
             return true;
         } else {
