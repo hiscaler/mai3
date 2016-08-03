@@ -183,7 +183,7 @@ class ApiController extends \yii\rest\Controller
                 $inputValues = [];
                 foreach (explode(PHP_EOL, $item['input_values']) as $row) {
                     $row = explode(':', $row);
-                    if (count($row) == 2) {
+                    if (count($row) == 2 && !empty($row[0]) && !empty($row[1])) {
                         $inputValues[$row[0]] = $row[1];
                     }
                 }
