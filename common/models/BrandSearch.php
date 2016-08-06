@@ -18,8 +18,8 @@ class BrandSearch extends Brand
     public function rules()
     {
         return [
-            [['id', 'ordering', 'tenant_id', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['alias', 'name', 'icon_path', 'description'], 'safe'],
+            [['id', 'status'], 'integer'],
+            [['alias', 'name'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ class BrandSearch extends Brand
      */
     public function search($params)
     {
-        $query = Brand::find();
+        $query = Brand::find()->where(['tenant_id' => Yad::getTenantId()]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,19 +57,11 @@ class BrandSearch extends Brand
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'ordering' => $this->ordering,
-            'tenant_id' => $this->tenant_id,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
         ]);
 
         $query->andFilterWhere(['like', 'alias', $this->alias])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'icon_path', $this->icon_path])
-            ->andFilterWhere(['like', 'description', $this->description]);
+            ->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }

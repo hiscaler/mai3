@@ -18,29 +18,11 @@ use yii\widgets\ActiveForm;
         ]);
         ?>
 
-        <?= $form->field($model, 'id') ?>
-
         <?= $form->field($model, 'alias') ?>
 
         <?= $form->field($model, 'name') ?>
 
-        <?= $form->field($model, 'icon_path') ?>
-
-        <?= $form->field($model, 'description') ?>
-
-        <?php // echo $form->field($model, 'ordering') ?>
-
-        <?php // echo $form->field($model, 'tenant_id') ?>
-
         <?php // echo $form->field($model, 'status') ?>
-
-        <?php // echo $form->field($model, 'created_at') ?>
-
-        <?php // echo $form->field($model, 'created_by') ?>
-
-        <?php // echo $form->field($model, 'updated_at') ?>
-
-        <?php // echo $form->field($model, 'updated_by')  ?>
 
         <div class="form-group buttons">
             <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
