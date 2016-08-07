@@ -58,7 +58,7 @@ class UsersController extends GlobalController
     public function actionIndex()
     {
         Url::remember(Yii::$app->getRequest()->getUrl());
-        $searchModel = new TenantUserSearch();
+        $searchModel = new \app\models\UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -75,8 +75,7 @@ class UsersController extends GlobalController
     public function actionCreate()
     {
         $model = new RegisterForm();
-        $model->type = User::TYPE_BACKEND;
-        $model->role = User::ROLE_USER;
+        $model->type = User::TYPE_USER;
         $model->status = User::STATUS_ACTIVE;
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {

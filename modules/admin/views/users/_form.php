@@ -26,8 +26,6 @@ use app\models\User;
 
         <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
-        <?= $form->field($model, 'role')->dropDownList(User::roleOptions(), ['prompt' => '']) ?>
-
         <?= $form->field($model, 'status')->dropDownList(User::statusOptions(), ['prompt' => '']) ?>
 
         <div class="form-group buttons">

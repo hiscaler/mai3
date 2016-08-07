@@ -28,7 +28,7 @@ use yii\widgets\ActiveForm;
         </div>
 
         <div class="entry">
-            <?php echo $form->field($model, 'user_group_id')->dropDownList(Tenant::userGroups(), ['prompt' => '']) ?>
+            <?php //echo $form->field($model, 'user_group_id')->dropDownList(Tenant::userGroups(), ['prompt' => '']) ?>
 
             <?php // echo $form->field($model, 'role')->dropDownList(User::roleOptions(), ['prompt' => '']) ?>
         </div>

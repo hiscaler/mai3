@@ -18,6 +18,7 @@ class m151106_155959_create_user_table extends Migration
 
         $this->createTable('{{%user}}', [
             'id' => $this->primaryKey(),
+            'type' => $this->boolean()->notNull()->defaultValue(0)->comment('用户类型'),
             'username' => $this->string(20)->notNull()->unique()->comment('用户名'),
             'nickname' => $this->string(20)->notNull()->unique()->comment('昵称'),
             'auth_key' => $this->string(32)->notNull()->comment('认证 key'),

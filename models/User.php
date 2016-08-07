@@ -12,6 +12,7 @@ use yii\web\IdentityInterface;
  * User model
  *
  * @property integer $id
+ * @property integer $type
  * @property string $username
  * @property string $password_hash
  * @property string $password_reset_token
@@ -25,6 +26,15 @@ use yii\web\IdentityInterface;
 class User extends ActiveRecord implements IdentityInterface
 {
 
+    /**
+     * 用户类型
+     */
+    const TYPE_USER = 0;
+    const TYPE_MEMBER = 1;
+
+    /**
+     * 用户状态
+     */
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
@@ -195,6 +205,14 @@ class User extends ActiveRecord implements IdentityInterface
             'nickname' => Yii::t('user', 'Nickname'),
             'email' => Yii::t('user', 'Email'),
             'enabled' => Yii::t('app', 'Enabled'),
+        ];
+    }
+
+    public static function statusOptions()
+    {
+        return [
+            self::STATUS_DELETED => '禁止',
+            self::STATUS_ACTIVE => '激活',
         ];
     }
 
