@@ -310,6 +310,12 @@ ul.list li em {
     top: 0;
     height: 50px;
     z-index: 1000;
+    font-size: 14px;
+}
+#header #header-account-manage a {
+    font-size: 14px;
+    color: #FFF;
+    margin: 0 10px;
 }
 #header #main-menu a {
     font-size: 14px;

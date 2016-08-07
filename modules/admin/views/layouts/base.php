@@ -29,7 +29,8 @@ app\modules\admin\assets\AppAsset::register($this);
                         <?= MainMenu::widget() ?>
                     </div>
                     <div id="header-account-manage">
-                        Account
+                        您好，<?= Yii::$app->getUser()->getIdentity()->username ?> [<a href="<?= \yii\helpers\Url::toRoute(['default/logout']) ?>">退出</a>]
+                        <a href="<?= \yii\helpers\Url::toRoute(Yii::$app->homeUrl) ?>" target="_blank">店铺首页</a>
                     </div>
                 </div>
                 <!-- // Header -->

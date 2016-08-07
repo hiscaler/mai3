@@ -2,11 +2,12 @@
 
 namespace app\modules\admin\controllers;
 
-use backend\forms\ChangeMyPasswordForm;
-use backend\forms\LoginForm;
+use app\models\Constant;
 use app\models\Option;
 use app\models\User;
 use app\models\Yad;
+use app\modules\admin\forms\ChangeMyPasswordForm;
+use app\modules\admin\forms\LoginForm;
 use PDO;
 use Yii;
 use yii\filters\AccessControl;
@@ -80,15 +81,15 @@ class DefaultController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            $tenantIds = Yii::$app->db->createCommand('SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId AND [[enabled]] = :enabled')->bindValues([
+            $tenantIds = Yii::$app->db->createCommand('SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId AND [[status]] = :status')->bindValues([
                     ':userId' => Yii::$app->user->id,
-                    ':enabled' => Option::BOOLEAN_TRUE
+                    ':status' => Option::BOOLEAN_TRUE
                 ])->queryColumn();
             if (count($tenantIds) == 1) {
                 Yad::setTenantData($tenantIds[0]);
-                $url = ['default/index'];
+                $url = ['/admin/default/index'];
             } else {
-                $url = ['default/choice-tenant'];
+                $url = ['/admin/default/choice-tenant'];
             }
 
             return $this->redirect($url);
@@ -190,7 +191,7 @@ class DefaultController extends Controller
     {
         $this->layout = 'base';
         $tenants = Yii::$app->db->createCommand('SELECT [[id]], [[name]], [[domain_name]], [[description]] FROM {{%tenant}} WHERE [[enabled]] = :enabled AND [[id]] IN (SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId)')->bindValues([
-                ':enabled' => \app\models\Constant::BOOLEAN_TRUE,
+                ':enabled' => Constant::BOOLEAN_TRUE,
                 ':userId' => Yii::$app->user->id
             ])->queryAll();
 
