@@ -19,8 +19,8 @@ class MemberSearch extends User
     public function rules()
     {
         return [
-            [['id', 'role', 'register_ip', 'last_login_time', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['username', 'nickname', 'auth_key', 'password_hash', 'password_reset_token', 'email'], 'safe'],
+            [['id', 'role', 'register_ip', 'last_login_time', 'status'], 'integer'],
+            [['username', 'email'], 'safe'],
         ];
     }
 
@@ -42,7 +42,7 @@ class MemberSearch extends User
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = User::find()->where(['type' => self::TYPE_MEMBER]);
 
         // add conditions that should always apply here
 
@@ -63,21 +63,11 @@ class MemberSearch extends User
             'id' => $this->id,
             'role' => $this->role,
             'register_ip' => $this->register_ip,
-            'login_count' => $this->login_count,
-            'last_login_ip' => $this->last_login_ip,
             'last_login_time' => $this->last_login_time,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'nickname', $this->nickname])
-            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
-            ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
             ->andFilterWhere(['like', 'email', $this->email]);
 
         return $dataProvider;

@@ -39,11 +39,6 @@ class GlobalControlPanel extends Widget
                         'url' => ['labels/index'],
                         'active' => $controllerId == 'labels',
                     ],
-                    [
-                        'label' => '会员管理',
-                        'url' => ['members/index'],
-                        'active' => $controllerId == 'members',
-                    ],
                 ]
             ],
             [
