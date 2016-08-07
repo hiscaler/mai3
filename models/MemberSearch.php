@@ -19,7 +19,7 @@ class MemberSearch extends User
     public function rules()
     {
         return [
-            [['id', 'role', 'register_ip', 'last_login_time', 'status'], 'integer'],
+            [['id', 'role', 'register_ip', 'last_login_time', 'user_group', 'system_group', 'status'], 'integer'],
             [['username', 'email'], 'safe'],
         ];
     }
@@ -64,6 +64,8 @@ class MemberSearch extends User
             'role' => $this->role,
             'register_ip' => $this->register_ip,
             'last_login_time' => $this->last_login_time,
+            'user_group' => $this->user_group,
+            'system_group' => $this->system_group,
             'status' => $this->status,
         ]);
 

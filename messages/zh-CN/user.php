@@ -18,6 +18,8 @@ return [
     'Guest' => '来宾用户',
     'Administrator' => '管理员',
     'User' => '普通用户',
+    'User Group' => '用户组',
+    'System Group' => '系统组',
     'Register IP' => '注册 IP',
     'Login Count' => '登陆次数',
     'Last Login Time' => '最后登陆时间',

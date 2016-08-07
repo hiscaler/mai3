@@ -18,6 +18,9 @@ use yii\web\IdentityInterface;
  * @property string $password_reset_token
  * @property string $email
  * @property string $auth_key
+ * @property integer $credits_count
+ * @property integer $user_group
+ * @property integer $system_group
  * @property integer $status
  * @property integer $created_at
  * @property integer $updated_at
@@ -62,6 +65,8 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['credits_count', 'user_group', 'system_group'], 'integer'],
+            [['credits_count', 'user_group', 'system_group'], 'default', 'value' => 0],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
@@ -205,6 +210,10 @@ class User extends ActiveRecord implements IdentityInterface
             'nickname' => Yii::t('user', 'Nickname'),
             'email' => Yii::t('user', 'Email'),
             'enabled' => Yii::t('app', 'Enabled'),
+            'user_group' => Yii::t('user', 'User Group'),
+            'user_group_text' => Yii::t('user', 'User Group'),
+            'system_group' => Yii::t('user', 'System Group'),
+            'system_group_text' => Yii::t('user', 'System Group'),
         ];
     }
 
@@ -214,6 +223,20 @@ class User extends ActiveRecord implements IdentityInterface
             self::STATUS_DELETED => '禁止',
             self::STATUS_ACTIVE => '激活',
         ];
+    }
+
+    public function getUser_group_text()
+    {
+        $options = UserGroup::userGroupOptions();
+
+        return isset($options[$this->user_group]) ? $options[$this->user_group] : null;
+    }
+
+    public function getSystem_group_text()
+    {
+        $options = UserGroup::systemGroupOptions();
+
+        return isset($options[$this->system_group]) ? $options[$this->system_group] : null;
     }
 
 }

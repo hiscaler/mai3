@@ -59,6 +59,14 @@ $this->params['menus'] = [
             ],
             'email:email',
             [
+                'attribute' => 'user_group_text',
+                'contentOptions' => ['class' => 'user-group'],
+            ],
+            [
+                'attribute' => 'system_group_text',
+                'contentOptions' => ['class' => 'system-group'],
+            ],
+            [
                 'attribute' => 'status',
                 'format' => 'boolean',
                 'contentOptions' => ['class' => 'boolean enabled-enable-handler pointer']

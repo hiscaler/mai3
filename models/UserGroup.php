@@ -84,6 +84,24 @@ class UserGroup extends \yii\db\ActiveRecord
         return isset($options[$this->type]) ? $options[$this->type] : null;
     }
 
+    /**
+     * 用户组
+     * @return array
+     */
+    public static function userGroupOptions()
+    {
+        return (new \yii\db\Query())->select('name')->from(self::tableName())->where(['type' => self::TYPE_USER_GROUP])->indexBy('id')->column();
+    }
+
+    /**
+     * 系统组
+     * @return array
+     */
+    public static function systemGroupOptions()
+    {
+        return (new \yii\db\Query())->select('name')->from(self::tableName())->where(['type' => self::TYPE_SYSTEM_GROUP])->indexBy('id')->column();
+    }
+
     // Events
     public function beforeSave($insert)
     {
