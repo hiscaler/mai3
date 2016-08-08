@@ -2,15 +2,16 @@
 
 namespace app\controllers;
 
-use Yii;
-use yii\filters\AccessControl;
-use yii\web\Controller;
-use yii\filters\VerbFilter;
-use app\models\LoginForm;
+use app\forms\SigninForm;
+use app\forms\SignupForm;
 use app\models\ContactForm;
+use Yii;
+use yii\base\Security;
+use yii\filters\AccessControl;
 
 class SiteController extends Controller
 {
+
     /**
      * @inheritdoc
      */
@@ -26,12 +27,6 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                ],
-            ],
-            'verbs' => [
-                'class' => VerbFilter::className(),
-                'actions' => [
-                    'logout' => ['post'],
                 ],
             ],
         ];
@@ -64,22 +59,42 @@ class SiteController extends Controller
     }
 
     /**
+     * 用户注册
+     * @return mixed
+     */
+    public function actionSignup()
+    {
+        $model = new SignupForm();
+
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->password_hash = (new Security())->generatePasswordHash($model->password);
+            if ($model->save()) {
+                return $this->redirect(['index']);
+            }
+        }
+
+        return $this->render('signup', [
+                'model' => $model,
+        ]);
+    }
+
+    /**
      * Login action.
      *
      * @return string
      */
-    public function actionLogin()
+    public function actionSignin()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
-        $model = new LoginForm();
+        $model = new SigninForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
-        return $this->render('login', [
-            'model' => $model,
+        return $this->render('signin', [
+                'model' => $model,
         ]);
     }
 
@@ -109,7 +124,7 @@ class SiteController extends Controller
             return $this->refresh();
         }
         return $this->render('contact', [
-            'model' => $model,
+                'model' => $model,
         ]);
     }
 
@@ -122,4 +137,5 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
 }
