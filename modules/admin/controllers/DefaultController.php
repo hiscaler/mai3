@@ -190,9 +190,9 @@ class DefaultController extends Controller
     public function actionChoiceTenant()
     {
         $this->layout = 'base';
-        $tenants = Yii::$app->db->createCommand('SELECT [[id]], [[name]], [[domain_name]], [[description]] FROM {{%tenant}} WHERE [[enabled]] = :enabled AND [[id]] IN (SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId)')->bindValues([
-                ':enabled' => Constant::BOOLEAN_TRUE,
-                ':userId' => Yii::$app->user->id
+        $tenants = Yii::$app->db->createCommand('SELECT [[id]], [[name]], [[domain_name]], [[description]] FROM {{%tenant}} WHERE [[status]] = :status AND [[id]] IN (SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId)')->bindValues([
+                ':status' => Constant::BOOLEAN_TRUE,
+                ':userId' => Yii::$app->getUser()->getId()
             ])->queryAll();
 
         return $this->render('choiceTenant', [
