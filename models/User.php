@@ -9,21 +9,29 @@ use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
 /**
- * User model
+ * This is the model class for table "mai_user".
  *
  * @property integer $id
  * @property integer $type
  * @property string $username
+ * @property string $nickname
+ * @property string $auth_key
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
- * @property string $auth_key
+ * @property integer $role
  * @property integer $credits_count
  * @property integer $user_group
  * @property integer $system_group
+ * @property integer $register_ip
+ * @property integer $login_count
+ * @property integer $last_login_ip
+ * @property integer $last_login_time
  * @property integer $status
  * @property integer $created_at
+ * @property integer $created_by
  * @property integer $updated_at
+ * @property integer $updated_by
  * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
@@ -65,8 +73,16 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['credits_count', 'user_group', 'system_group'], 'integer'],
+            [['type', 'role', 'credits_count', 'user_group', 'system_group', 'register_ip', 'login_count', 'last_login_ip', 'last_login_time', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['username', 'email'], 'required'],
+            [['username', 'nickname'], 'string', 'max' => 20],
+            [['auth_key'], 'string', 'max' => 32],
+            [['password_hash', 'password_reset_token'], 'string', 'max' => 255],
+            [['email'], 'string', 'max' => 50],
             [['credits_count', 'user_group', 'system_group'], 'default', 'value' => 0],
+            [['username'], 'unique'],
+            [['email'], 'unique'],
+            [['password_reset_token'], 'unique'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
         ];
@@ -237,6 +253,33 @@ class User extends ActiveRecord implements IdentityInterface
         $options = UserGroup::systemGroupOptions();
 
         return isset($options[$this->system_group]) ? $options[$this->system_group] : null;
+    }
+
+    // Events
+    public function beforeSave($insert)
+    {
+        if (parent::beforeSave($insert)) {
+            if (empty($this->nickname)) {
+                $this->nickname = $this->username;
+            }
+            if ($insert) {
+                $this->generateAuthKey();
+                $this->register_ip = Yii::$app->getRequest()->getUserIP();
+                if ($this->type == self::TYPE_MEMBER) {
+                    $this->created_by = $this->updated_by = 0;
+                } else {
+                    $this->created_by = $this->updated_by = Yii::$app->getUser()->getId();
+                }
+                $this->created_at = $this->updated_at = time();
+            } else {
+                $this->updated_at = time();
+                $this->updated_by = Yii::$app->getUser()->getId();
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
