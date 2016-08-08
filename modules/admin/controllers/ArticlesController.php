@@ -5,15 +5,17 @@ namespace app\modules\admin\controllers;
 use Yii;
 use app\models\Article;
 use app\models\ArticleSearch;
-use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ArticlesController implements the CRUD actions for Article model.
+ * 文章管理
+ * 
+ * @author hiscaler <hiscaler@gmail.com>
  */
 class ArticlesController extends Controller
 {
+
     /**
      * @inheritdoc
      */
@@ -39,8 +41,8 @@ class ArticlesController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -52,7 +54,7 @@ class ArticlesController extends Controller
     public function actionView($id)
     {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                'model' => $this->findModel($id),
         ]);
     }
 
@@ -69,7 +71,7 @@ class ArticlesController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                    'model' => $model,
             ]);
         }
     }
@@ -88,7 +90,7 @@ class ArticlesController extends Controller
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                    'model' => $model,
             ]);
         }
     }
@@ -121,4 +123,5 @@ class ArticlesController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }
