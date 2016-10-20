@@ -17,4 +17,5 @@ return [
     'End Datetime' => '结束时间',
     'Message' => '过期提示信息',
     'Views Count' => '查看次数',
+    'Clicks Count' => '点击次数',
 ];

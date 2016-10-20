@@ -4,25 +4,34 @@
  * meta
  */
 return [
-    'Meta tables' => '自定义表单表管理',
-    'Name' => '数据库字段名称',
-    'Form Field Type' => '表单元素类型',
-    'Text Input' => '单行文本',
-    'Text Area' => '多行文本',
-    'Checkbox' => '勾选框',
-    'DropDown List' => '下拉框',
-    'DB Field Type' => '数据库字段类型',
-    'Integer' => '整形',
-    'String' => '字符型',
-    'Text' => '文本型',
-    'Validator Rule' => '数据验证规则',
-    'Boolean Validator' => '布尔值',
-    'Email Validator' => '邮箱',
-    'Number Validator' => '数字',
-    'Integer Validator' => '整型',
-    'String Validator' => '字符型',
-    'URL Validator' => 'URL',
-    'Date Validator' => '日期型',
-    'Required' => '必填',
-    'Description' => '说明',
+    'Object Name' => '对象名称',
+    'Key' => '键名',
+    'Label' => '显示名称',
+    'Description' => '描述',
+    'Input Type' => '输入类型',
+    'Input Candidate Value' => '输入候选值',
+    'Return Value Type' => '返回值类型',
+    'Default Value' => '默认值',
+    // 必填验证规则
+    'Required Validator' => '必填验证规则',
+    // 数字验证规则
+    'Integer Validator' => '验证是否是数字',
+    'Integer Min' => '最小',
+    'Integer Max' => '最大',
+    'Integer Message' => '出错提示信息',
+    // 字符验证规则
+    'String Validator' => '验证是否为字符串',
+    'String Length' => '长度',
+    'String Min' => '最短',
+    'String Max' => '最长',
+    'String Message' => '出错提示信息',
+    'String Encoding' => '字符集',
+    // 邮箱验证规则
+    'Email Validator' => '验证是否为有效的邮箱',
+    // URL 验证规则
+    'Url Validator' => '验证是否为有效的 URL 地址',
+    // 时间验证规则
+    'Date Validator' => '验证是否为有效的日期',
+    'Date Format' => '格式',
+    'Date TimeZone' => '时区',
 ];

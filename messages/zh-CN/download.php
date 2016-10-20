@@ -4,11 +4,13 @@
  * download
  */
 return [
-    'File' => '文件',
-    'Support OS' => '操作系统支持',
-    'Copyright Type' => '版权类型',
-    'Language' => '软件语言',
-    'Version' => '软件版本',
-    'Star Rating' => '评星',
+    'Title' => '标题',
+    'Path Type' => '类型',
+    'File' => '本地文件',
+    'URL' => '外部地址',
+    'Cover Photo' => '封面图片',
+    'Pay Credits' => '消耗积分',
     'Downloads Count' => '下载次数',
+    'Clicks Count' => '点击次数',
+    'Download' => '下载',
 ];
