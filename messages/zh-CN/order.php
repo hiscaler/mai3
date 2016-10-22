@@ -13,6 +13,7 @@ return [
     'Address' => '收货地址',
     'Express' => '快递公司',
     'Express Sn' => '快递单号',
+    'Status' => '状态',
     'Remark' => '备注',
     'Created At' => '下单时间',
     'Created By' => '下单人',
