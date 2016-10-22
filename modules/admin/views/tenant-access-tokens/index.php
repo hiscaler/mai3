@@ -33,7 +33,7 @@ $this->params['menus'] = [
                 'attribute' => 'tenant.name',
                 'contentOptions' => ['class' => 'tenant-name'],
             ],
-            'title',
+            'name',
             [
                 'attribute' => 'access_token',
                 'contentOptions' => ['class' => 'access-token'],

@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Constant;
 use app\models\Option;
 use app\models\TenantAccessToken;
 use app\models\TenantAccessTokenSearch;
@@ -79,7 +80,8 @@ class TenantAccessTokensController extends GlobalController
     {
         $model = new TenantAccessToken();
         $model->access_token = StringHelper::uuid();
-        $model->enabled = Option::BOOLEAN_TRUE;
+        $model->enabled = Constant::BOOLEAN_TRUE;
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -118,9 +120,9 @@ class TenantAccessTokensController extends GlobalController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $userId = Yii::$app->user->id;
+        $userId = Yii::$app->getUser()->getId();
         $now = time();
-        Yii::$app->db->createCommand()->update('{{%tenant_access_token}}', [
+        Yii::$app->getDb()->createCommand()->update('{{%tenant_access_token}}', [
             'status' => Option::STATUS_DELETED,
             'updated_by' => $userId,
             'updated_at' => $now,
@@ -140,9 +142,9 @@ class TenantAccessTokensController extends GlobalController
     public function actionUndo($id)
     {
         $model = $this->findModel($id);
-        Yii::$app->db->createCommand()->update('{{%tenant_access_token}}', [
+        Yii::$app->getDb()->createCommand()->update('{{%tenant_access_token}}', [
             'status' => Option::STATUS_PUBLISHED,
-            'updated_by' => Yii::$app->user->id,
+            'updated_by' => Yii::$app->getUser()->getId(),
             'updated_at' => time(),
             'deleted_by' => null,
             'deleted_at' => null,
@@ -158,18 +160,18 @@ class TenantAccessTokensController extends GlobalController
     public function actionToggle()
     {
         $id = Yii::$app->request->post('id');
-        $db = Yii::$app->db;
+        $db = Yii::$app->getDb();
         $value = $db->createCommand('SELECT [[enabled]] FROM {{%tenant_access_token}} WHERE [[id]] = :id')->bindValue(':id', (int) $id, PDO::PARAM_INT)->queryScalar();
         if ($value !== null) {
             $value = !$value;
             $now = time();
-            $db->createCommand()->update('{{%tenant_access_token}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->user->id], '[[id]] = :id', [':id' => (int) $id])->execute();
+            $db->createCommand()->update('{{%tenant_access_token}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
             $responseData = [
                 'success' => true,
                 'data' => [
                     'value' => $value,
                     'updatedAt' => Yii::$app->formatter->asDate($now),
-                    'updatedBy' => Yii::$app->user->getIdentity()->nickname,
+                    'updatedBy' => Yii::$app->getUser()->getIdentity()->nickname,
                 ],
             ];
         } else {

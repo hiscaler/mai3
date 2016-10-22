@@ -22,7 +22,7 @@ $this->params['menus'] = [
         'model' => $model,
         'attributes' => [
             'tenant.name',
-            'title',
+            'name',
             'access_token',
             'enabled:boolean',
             [

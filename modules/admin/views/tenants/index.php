@@ -1,6 +1,5 @@
 <?php
 
-use app\models\Option;
 use yii\grid\GridView;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -13,7 +12,7 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('app', 'Tenants');
 $this->params['breadcrumbs'][] = $this->title;
 
-$baseUrl = Yii::$app->getRequest()->getBaseUrl();
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
 
 $this->params['menus'] = [
     ['label' => Yii::t('app', 'List'), 'url' => ['index']],
@@ -65,7 +64,7 @@ $this->params['menus'] = [
             ],
             'description',
             [
-                'attribute' => 'status',
+                'attribute' => 'enabled',
                 'format' => 'boolean',
                 'contentOptions' => ['class' => 'boolean pointer enabled-handler'],
             ],
@@ -95,30 +94,14 @@ $this->params['menus'] = [
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'template' => '{view} {users} {access-tokens} {update} {delete} {undo}',
+                'template' => '{view} {users} {access-tokens} {update}',
                 'buttons' => [
                     'users' => function ($url, $model, $key) use ($baseUrl) {
                         return Html::a(Html::img($baseUrl . '/images/users.png'), ['view', 'id' => $model['id'], 'tab' => 'users'], ['data-pjax' => 0, 'class' => 'user-auth']);
                     },
-                    'users' => function ($url, $model, $key) use ($baseUrl) {
+                    'access-tokens' => function ($url, $model, $key) use ($baseUrl) {
                         return Html::a(Html::img($baseUrl . '/images/access-token.png'), ['view', 'id' => $model['id'], 'tab' => 'access-tokens'], ['data-pjax' => 0, 'title' => Yii::t('app', 'Tenant Access Tokens')]);
                     },
-                    'delete' => function ($url, $model, $key) {
-                        return $model['status'] != Option::STATUS_DELETED ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                            'title' => Yii::t('yii', 'Delete'),
-                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-                            'data-method' => 'post',
-                            'data-pjax' => '0',
-                        ]) : '';
-                    },
-                    'undo' => function ($url, $model, $key) {
-                        return $model['status'] == Option::STATUS_DELETED ? Html::a('<span class="glyphicon glyphicon-undo"></span>', $url, [
-                            'title' => Yii::t('app', 'Undo'),
-                            'data-confirm' => Yii::t('app', 'Are you sure you want to undo this item?'),
-                            'data-method' => 'post',
-                            'data-pjax' => '0',
-                        ]) : '';
-                    }
                 ],
                 'headerOptions' => ['class' => 'buttons-4 last'],
             ],

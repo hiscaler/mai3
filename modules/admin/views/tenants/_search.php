@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
         <div class="entry">
             <?= $form->field($model, 'domain_name') ?>
 
-            <?= $form->field($model, 'status')->dropDownList(Option::booleanOptions(), ['prompt' => '']) ?>
+            <?= $form->field($model, 'enabled')->dropDownList(Option::booleanOptions(), ['prompt' => '']) ?>
         </div>
 
         <div class="form-group buttons">

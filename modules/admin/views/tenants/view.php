@@ -1,6 +1,6 @@
 <?php
 
-use backend\widgets\TenantTabs;
+use app\modules\admin\widgets\TenantTabs;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\Tenant */

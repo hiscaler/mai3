@@ -3,8 +3,8 @@
 /* @var $model app\models\TenantAccessToken */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-            'modelClass' => Yii::t('model', 'Tenant Access Token'),
-        ]) . ' ' . $model->title;
+        'modelClass' => Yii::t('model', 'Tenant Access Token'),
+    ]) . ' ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tenant Access Tokens'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->title, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');

@@ -10,6 +10,8 @@ use yii\base\Model;
 class CreateTenantUserForm extends Model
 {
 
+    public $tenant_id;
+    public $tenant_name;
     public $user_id;
     public $username;
     public $user_group_id;
@@ -22,7 +24,7 @@ class CreateTenantUserForm extends Model
             [['username', 'role'], 'required'],
             [['username'], 'trim'],
             [['rule_id', 'user_group_id'], 'default', 'value' => 0],
-            [['user_id', 'user_group_id', 'rule_id'], 'integer'],
+            [['user_id', 'user_group_id', 'rule_id', 'tenant_id'], 'integer'],
             ['role', 'default', 'value' => User::ROLE_USER],
             ['role', 'in', 'range' => array_keys(User::roleOptions())],
             [['username'], 'checkUser'],
@@ -31,7 +33,8 @@ class CreateTenantUserForm extends Model
 
     public function checkUser($attribute, $params)
     {
-        $userId = Yii::$app->db->createCommand('SELECT [[id]] FROM {{%user}} WHERE [[username]] = :username AND [[status]] = :status')->bindValues([
+        $db = Yii::$app->getDb();
+        $userId = $db->createCommand('SELECT [[id]] FROM {{%user}} WHERE [[username]] = :username AND [[status]] = :status')->bindValues([
                 ':username' => $this->username,
                 ':status' => User::STATUS_ACTIVE
             ])->queryScalar();
@@ -39,8 +42,8 @@ class CreateTenantUserForm extends Model
             $this->addError($attribute, '该用户不存在或者处于非激活状态。');
         } else {
             $this->user_id = $userId;
-            $exists = Yii::$app->db->createCommand('SELECT COUNT(*) FROM {{%tenant_user}} WHERE [[tenant_id]] = :tenantId AND [[user_id]] = :userId')->bindValues([
-                    ':tenantId' => Yad::getTenantId(),
+            $exists = $db->createCommand('SELECT COUNT(*) FROM {{%tenant_user}} WHERE [[tenant_id]] = :tenantId AND [[user_id]] = :userId')->bindValues([
+                    ':tenantId' => $this->tenant_id,
                     ':userId' => $userId
                 ])->queryScalar();
             if ($exists) {

@@ -2,6 +2,7 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Constant;
 use app\models\Option;
 use app\models\Tenant;
 use app\models\TenantSearch;
@@ -83,7 +84,7 @@ class TenantsController extends GlobalController
         $model->date_format = 'php:Y-m-d';
         $model->time_format = 'php:H:i:s';
         $model->datetime_format = 'php:Y-m-d H:i:s';
-        $model->status = Option::BOOLEAN_TRUE;
+        $model->enabled = Constant::BOOLEAN_TRUE;
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -122,9 +123,9 @@ class TenantsController extends GlobalController
     public function actionDelete($id)
     {
         $model = $this->findModel($id);
-        $userId = Yii::$app->user->id;
+        $userId = Yii::$app->getUser()->getId();
         $now = time();
-        Yii::$app->db->createCommand()->update('{{%tenant}}', [
+        Yii::$app->getDb()->createCommand()->update('{{%tenant}}', [
             'status' => Option::STATUS_DELETED,
             'updated_by' => $userId,
             'updated_at' => $now,
@@ -144,9 +145,9 @@ class TenantsController extends GlobalController
     public function actionUndo($id)
     {
         $model = $this->findModel($id);
-        Yii::$app->db->createCommand()->update('{{%tenant}}', [
+        Yii::$app->getDb()->createCommand()->update('{{%tenant}}', [
             'status' => Option::STATUS_PUBLISHED,
-            'updated_by' => Yii::$app->user->id,
+            'updated_by' => Yii::$app->getUser()->getId(),
             'updated_at' => time(),
             'deleted_by' => null,
             'deleted_at' => null,
@@ -162,11 +163,11 @@ class TenantsController extends GlobalController
     public function actionToggle()
     {
         $id = Yii::$app->getRequest()->post('id');
-        $db = Yii::$app->db;
+        $db = Yii::$app->getDb();
         $value = $db->createCommand('SELECT [[enabled]] FROM {{%tenant}} WHERE [[id]] = :id')->bindValue(':id', (int) $id, PDO::PARAM_INT)->queryScalar();
         if ($value !== null) {
             $value = !$value;
-            $db->createCommand()->update('{{%tenant}}', ['enabled' => $value, 'updated_at' => time(), 'deleted_by' => null, 'deleted_at' => null], '[[id]] = :id', [':id' => (int) $id], PDO::PARAM_INT)->execute();
+            $db->createCommand()->update('{{%tenant}}', ['enabled' => $value, 'updated_at' => time()], '[[id]] = :id', [':id' => (int) $id], PDO::PARAM_INT)->execute();
             $responseData = [
                 'success' => true,
                 'data' => [
@@ -200,13 +201,19 @@ class TenantsController extends GlobalController
         $model->tenant_name = $tenant['name'];
 
         if ($model->load(Yii::$app->getRequest()->post()) && $model->validate()) {
-            Yii::$app->db->createCommand()->insert('{{%tenant_user}}', [
+            $userId = Yii::$app->getUser()->getId();
+            $now = time();
+            Yii::$app->getDb()->createCommand()->insert('{{%tenant_user}}', [
                 'tenant_id' => $tenant->id,
                 'user_id' => $model->user_id,
                 'user_group_id' => $model->user_group_id,
                 'role' => $model->role,
                 'rule_id' => $model->rule_id,
-                'enabled' => Option::BOOLEAN_TRUE
+                'enabled' => Constant::BOOLEAN_TRUE,
+                'created_at' => $now,
+                'created_by' => $userId,
+                'updated_at' => $now,
+                'updated_by' => $userId
             ])->execute();
             Yii::$app->getSession()->setFlash('notice', "用户 {$model->username} 已经成功绑定「{$tenant->name}」站点。");
             return $this->redirect(['view', 'id' => $tenant->id, 'tab' => 'users']);

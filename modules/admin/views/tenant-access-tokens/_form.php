@@ -13,13 +13,13 @@ use yii\widgets\ActiveForm;
     <div class="tenant-access-token-form form">
 
         <?php $form = ActiveForm::begin(); ?>
-        
+
         <div class="form-group">
             <?= Html::label(Yii::t('tenant', 'Name')) ?>
             <?= Html::textInput('tenant_name', $model->isNewRecord ? Yad::getTenantName() : $model->tenant->name, ['disabled' => 'disabled', 'class' => 'g-text-medium disabled']) ?>
         </div>
 
-        <?= $form->field($model, 'title')->textInput(['maxlength' => true, 'class' => 'g-text-medium']) ?>
+        <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'class' => 'g-text-medium']) ?>
 
         <?= $form->field($model, 'access_token')->textInput(['maxlength' => true, 'class' => 'g-text-medium']) ?>
 
