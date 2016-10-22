@@ -21,7 +21,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'ordering') ?>
 
-    <?= $form->field($model, 'status') ?>
+    <?= $form->field($model, 'enabled') ?>
 
     <?= $form->field($model, 'tenant_id') ?>
 

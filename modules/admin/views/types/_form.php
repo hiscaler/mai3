@@ -31,7 +31,7 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'ordering')->dropDownList(Option::orderingOptions()) ?>
 
-                        <?= $form->field($model, 'status')->checkbox([], false) ?>
+                        <?= $form->field($model, 'enabled')->checkbox([], false) ?>
                     </div>
                 </div>
 

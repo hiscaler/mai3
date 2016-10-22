@@ -19,6 +19,7 @@ $this->params['menus'] = [
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
+    <?php yii\widgets\Pjax::begin() ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -39,9 +40,9 @@ $this->params['menus'] = [
                 }
             ],
             [
-                'attribute' => 'status',
+                'attribute' => 'enabled',
                 'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean pointer'],
+                'contentOptions' => ['class' => 'boolean pointer enabled-handler'],
             ],
             [
                 'attribute' => 'created_by',
@@ -74,5 +75,11 @@ $this->params['menus'] = [
         ],
     ]);
     ?>
-
+    <?php yii\widgets\Pjax::end() ?>
 </div>
+
+<?php \app\modules\admin\components\JsBlock::begin() ?>
+    <script type="text/javascript">
+        yadjet.actions.toggle("table td.enabled-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
+    </script>
+<?php \app\modules\admin\components\JsBlock::end() ?>

@@ -2,13 +2,18 @@
 
 namespace app\modules\admin\controllers;
 
-use app\models\Type;
-use app\models\TypeSearch;
 use app\models\Specification;
+use app\models\Type;
+use app\models\TypeProperty;
+use app\models\TypeSearch;
 use app\models\Yad;
+use PDO;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * 商品类型管理
@@ -21,10 +26,21 @@ class TypesController extends ShopController
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'view', 'delete', 'create-property', 'toggle'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'toggle' => ['post'],
                 ],
             ],
         ];
@@ -65,6 +81,7 @@ class TypesController extends ShopController
     public function actionCreate()
     {
         $model = new Type();
+        $model->loadDefaultValues();
         $model->brandIdList = $model->specificationIdList = [];
         $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
 
@@ -110,7 +127,13 @@ class TypesController extends ShopController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $exists = Yii::$app->getDb()->createCommand('SELECT COUNT(*) FROM {{%product}} WHERE [[type_id]] = :type', [':type' => $model['id']])->queryScalar();
+        if ($exists) {
+            throw new ForbiddenHttpException('该商品类型已有商品使用，禁止删除。');
+        } else {
+            $model->delete();
+        }
 
         return $this->redirect(['index']);
     }
@@ -124,7 +147,7 @@ class TypesController extends ShopController
     {
         $this->layout = 'ajax';
         $type = $this->findModel($typeId);
-        $model = new \app\models\TypeProperty();
+        $model = new TypeProperty();
         $model->type_id = $type['id'];
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -134,6 +157,48 @@ class TypesController extends ShopController
                     'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * 激活禁止操作
+     * @return Response
+     */
+    public function actionToggle()
+    {
+        $id = Yii::$app->request->post('id');
+        $db = Yii::$app->getDb();
+        $command = $db->createCommand('SELECT [[enabled]] FROM {{%type}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
+        $command->bindValues([
+            ':id' => (int) $id,
+            ':tenantId' => Yad::getTenantId(),
+        ]);
+        $command->bindValue(':id', (int) $id, PDO::PARAM_INT);
+        $value = $command->queryScalar();
+        if ($value !== null) {
+            $value = !$value;
+            $now = time();
+            $db->createCommand()->update('{{%type}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
+            $responseData = [
+                'success' => true,
+                'data' => [
+                    'value' => $value,
+                    'updatedAt' => Yii::$app->getFormatter()->asDate($now),
+                    'updatedBy' => Yii::$app->getUser()->getIdentity()->username,
+                ],
+            ];
+        } else {
+            $responseData = [
+                'success' => false,
+                'error' => [
+                    'message' => '数据有误',
+                ],
+            ];
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $responseData,
+        ]);
     }
 
     /**

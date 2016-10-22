@@ -22,14 +22,11 @@ $this->params['menus'] = [
         'model' => $model,
         'attributes' => [
             'id',
-            'name',
             'ordering',
-            'status',
-            'tenant_id',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
+            'name',
+            'enabled:boolean',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ])
     ?>
