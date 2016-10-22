@@ -21,18 +21,14 @@ $this->params['menus'] = [
     DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
+            'ordering',
             'alias',
             'name',
-            'icon_path',
+            'icon_path:image',
             'description:ntext',
-            'ordering',
-            'tenant_id',
-            'status',
-            'created_at',
-            'created_by',
-            'updated_at',
-            'updated_by',
+            'enabled:boolean',
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ])
     ?>

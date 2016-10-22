@@ -20,9 +20,9 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-        <?= $form->field($model, 'ordering')->textInput() ?>   
+        <?= $form->field($model, 'ordering')->dropDownList(\app\models\Option::orderingOptions()) ?>   
 
-        <?= $form->field($model, 'status')->checkbox([], null) ?>
+        <?= $form->field($model, 'enabled')->checkbox([], null) ?>
 
         <div class="form-group buttons">
             <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
