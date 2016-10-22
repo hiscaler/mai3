@@ -36,9 +36,9 @@ $this->params['menus'] = [
             'name',
             'description:ntext',
             [
-                'attribute' => 'status',
+                'attribute' => 'enabled',
                 'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean pointer'],
+                'contentOptions' => ['class' => 'boolean pointer enabled-handler'],
             ],
             [
                 'attribute' => 'created_by',
@@ -73,3 +73,9 @@ $this->params['menus'] = [
     ?>
 
 </div>
+
+<?php \app\modules\admin\components\JsBlock::begin() ?>
+    <script type="text/javascript">
+        yadjet.actions.toggle("table td.enabled-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
+    </script>
+<?php \app\modules\admin\components\JsBlock::end() ?>

@@ -2,11 +2,15 @@
 
 namespace app\modules\admin\controllers;
 
-use Yii;
 use app\models\PaymentConfig;
 use app\models\PaymentConfigSearch;
-use yii\web\NotFoundHttpException;
+use app\models\Yad;
+use PDO;
+use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * 支付配置管理
@@ -19,10 +23,21 @@ class PaymentConfigsController extends ShopController
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'view', 'delete', 'toggle'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'toggle' => ['post'],
                 ],
             ],
         ];
@@ -63,6 +78,7 @@ class PaymentConfigsController extends ShopController
     public function actionCreate()
     {
         $model = new PaymentConfig();
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -103,6 +119,48 @@ class PaymentConfigsController extends ShopController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * 激活禁止操作
+     * @return Response
+     */
+    public function actionToggle()
+    {
+        $id = Yii::$app->request->post('id');
+        $db = Yii::$app->getDb();
+        $command = $db->createCommand('SELECT [[enabled]] FROM {{%payment_config}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
+        $command->bindValues([
+            ':id' => (int) $id,
+            ':tenantId' => Yad::getTenantId(),
+        ]);
+        $command->bindValue(':id', (int) $id, PDO::PARAM_INT);
+        $value = $command->queryScalar();
+        if ($value !== null) {
+            $value = !$value;
+            $now = time();
+            $db->createCommand()->update('{{%payment_config}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
+            $responseData = [
+                'success' => true,
+                'data' => [
+                    'value' => $value,
+                    'updatedAt' => Yii::$app->getFormatter()->asDate($now),
+                    'updatedBy' => Yii::$app->getUser()->getIdentity()->username,
+                ],
+            ];
+        } else {
+            $responseData = [
+                'success' => false,
+                'error' => [
+                    'message' => '数据有误',
+                ],
+            ];
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $responseData,
+        ]);
     }
 
     /**
