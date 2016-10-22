@@ -1,16 +1,15 @@
 <?php
 
-use backend\components\MessageBox;
+use app\modules\admin\components\MessageBox;
 use yii\grid\GridView;
 use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$baseUrl = Yii::$app->getRequest()->baseUrl;
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
 
 $this->title = Yii::t('app', 'Members');
 $this->params['breadcrumbs'][] = $this->title;
@@ -57,19 +56,41 @@ $this->params['menus'] = [
                 'attribute' => 'nickname',
                 'contentOptions' => ['class' => 'username']
             ],
-            'email:email',
+            [
+                'attribute' => 'credits_count',
+                'contentOptions' => ['class' => 'number'],
+            ],
             [
                 'attribute' => 'user_group_text',
                 'contentOptions' => ['class' => 'user-group'],
             ],
             [
-                'attribute' => 'system_group_text',
-                'contentOptions' => ['class' => 'system-group'],
+                'attribute' => 'login_count',
+                'contentOptions' => ['class' => 'number'],
             ],
             [
-                'attribute' => 'status',
-                'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean enabled-enable-handler pointer']
+                'attribute' => 'created_at',
+                'format' => 'datetime',
+                'contentOptions' => ['class' => 'datetime'],
+            ],
+            [
+                'attribute' => 'last_login_time',
+                'format' => 'datetime',
+                'contentOptions' => ['class' => 'datetime'],
+            ],
+            [
+                'attribute' => 'status_text',
+                'contentOptions' => ['class' => 'data-status']
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {update} {change-password}',
+                'buttons' => [
+                    'change-password' => function ($url, $model, $key) use ($baseUrl) {
+                        return Html::a(Html::img($baseUrl . '/images/change-password.png'), $url, ['data-pjax' => 0]);
+                    }
+                ],
+                'headerOptions' => ['class' => 'buttons-3 last'],
             ],
         ],
     ]);
@@ -77,62 +98,3 @@ $this->params['menus'] = [
     ?>
 
 </div>
-
-<?php
-$this->registerJs('yadjet.actions.toggle("table td.enabled-enable-handler img", "' . Url::toRoute('toggle') . '");');
-
-$title = Yii::t('app', 'Please choice this user can manager nodes');
-$js = <<<EOT
-jQuery(document).on('click', 'a.user-auth', function () {
-    var t = $(this);
-    var url = t.attr('href');
-    $.ajax({
-        type: 'GET',
-        url: url,
-        beforeSend: function(xhr) {
-            $.fn.lock();
-        }, success: function(response) {
-            $.dialog({
-                id: 'nodes-list',
-                title: '{$title}' + ' [ ' + t.attr('data-name') + ' ]',
-                content: response,
-                lock: true,
-                padding: '10px',
-                ok: function () {
-                    var nodes = $.fn.zTree.getZTreeObj("__ztree__").getCheckedNodes(true);
-                    var ids = [];
-                    for(var i = 0, l = nodes.length; i < l; i++){
-                        ids.push(nodes[i].id);
-                    }
-                    
-                    $.ajax({
-                        type: 'POST',
-                        url: url,
-                        data: { choiceNodeIds: ids.toString() },
-                        dataType: 'json',
-                        beforeSend: function(xhr) {
-                            $.fn.lock();
-                        }, success: function(response) {
-                            if (response.success === false) {
-                                $.alert(response.error.message);
-                            }
-                            $.fn.unlock();
-                        }, error: function(XMLHttpRequest, textStatus, errorThrown) {
-                            $.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
-                            $.fn.unlock();
-                        }
-                    });
-                }
-            });
-            $.fn.unlock();
-        }, error: function(XMLHttpRequest, textStatus, errorThrown) {
-            $.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
-            $.fn.unlock();
-        }
-    });
-    
-    return false;
-});
-EOT;
-        $this->registerJs($js);
-        
