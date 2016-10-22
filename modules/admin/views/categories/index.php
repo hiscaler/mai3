@@ -10,45 +10,59 @@ use yii\helpers\Html;
 $this->title = Yii::t('app', 'Categories');
 $this->params['breadcrumbs'][] = $this->title;
 
-$this->params['menus'] = [
-    ['label' => Yii::t('app', 'List'), 'url' => ['index']],
-    ['label' => Yii::t('app', 'Create'), 'url' => ['create']],
-    ['label' => Yii::t('app', '搜索'), 'url' => '#'],
-];
+$menus = [];
+$typeOptions = \app\models\Category::typeOptions();
+foreach ($typeOptions as $key => $value) {
+    $menus[] = ['label' => $value . Yii::t('app', 'Categories'), 'url' => ['index', 'CategorySearch[type]' => $key]];
+    $menus[] = ['label' => Yii::t('app', 'Create') . $value . Yii::t('model', 'Category'), 'url' => ['create', 'type' => $key]];
+}
+if (!$typeOptions) {
+    $menus[] = ['label' => Yii::t('app', 'Create'), 'url' => ['create']];
+}
+$this->params['menus'] = $menus;
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
 ?>
 <div class="categories-index">
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-
+ 
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
+        'rowOptions' => function ($model, $key, $index, $grid) {
+            return [
+                'data-tt-id' => $model['id'],
+                'class' => $model['enabled'] ? 'enabled' : 'disabled',
+                'data-tt-parent-id' => $model['parent_id'],
+                'style' => $model['parent_id'] ? 'display: none' : '',
+            ];
+        },
         'columns' => [
             [
-                'class' => 'yii\grid\SerialColumn',
-                'contentOptions' => ['class' => 'serial-number']
-            ],
-            'type',
-            'alias',
-            [
                 'attribute' => 'name',
+                'header' => Yii::t('category', 'Name'),
                 'format' => 'raw',
                 'value' => function ($model)  {
-                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . Html::a($model['name'], ['update', 'id' => $model['id']]);
+                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . Html::a($model['name'], ['update', 'id' => $model['id']]) . '<span class="alias">' . $model['alias'] . '</span>';
                 },
             ],
-            // 'level',
-            // 'parent_ids',
-            // 'parent_names',
-            'description:ntext',
             [
-                'attribute' => 'status',
+                'attribute' => 'description',
+                'header' => Yii::t('category', 'Description'),
+                'format' => 'ntext',
+            ],
+            [
+                'attribute' => 'ordering',
+                'header' => Yii::t('app', 'Ordering'),
+                'contentOptions' => ['class' => 'ordering'],
+            ],
+            [
+                'attribute' => 'enabled',
+                'header' => Yii::t('app', 'Enabled'),
                 'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean pointer'],
+                'contentOptions' => ['class' => 'boolean pointer enabled-handler'],
             ],
             [
                 'attribute' => 'created_by',
+                'header' => Yii::t('app', 'Created By'),
                 'value' => function($model) {
 //                                return $model['creater']['nickname'];
                 },
@@ -56,11 +70,13 @@ $this->params['menus'] = [
             ],
             [
                 'attribute' => 'created_at',
+                'header' => Yii::t('app', 'Created At'),
                 'format' => 'date',
                 'contentOptions' => ['class' => 'date']
             ],
             [
                 'attribute' => 'updated_by',
+                'header' => Yii::t('app', 'Updated By'),
                 'value' => function($model) {
 //                                return $model['updater']['nickname'];
                 },
@@ -68,14 +84,38 @@ $this->params['menus'] = [
             ],
             [
                 'attribute' => 'updated_at',
+                'header' => Yii::t('app', 'Updated At'),
                 'format' => 'date',
                 'contentOptions' => ['class' => 'date']
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
-                'headerOptions' => array('class' => 'buttons-3 last'),
+                'template' => '{create} {update} {delete}',
+                'buttons' => [
+                    'create' => function ($url, $model, $key) use ($baseUrl) {
+                        return Html::a(Html::img($baseUrl . '/images/update.png'), ['create', 'type' => $model['type'], 'parentId' => $model['id']], ['data-pjax' => 0]);
+                    }
+                ],
+                'headerOptions' => array('class' => 'buttons-2 last'),
             ],
         ],
     ]);
     ?>
 </div>
+
+<?php
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin/jquery-treetable-3.2.0';
+$this->registerCssFile($baseUrl . '/css/jquery.treetable.css');
+$this->registerCssFile($baseUrl . '/css/jquery.treetable.theme.default.css');
+$this->registerJsFile($baseUrl . '/jquery.treetable.js', [
+    'depends' => ['\yii\web\JqueryAsset']
+]);
+$js = '$(".table").treetable({expandable: true, initialState: "expand"});';
+$this->registerJs($js);
+
+\app\modules\admin\components\JsBlock::begin();
+?>
+    <script type="text/javascript">
+        yadjet.actions.toggle("table td.enabled-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
+    </script>
+<?php \app\modules\admin\components\JsBlock::end() ?>

@@ -15,19 +15,25 @@ use yii\widgets\ActiveForm;
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'type')->dropDownList(Option::categoryTypeOptions(), ['prompt' => '']) ?>
+        <div class="entry">
+            <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+        </div>
 
-        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+        <div class="entry">
+            <?= $form->field($model, 'parent_id')->dropDownList(Category::getTree('顶级分类')) ?>
 
-        <?= $form->field($model, 'parent_id')->dropDownList(Category::getTree('顶级分类')) ?>
-
-        <?= $form->field($model, 'icon_path')->fileInput() ?>
+            <?= $form->field($model, 'icon_path')->fileInput() ?>
+        </div>
 
         <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-        <?= $form->field($model, 'status')->checkbox()->label(false) ?>
+        <div class="entry">
+            <?= $form->field($model, 'ordering')->dropDownList(Option::orderingOptions()) ?>
+
+            <?= $form->field($model, 'enabled')->checkbox([], false) ?>
+        </div>
 
         <div class="form-group buttons">
             <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

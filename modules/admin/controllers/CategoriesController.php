@@ -2,27 +2,43 @@
 
 namespace app\modules\admin\controllers;
 
-use Yii;
 use app\models\Category;
 use app\models\CategorySearch;
-use yii\web\NotFoundHttpException;
+use app\models\Yad;
+use PDO;
+use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * 分类管理
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class CategoriesController extends ShopController
+class CategoriesController extends GlobalController
 {
 
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'delete', 'toggle'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['post'],
+                    'toggle' => ['post'],
                 ],
             ],
         ];
@@ -44,28 +60,20 @@ class CategoriesController extends ShopController
     }
 
     /**
-     * Displays a single Category model.
-     * @param integer $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-                'model' => $this->findModel($id),
-        ]);
-    }
-
-    /**
      * Creates a new Category model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the 'index' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($type = 0, $parentId = 0, $ordering = 1)
     {
         $model = new Category();
+        $model->type = $type;
+        $model->parent_id = (int) $parentId;
+        $model->ordering = (int) $ordering;
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['create', 'type' => $model->type, 'parentId' => $model->parent_id, 'ordering' => ++$model['ordering']]);
         } else {
             return $this->render('create', [
                     'model' => $model,
@@ -75,7 +83,7 @@ class CategoriesController extends ShopController
 
     /**
      * Updates an existing Category model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * If update is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
@@ -84,7 +92,7 @@ class CategoriesController extends ShopController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                     'model' => $model,
@@ -100,9 +108,57 @@ class CategoriesController extends ShopController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $exists = Yii::$app->getDb()->createCommand('SELECT COUNT(*) FROM {{%item}} WHERE [[category_id]] = :categoryId', [':categoryId' => $model['id']])->queryScalar();
+        if ($exists) {
+            throw new ForbiddenHttpException('该分类已有商品使用，禁止删除。');
+        } else {
+            $model->delete();
+        }
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * 激活禁止操作
+     * @return Response
+     */
+    public function actionToggle()
+    {
+        $id = Yii::$app->getRequest()->post('id');
+        $db = Yii::$app->getDb();
+        $command = $db->createCommand('SELECT [[enabled]] FROM {{%category}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
+        $command->bindValues([
+            ':id' => (int) $id,
+            ':tenantId' => Yad::getTenantId(),
+        ]);
+        $command->bindValue(':id', (int) $id, PDO::PARAM_INT);
+        $value = $command->queryScalar();
+        if ($value !== null) {
+            $value = !$value;
+            $now = time();
+            $db->createCommand()->update('{{%category}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
+            $responseData = [
+                'success' => true,
+                'data' => [
+                    'value' => $value,
+                    'updatedAt' => Yii::$app->getFormatter()->asDate($now),
+                    'updatedBy' => Yii::$app->getUser()->getIdentity()->username,
+                ],
+            ];
+        } else {
+            $responseData = [
+                'success' => false,
+                'error' => [
+                    'message' => '数据有误',
+                ],
+            ];
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $responseData,
+        ]);
     }
 
     /**
