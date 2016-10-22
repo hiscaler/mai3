@@ -4,7 +4,7 @@
 /* @var $model app\models\Specification */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-        'modelClass' => 'Specification',
+        'modelClass' => Yii::t('model', 'Specification'),
     ]) . ' ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Specifications'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];

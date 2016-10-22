@@ -30,9 +30,9 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'type')->radioList(Specification::typeOptions()) ?>
 
-                        <?= $form->field($model, 'ordering')->textInput() ?>
+                        <?= $form->field($model, 'ordering')->dropDownList(Option::orderingOptions(), ['prompt' => '']) ?>
 
-                        <?= $form->field($model, 'status')->checkbox([], null) ?>
+                        <?= $form->field($model, 'enabled')->checkbox([], null) ?>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@ use yii\widgets\ActiveForm;
                                         <th>排序</th>
                                         <th>规格值名称</th>
                                         <th style="width: 120px">规格图标</th>
-                                        <th>状态</th>
+                                        <th>激活</th>
                                         <th class="button-1 last"></th>
                                     </tr>
                                 </thead>
@@ -66,7 +66,7 @@ use yii\widgets\ActiveForm;
                                                 <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
                                                 <td><?= $form->field($model, "valuesData[$index][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
                                                 <td class="boolean">
-                                                    <?= $form->field($model, "valuesData[$index][status]", ['template' => '{input}'])->checkbox([], false)->label(false) ?>
+                                                    <?= $form->field($model, "valuesData[$index][enabled]", ['template' => '{input}'])->checkbox([], false)->label(false) ?>
 
                                                 </td>
                                                 <td class="btn-render">
@@ -82,7 +82,7 @@ use yii\widgets\ActiveForm;
                                             <td class="ordering"><?= $form->field($model, "valuesData[0][ordering]", ['template' => '{input}'])->dropDownList(Option::orderingOptions())->label(false) ?></td>
                                             <td><?= $form->field($model, "valuesData[0][text]", ['template' => '{input}'])->textInput(['maxlength' => 20])->label(false) ?></td>
                                             <td><?= $form->field($model, "valuesData[0][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
-                                            <td class="boolean"><?= $form->field($model, "valuesData[0][status]", ['template' => '{input}'])->checkbox([], false)->label(false) ?></td>
+                                            <td class="boolean"><?= $form->field($model, "valuesData[0][enabled]", ['template' => '{input}'])->checkbox([], false)->label(false) ?></td>
 
                                             <td class="btn-render"></td>
                                         </tr>

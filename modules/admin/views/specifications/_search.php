@@ -10,10 +10,12 @@ use yii\widgets\ActiveForm;
 
 <div class="specification-search">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
+    <?php
+    $form = ActiveForm::begin([
+            'action' => ['index'],
+            'method' => 'get',
+    ]);
+    ?>
 
     <?= $form->field($model, 'id') ?>
 
@@ -21,9 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'type') ?>
 
-    <?= $form->field($model, 'ordering') ?>
-
-    <?= $form->field($model, 'status') ?>
+    <?= $form->field($model, 'enabled') ?>
 
     <?php // echo $form->field($model, 'tenant_id') ?>
 
@@ -33,13 +33,13 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'updated_at') ?>
 
-    <?php // echo $form->field($model, 'updated_by') ?>
+        <?php // echo $form->field($model, 'updated_by')  ?>
 
     <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+<?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+    <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
-    <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
 
 </div>
