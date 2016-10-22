@@ -19,7 +19,7 @@ class SpecificationSearch extends Specification
     public function rules()
     {
         return [
-            [['id', 'type', 'status'], 'integer'],
+            [['id', 'type', 'enabled'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -60,7 +60,7 @@ class SpecificationSearch extends Specification
             'id' => $this->id,
             'type' => $this->type,
             'ordering' => $this->ordering,
-            'status' => $this->status,
+            'enabled' => $this->enabled,
             'tenant_id' => $this->tenant_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,

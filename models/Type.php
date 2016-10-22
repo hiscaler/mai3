@@ -11,7 +11,7 @@ use yii\db\Query;
  * @property integer $id
  * @property string $name
  * @property integer $ordering
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_at
  * @property integer $created_by
@@ -54,11 +54,13 @@ class Type extends BaseActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['status'], 'boolean'],
-            [['status'], 'default', 'value' => 0],
+            [['name'], 'trim'],
+            [['enabled'], 'boolean'],
+            [['enabled'], 'default', 'value' => 0],
             [['ordering', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 30],
-            [['brandIdList', 'specificationIdList', 'propertiesList'], 'safe']
+            [['brandIdList', 'specificationIdList', 'propertiesList'], 'safe'],
+            ['name', 'unique', 'targetAttribute' => ['name', 'tenant_id']],
         ];
     }
 

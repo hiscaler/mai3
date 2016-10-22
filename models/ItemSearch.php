@@ -12,14 +12,15 @@ use app\models\Item;
  */
 class ItemSearch extends Item
 {
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'product_id', 'market_price', 'member_price', 'cost_price', 'clicks_count', 'favorites_count', 'sales_count', 'stocks_count', 'default', 'enabled', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['sn', 'name', 'picture_path'], 'safe'],
+            [['id', 'product_id', 'category_id', 'brand_id', 'default', 'enabled', 'status'], 'integer'],
+            [['sn', 'name'], 'safe'],
         ];
     }
 
@@ -41,12 +42,17 @@ class ItemSearch extends Item
      */
     public function search($params)
     {
-        $query = Item::find();
+        $query = Item::find()->where(['tenant_id' => Yad::getTenantId()]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'id' => SORT_DESC,
+                ]
+            ]
         ]);
 
         $this->load($params);
@@ -57,30 +63,27 @@ class ItemSearch extends Item
             return $dataProvider;
         }
 
+        $categoryId = $this->category_id;
+        if ($categoryId) {
+            $categoryChildren = Category::getChildrenIds($categoryId);
+            $categoryChildren[] = $categoryId;
+            $query->andWhere(['category_id' => $categoryChildren]);
+        }
+
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'product_id' => $this->product_id,
-            'market_price' => $this->market_price,
-            'member_price' => $this->member_price,
-            'cost_price' => $this->cost_price,
-            'clicks_count' => $this->clicks_count,
-            'favorites_count' => $this->favorites_count,
-            'sales_count' => $this->sales_count,
-            'stocks_count' => $this->stocks_count,
+            'brand_id' => $this->brand_id,
             'default' => $this->default,
             'enabled' => $this->enabled,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'created_by' => $this->created_by,
-            'updated_at' => $this->updated_at,
-            'updated_by' => $this->updated_by,
         ]);
 
         $query->andFilterWhere(['like', 'sn', $this->sn])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'picture_path', $this->picture_path]);
+            ->andFilterWhere(['like', 'name', $this->name]);
 
         return $dataProvider;
     }
+
 }

@@ -23,7 +23,7 @@ class TenantUserSearch extends TenantUser
     {
         return [
             [['role', 'rule_id', 'rule_id', 'user_group_id'], 'integer'],
-            ['status', 'boolean'],
+            ['enabled', 'boolean'],
             [['username'], 'safe'],
         ];
     }
@@ -48,7 +48,7 @@ class TenantUserSearch extends TenantUser
     {
         $tenantId = Yad::getTenantId();
         $query = User::find()
-            ->select(['t.id', 'tup.name AS user_group_name', 't.username', 't.nickname', 't.email', 'tu.role', 'tu.status'])
+            ->select(['t.id', 'tup.name AS user_group_name', 't.username', 't.nickname', 't.email', 'tu.role', 'tu.enabled'])
             ->from(['{{%user}} t'])
             ->leftJoin('{{%tenant_user}} tu', '[[t.id]] = tu.user_id AND [[tu.tenant_id]] = :tenantId', [':tenantId' => $tenantId])
             ->leftJoin('{{%tenant_user_group}} tup', '[[tu.user_group_id]] = tup.id')
@@ -77,7 +77,7 @@ class TenantUserSearch extends TenantUser
             'tu.role' => $this->role,
             'tu.rule_id' => $this->rule_id,
             'tu.user_group_id' => $this->user_group_id,
-            'tu.status' => $this->status,
+            'tu.enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 't.username', $this->username]);

@@ -18,7 +18,7 @@ class LabelSearch extends Label
     public function rules()
     {
         return [
-            [['status'], 'boolean'],
+            [['enabled'], 'boolean'],
             [['alias', 'name'], 'safe'],
         ];
     }
@@ -58,7 +58,7 @@ class LabelSearch extends Label
         }
 
         $query->andFilterWhere([
-            'status' => $this->status,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'alias', $this->alias])

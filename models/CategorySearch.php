@@ -2,10 +2,11 @@
 
 namespace app\models;
 
-use Yii;
+use app\models\Category;
+use yadjet\helpers\ArrayHelper;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Category;
+use yii\data\ArrayDataProvider;
 
 /**
  * CategorySearch represents the model behind the search form about `app\models\Category`.
@@ -19,7 +20,7 @@ class CategorySearch extends Category
     public function rules()
     {
         return [
-            [['id', 'type', 'parent_id', 'level', 'status'], 'integer'],
+            [['id', 'type', 'parent_id', 'level', 'enabled'], 'integer'],
             [['alias', 'name'], 'safe'],
         ];
     }
@@ -42,32 +43,32 @@ class CategorySearch extends Category
      */
     public function search($params)
     {
-        $query = Category::find()->where(['tenant_id' => Yad::getTenantId()]);
+        $query = Category::find()->where(['tenant_id' => Yad::getTenantId()])->asArray();
 
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+        if ($this->load($params)) {
+            $query->andFilterWhere([
+                'id' => $this->id,
+                'type' => $this->type,
+                'parent_id' => $this->parent_id,
+                'level' => $this->level,
+                'enabled' => $this->enabled,
+            ]);
 
-        $this->load($params);
-
-        if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
-            return $dataProvider;
+            $query->andFilterWhere(['like', 'alias', $this->alias])
+                ->andFilterWhere(['like', 'name', $this->name]);
         }
 
-        $query->andFilterWhere([
-            'id' => $this->id,
-            'type' => $this->type,
-            'parent_id' => $this->parent_id,
-            'level' => $this->level,
-            'status' => $this->status,
+        $rawData = $query->all();
+        if ($rawData) {
+            $rawData = static::sortItems(['children' => ArrayHelper::toTree($rawData, 'id')]);
+            unset($rawData[0]);
+        }
+
+        return new ArrayDataProvider([
+            'allModels' => $rawData,
+            'key' => 'id',
+            'pagination' => false,
         ]);
-
-        $query->andFilterWhere(['like', 'alias', $this->alias])
-            ->andFilterWhere(['like', 'name', $this->name]);
-
-        return $dataProvider;
     }
 
 }

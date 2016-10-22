@@ -14,7 +14,7 @@ use yii\db\ActiveRecord;
  * @property integer $user_id
  * @property integer $role
  * @property integer $rule_id
- * @property integer $status
+ * @property integer $enabled
  * @property integer $user_group_id
  */
 class TenantUser extends ActiveRecord
@@ -36,7 +36,7 @@ class TenantUser extends ActiveRecord
         return [
             [['tenant_id', 'user_id', 'role'], 'required'],
             [['rule_id', 'user_group_id'], 'default', 'value' => 0],
-            [['tenant_id', 'user_id', 'role', 'rule_id', 'status', 'user_group_id'], 'integer']
+            [['tenant_id', 'user_id', 'role', 'rule_id', 'enabled', 'user_group_id'], 'integer']
         ];
     }
 
@@ -51,7 +51,7 @@ class TenantUser extends ActiveRecord
             'username' => Yii::t('user', 'Username'),
             'role' => Yii::t('user', 'Role'),
             'rule_id' => Yii::t('tenantUser', 'Rule'),
-            'status' => Yii::t('app', 'Enabled'),
+            'enabled' => Yii::t('app', 'Enabled'),
             'user_group_id' => Yii::t('tenantUser', 'User Group'),
         ];
     }

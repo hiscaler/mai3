@@ -19,7 +19,7 @@ class PaymentConfigSearch extends PaymentConfig
     public function rules()
     {
         return [
-            [['status'], 'integer'],
+            [['enabled'], 'integer'],
             [['key', 'name'], 'safe'],
         ];
     }
@@ -62,7 +62,7 @@ class PaymentConfigSearch extends PaymentConfig
         }
 
         $query->andFilterWhere([
-            'status' => $this->status,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'key', $this->key])

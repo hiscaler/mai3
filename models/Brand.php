@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\modules\admin\components\ApplicationHelper;
+use yadjet\behaviors\FileUploadBehavior;
 use Yii;
 use yii\helpers\Inflector;
 
@@ -15,7 +17,7 @@ use yii\helpers\Inflector;
  * @property string $description
  * @property integer $ordering
  * @property integer $tenant_id
- * @property integer $status
+ * @property integer $enabled
  * @property integer $created_at
  * @property integer $created_by
  * @property integer $updated_at
@@ -23,6 +25,16 @@ use yii\helpers\Inflector;
  */
 class Brand extends BaseActiveRecord
 {
+
+    use ActiveRecordHelperTrait;
+
+    private $_fileUploadConfig;
+
+    public function init()
+    {
+        $this->_fileUploadConfig = FileUploadConfig::getConfig(static::className2Id(), 'file_path');
+        parent::init();
+    }
 
     /**
      * @inheritdoc
@@ -40,12 +52,32 @@ class Brand extends BaseActiveRecord
         return [
             [['name'], 'required'],
             [['description'], 'string'],
-            [['ordering', 'tenant_id', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['ordering', 'tenant_id', 'enabled', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['ordering'], 'default', 'value' => 1],
             [['alias', 'name'], 'string', 'max' => 20],
-            [['icon_path'], 'string', 'max' => 100],
             [['alias'], 'unique'],
-            [['name'], 'unique']
+            [['name'], 'unique'],
+            ['icon_path', 'file',
+                'extensions' => $this->_fileUploadConfig['extensions'],
+                'minSize' => $this->_fileUploadConfig['size']['min'],
+                'maxSize' => $this->_fileUploadConfig['size']['max'],
+                'tooSmall' => Yii::t('app', 'The file "{file}" is too small. Its size cannot be smaller than {limit}.', [
+                    'limit' => ApplicationHelper::friendlyFileSize($this->_fileUploadConfig['size']['min']),
+                ]),
+                'tooBig' => Yii::t('app', 'The file "{file}" is too big. Its size cannot exceed {limit}.', [
+                    'limit' => ApplicationHelper::friendlyFileSize($this->_fileUploadConfig['size']['max']),
+                ]),
+            ],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => FileUploadBehavior::className(),
+                'attribute' => 'icon_path'
+            ],
         ];
     }
 
@@ -62,7 +94,7 @@ class Brand extends BaseActiveRecord
             'description' => Yii::t('app', '描述'),
             'ordering' => Yii::t('app', '排序'),
             'tenant_id' => Yii::t('app', 'Tenant ID'),
-            'status' => Yii::t('app', '状态'),
+            'enabled' => Yii::t('app', 'Enabled'),
             'created_at' => Yii::t('app', 'Created At'),
             'created_by' => Yii::t('app', 'Created By'),
             'updated_at' => Yii::t('app', 'Updated At'),
@@ -81,8 +113,8 @@ class Brand extends BaseActiveRecord
         $sql = 'SELECT [[id]], [[name]] FROM {{%brand}}';
         $bindValues = [];
         if (!$all) {
-            $sql .= ' WHERE [[status]] = :status';
-            $bindValues = [':status' => Constant::BOOLEAN_TRUE];
+            $sql .= ' WHERE [[enabled]] = :enabled';
+            $bindValues = [':enabled' => Constant::BOOLEAN_TRUE];
         }
         $sql .= ' ORDER BY [[alias]] DESC';
 
@@ -98,7 +130,7 @@ class Brand extends BaseActiveRecord
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
-            if (empty($this->alias) && !empty($this->name)) {
+            if (empty($this->alias)) {
                 $this->alias = Inflector::slug($this->name);
             }
 

@@ -12,7 +12,7 @@ use Yii;
  * @property string $text
  * @property string $icon_path
  * @property integer $ordering
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_at
  * @property integer $created_by
@@ -37,7 +37,7 @@ class SpecificationValue extends \yii\db\ActiveRecord
     {
         return [
             [['specification_id', 'text', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'required'],
-            [['specification_id', 'ordering', 'status', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['specification_id', 'ordering', 'enabled', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['text'], 'string', 'max' => 30],
             [['icon_path'], 'string', 'max' => 100]
         ];
@@ -54,7 +54,7 @@ class SpecificationValue extends \yii\db\ActiveRecord
             'text' => Yii::t('app', 'Text'),
             'icon_path' => Yii::t('app', 'Icon Path'),
             'ordering' => Yii::t('app', 'Ordering'),
-            'status' => Yii::t('app', 'Status'),
+            'enabled' => Yii::t('app', 'Status'),
             'tenant_id' => Yii::t('app', 'Tenant ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'created_by' => Yii::t('app', 'Created By'),

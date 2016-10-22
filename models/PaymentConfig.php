@@ -13,7 +13,7 @@ use Yii;
  * @property string $config
  * @property string $description
  * @property integer $ordering
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_at
  * @property integer $created_by
@@ -41,7 +41,7 @@ class PaymentConfig extends BaseActiveRecord
         return [
             [['key', 'name', 'description'], 'required'],
             [['config', 'description'], 'string'],
-            [['ordering', 'status', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['ordering', 'enabled', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['key'], 'string', 'max' => 16],
             ['key', 'unique', 'targetAttribute' => ['key', 'tenant_id']],
             [['name'], 'string', 'max' => 100],
@@ -61,7 +61,7 @@ class PaymentConfig extends BaseActiveRecord
             'config' => Yii::t('app', 'Config'),
             'description' => Yii::t('app', 'Description'),
             'ordering' => Yii::t('app', 'Ordering'),
-            'status' => Yii::t('app', 'Status'),
+            'enabled' => Yii::t('app', 'Enabled'),
             'tenant_id' => Yii::t('app', 'Tenant ID'),
             'created_at' => Yii::t('app', 'Created At'),
             'created_by' => Yii::t('app', 'Created By'),

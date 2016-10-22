@@ -11,7 +11,7 @@ use Yii;
  * @property string $name
  * @property integer $type
  * @property integer $ordering
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_at
  * @property integer $created_by
@@ -44,8 +44,11 @@ class Specification extends BaseActiveRecord
     {
         return [
             [['name'], 'required'],
+            [['name'], 'trim'],
+            ['name', 'unique', 'targetAttribute' => ['name', 'tenant_id']],
             [['type', 'ordering', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
-            [['status'], 'boolean'],
+            [['enabled'], 'boolean'],
+            ['ordering', 'default', 'value' => 0],
             [['name'], 'string', 'max' => 20],
             [['valuesData'], 'safe']
         ];
@@ -95,8 +98,8 @@ class Specification extends BaseActiveRecord
         $condition = ['tenant_id = :tenantId'];
         $bindValues = [':tenantId' => Yad::getTenantId()];
         if (!$all) {
-            $condition[] = '[[status]] = :status';
-            $bindValues[':status'] = Constant::BOOLEAN_TRUE;
+            $condition[] = '[[enabled]] = :enabled';
+            $bindValues[':enabled'] = Constant::BOOLEAN_TRUE;
         }
         $sql .= ' WHERE ' . implode(' AND ', $condition) . ' ORDER BY [[ordering]] ASC';
 
@@ -121,19 +124,25 @@ class Specification extends BaseActiveRecord
         if ($insert) {
             $insertColumns = [];
             foreach ($values as $value) {
-                $value['status'] = $value['status'] == 1 ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE;
+                if (empty($value['text'])) {
+                    continue;
+                }
+                $value['enabled'] = $value['enabled'] == 1 ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE;
                 $insertColumns = array_merge($value, ['specification_id' => $this->id, 'tenant_id' => $tenantId, 'created_at' => $now, 'created_by' => $userId, 'updated_at' => $now, 'updated_by' => $userId]);
                 $insertValues[] = array_values($insertColumns);
             }
         } else {
             foreach ($values as $value) {
-                $value['status'] = $value['status'] == 1 ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE;
+                if (empty($value['text'])) {
+                    continue;
+                }
+                $value['enabled'] = $value['enabled'] == 1 ? Constant::BOOLEAN_TRUE : Constant::BOOLEAN_FALSE;
                 $valueId = isset($value['id']) && $value['id'] ? $value['id'] : null;
                 if ($valueId) {
                     // Update
-                    $specificationValue = $db->createCommand('SELECT [[text]], [[icon_path]], [[ordering]], [[status]] FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId AND [[specification_id]] = :specificationId')->bindValues([':id' => $valueId, ':tenantId' => $tenantId, ':specificationId' => $this->id])->queryOne();
+                    $specificationValue = $db->createCommand('SELECT [[text]], [[icon_path]], [[ordering]], [[enabled]] FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId AND [[specification_id]] = :specificationId')->bindValues([':id' => $valueId, ':tenantId' => $tenantId, ':specificationId' => $this->id])->queryOne();
                     if ($specificationValue) {
-                        if ($value['text'] != $specificationValue['text'] || $value['icon_path'] != $specificationValue['icon_path'] || $value['ordering'] != $specificationValue['ordering'] || $value['status'] != $specificationValue['status']) {
+                        if ($value['text'] != $specificationValue['text'] || $value['icon_path'] != $specificationValue['icon_path'] || $value['ordering'] != $specificationValue['ordering'] || $value['enabled'] != $specificationValue['enabled']) {
                             $updateColumns = [
                                 'updated_at' => $now,
                                 'updated_by' => $userId,
@@ -147,8 +156,8 @@ class Specification extends BaseActiveRecord
                             if ($value['ordering'] != $specificationValue['ordering']) {
                                 $updateColumns['ordering'] = $value['ordering'];
                             }
-                            if ($value['status'] != $specificationValue['status']) {
-                                $updateColumns['status'] = $value['status'];
+                            if ($value['enabled'] != $specificationValue['enabled']) {
+                                $updateColumns['enabled'] = $value['enabled'];
                             }
                             $db->createCommand()->update('{{%specification_value}}', $updateColumns, ['id' => $valueId, 'tenant_id' => $tenantId, 'specification_id' => $this->id])->execute();
                         }

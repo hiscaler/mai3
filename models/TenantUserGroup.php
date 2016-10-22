@@ -10,7 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $alias
  * @property string $name
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_by
  * @property integer $created_at
@@ -37,7 +37,7 @@ class TenantUserGroup extends BaseActiveRecord
             [['alias', 'name'], 'required'],
             ['alias', 'match', 'pattern' => '/^[a-z]+$/'],
             ['alias', 'unique', 'targetAttribute' => ['alias', 'tenant_id']],
-            [['status', 'tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
+            [['enabled', 'tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['alias'], 'string', 'max' => 20],
             [['name'], 'string', 'max' => 30]
         ]);

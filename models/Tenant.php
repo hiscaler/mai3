@@ -2,10 +2,8 @@
 
 namespace app\models;
 
-use PDO;
 use Yii;
 use yii\db\Query;
-use yii\web\HttpException;
 
 /**
  * This is the model class for table "tenant".
@@ -19,14 +17,12 @@ use yii\web\HttpException;
  * @property string $time_format
  * @property string $datetime_format
  * @property string $domain_name
- * @property integer $status
+ * @property integer $enabled
  * @property string $description
  * @property integer $created_by
  * @property integer $created_at
  * @property integer $updated_by
  * @property integer $updated_at
- * @property integer $deleted_at
- * @property integer $deleted_by
  */
 class Tenant extends BaseActiveRecord
 {
@@ -48,12 +44,12 @@ class Tenant extends BaseActiveRecord
     public function rules()
     {
         return [
-            [['name', 'language', 'timezone', 'domain_name', 'status'], 'required'],
+            [['name', 'language', 'timezone', 'domain_name', 'enabled'], 'required'],
             [['key', 'name', 'domain_name', 'description', 'date_format', 'time_format', 'datetime_format'], 'trim'],
             ['key', 'match', 'pattern' => '/^[1-9]{1}[0-9]{11}$/'],
             ['domain_name', 'match', 'pattern' => '/[a-zA-Z0-9][-a-zA-Z0-9]{1,62}(.[a-zA-Z0-9][-a-zA-Z0-9]{1,62})+.?/'],
             [['created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
-            ['status', 'boolean'],
+            ['enabled', 'boolean'],
             [['key', 'name', 'description'], 'string', 'max' => 255],
             [['domain_name'], 'string', 'max' => 100],
             [['language'], 'string', 'max' => 10],
@@ -89,7 +85,7 @@ class Tenant extends BaseActiveRecord
     public function getUsers()
     {
         return (new Query())
-                ->select(['u.id', 'u.username', 'u.nickname', 'u.email', 'u.status', 't.status', 't.role', 'tug.name AS group_name'])
+                ->select(['u.id', 'u.username', 'u.nickname', 'u.email', 'u.status', 't.enabled', 't.role', 'tug.name AS group_name'])
                 ->from('{{%tenant_user}} t')
                 ->leftJoin('{{%user}} u', '[[t.user_id]] = [[u.id]]')
                 ->leftJoin('{{%tenant_user_group}} tug', '[[t.user_group_id]] = [[tug.id]]')
@@ -121,7 +117,7 @@ class Tenant extends BaseActiveRecord
             ->from('{{%tenant_user_group}}')
             ->where([
                 'tenant_id' => $tenantId === null ? Yad::getTenantId() : $tenantId,
-                'status' => Constant::BOOLEAN_TRUE
+                'enabled' => Constant::BOOLEAN_TRUE
             ])
             ->indexBy('id')
             ->column();
@@ -155,6 +151,7 @@ class Tenant extends BaseActiveRecord
      */
     public static function workflowRules($tenantId = null)
     {
+        return [];
         $items = (new Query())
             ->select('name')
             ->from('{{%workflow_rule}}')
@@ -167,19 +164,91 @@ class Tenant extends BaseActiveRecord
         return $items;
     }
 
+    /**
+     * 租户可管理模块
+     */
+    public static function modules()
+    {
+        return Yii::$app->getDb()->createCommand('SELECT [[module_name]] FROM {{%tenant_module}} WHERE [[tenant_id]] = :tenantId')->bindValue(':tenantId', Yad::getTenantId(), \PDO::PARAM_INT)->queryColumn();
+    }
+
     // Events
+    public function afterFind()
+    {
+        parent::afterFind();
+        if ($this->isNewRecord) {
+            $this->modules = [];
+        } else {
+            $this->modules = Yii::$app->getDb()->createCommand('SELECT [[module_name]] FROM {{%tenant_module}} WHERE [[tenant_id]] = :tenantId')->bindValue(':tenantId', $this->id, \PDO::PARAM_INT)->queryColumn();
+        }
+        $this->_modules = $this->modules;
+    }
 
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
             if ($insert) {
-                $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM {{%tenant}}')->queryScalar();
+                $count = Yii::$app->getDb()->createCommand('SELECT COUNT(*) FROM {{%tenant}}')->queryScalar();
                 $this->key = date('Ymd') . sprintf('%04d', $count + 1);
             }
 
             return true;
         } else {
             return false;
+        }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        $modules = $this->modules;
+        if (!is_array($this->_modules)) {
+            $this->_modules = [];
+        }
+        if (!is_array($modules)) {
+            $modules = [];
+        }
+        $db = Yii::$app->getDb();
+        $cmd = $db->createCommand();
+
+        if ($insert) {
+            $cmd->insert('{{%tenant_user}}', [
+                'tenant_id' => $this->id,
+                'user_id' => Yii::$app->getUser()->getId(),
+                'role' => User::ROLE_ADMINISTRATOR,
+                'rule_id' => 0,
+                'enabled' => Constant::BOOLEAN_TRUE,
+                'user_group_id' => 0
+            ])->execute();
+            $insertModules = $modules;
+            $deleteModules = [];
+        } else {
+            $insertModules = array_diff($modules, $this->_modules);
+            $deleteModules = array_diff($this->_modules, $modules);
+        }
+
+
+        $transaction = $db->beginTransaction();
+        try {
+            // Insert data
+            if ($insertModules) {
+                $rows = [];
+                foreach ($insertModules as $moduleName) {
+                    $rows[] = [$this->id, $moduleName];
+                }
+                $cmd->batchInsert('{{%tenant_module}}', ['tenant_id', 'module_name'], $rows)->execute();
+            }
+            // Delete data
+            if ($deleteModules) {
+                $cmd->delete('{{%tenant_module}}', [
+                    'tenant_id' => $this->id,
+                    'module_name' => $deleteModules
+                ])->execute();
+            }
+            $transaction->commit();
+        } catch (HttpException $e) {
+            $transaction->rollback();
+            new HttpException(500, $e->getMessage());
         }
     }
 

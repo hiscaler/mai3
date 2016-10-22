@@ -2,6 +2,8 @@
 
 namespace app\models;
 
+use app\modules\admin\components\ApplicationHelper;
+use yadjet\behaviors\ImageUploadBehavior;
 use Yii;
 
 /**
@@ -14,7 +16,7 @@ use Yii;
  * @property string $description
  * @property string $content
  * @property string $picture_path
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_at
  * @property integer $created_by
@@ -25,6 +27,14 @@ use Yii;
  */
 class Article extends BaseActiveRecord
 {
+
+    public $_fileUploadConfig;
+
+    public function init()
+    {
+        $this->_fileUploadConfig = FileUploadConfig::getConfig(static::className2Id(), 'picture_path');
+        parent::init();
+    }
 
     /**
      * @inheritdoc
@@ -42,9 +52,31 @@ class Article extends BaseActiveRecord
         return [
             [['alias', 'title', 'content'], 'required'],
             [['description', 'content'], 'string'],
-            [['status', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
+            [['enabled', 'tenant_id', 'created_at', 'created_by', 'updated_at', 'updated_by', 'deleted_at', 'deleted_by'], 'integer'],
             [['alias'], 'string', 'max' => 30],
-            [['title', 'keywords', 'picture_path'], 'string', 'max' => 100],
+            [['title', 'keywords'], 'string', 'max' => 100],
+            ['picture_path', 'image',
+                'extensions' => $this->_fileUploadConfig['extensions'],
+                'minSize' => $this->_fileUploadConfig['size']['min'],
+                'maxSize' => $this->_fileUploadConfig['size']['max'],
+                'tooSmall' => Yii::t('app', 'The file "{file}" is too small. Its size cannot be smaller than {limit}.', [
+                    'limit' => ApplicationHelper::friendlyFileSize($this->_fileUploadConfig['size']['min']),
+                ]),
+                'tooBig' => Yii::t('app', 'The file "{file}" is too big. Its size cannot exceed {limit}.', [
+                    'limit' => ApplicationHelper::friendlyFileSize($this->_fileUploadConfig['size']['max']),
+                ]),
+            ],
+        ];
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => ImageUploadBehavior::className(),
+                'attribute' => 'picture_path',
+                'thumb' => $this->_fileUploadConfig['thumb']
+            ],
         ];
     }
 
@@ -53,23 +85,14 @@ class Article extends BaseActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'id' => 'ID',
-            'alias' => '别名',
-            'title' => '标题',
-            'keywords' => '关键词',
-            'description' => '描述',
-            'content' => '正文',
-            'picture_path' => '图片',
-            'status' => '状态',
-            'tenant_id' => '所属站点',
-            'created_at' => '添加时间',
-            'created_by' => '添加人',
-            'updated_at' => '更新时间',
-            'updated_by' => '更新人',
-            'deleted_at' => '删除时间',
-            'deleted_by' => '删除人',
-        ];
+        return array_merge(parent::attributeLabels(), [
+            'alias' => Yii::t('article', 'Alias'),
+            'title' => Yii::t('article', 'Title'),
+            'keywords' => Yii::t('app', 'Page Keywords'),
+            'description' => Yii::t('app', 'Page Description'),
+            'content' => Yii::t('article', 'Content'),
+            'picture_path' => Yii::t('article', 'Picture'),
+        ]);
     }
 
 }

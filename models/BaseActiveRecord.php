@@ -34,7 +34,7 @@ class BaseActiveRecord extends ActiveRecord
     public $entityNodeIds;
     public $entityNodeNames;
     private $_oldNodeId;
-    public $isDraft = Option::BOOLEAN_FALSE; // 记录是否为草稿
+    public $isDraft = Constant::BOOLEAN_FALSE; // 记录是否为草稿
     public $content_image_number = 1; // 从文本内容中获取第几章图片作为缩略图
 
     /**
@@ -209,7 +209,7 @@ class BaseActiveRecord extends ActiveRecord
     {
         parent::afterFind();
         if (!$this->isNewRecord) {
-            $this->entityAttributes = Label::getEntityAttributeIds($this->id, static::className2Id());
+            $this->entityAttributes = Label::getEntityLabelIds($this->id, static::className2Id());
             $this->_oldEntityAttributes = $this->entityAttributes;
 //            $nodes = \Yii::$app->getDb()->createCommand('SELECT [[n.id]], [[n.name]] FROM {{%entity_node}} t LEFT JOIN {{%node}} n ON [[t.node_id]] = [[n.id]] WHERE [[t.entity_id]] = :entityId AND [[t.entity_name]] = :entityName')->bindValues([':entityId' => (int) $this->id, ':entityName' => static::className2Id()])->queryAll();
             $nodes = [];
@@ -255,7 +255,7 @@ class BaseActiveRecord extends ActiveRecord
                     if ($this->hasAttribute('node_id')) {
                         $entityDefaultValues = [
                             'status' => Option::STATUS_PENDING,
-                            'enabled' => Option::BOOLEAN_FALSE
+                            'enabled' => Constant::BOOLEAN_FALSE
                         ];
                         if ($this->isDraft) {
                             $entityDefaultValues['status'] = Option::STATUS_DRAFT;
@@ -267,11 +267,11 @@ class BaseActiveRecord extends ActiveRecord
                     } else {
                         // 如果站点用户需要审核流程控制，则状态为待审核，否则为已发布
                         $this->status = Yad::getTenantUserRule() ? Option::STATUS_PENDING : Option::STATUS_PUBLISHED;
-                        $this->enabled = Option::BOOLEAN_TRUE;
+                        $this->enabled = Constant::BOOLEAN_TRUE;
                     }
                 }
 
-                $this->created_by = Yii::$app->user->id ? : 0;
+                $this->created_by = Yii::$app->getUser()->getId() ? : 0;
                 $this->created_at = time();
                 if ($this->hasAttribute('updated_at')) {
                     $this->updated_by = $this->created_by;
@@ -285,14 +285,14 @@ class BaseActiveRecord extends ActiveRecord
                     $this->enabled = $entityDefaultValues['enabled'];
                 }
                 if ($this->hasAttribute('updated_at')) {
-                    $this->updated_by = $this->updated_by ? : Yii::$app->user->id;
+                    $this->updated_by = $this->updated_by ? : Yii::$app->getUser()->getId();
                     $this->updated_at = time();
                 }
             }
             if ($this->hasAttribute('deleted_by') && $this->hasAttribute('deleted_at')) {
                 if ($this->hasAttribute('status')) {
                     if ($this->status == Option::STATUS_DELETED) {
-                        $this->deleted_by = Yii::$app->user->id;
+                        $this->deleted_by = Yii::$app->getUser()->getId();
                         $this->deleted_at = time();
                     } else {
                         $this->deleted_by = $this->deleted_at = null;
@@ -346,7 +346,7 @@ class BaseActiveRecord extends ActiveRecord
             $deleteAttributes = array_diff($this->_oldEntityAttributes, $entityAttributes);
         }
 
-        $db = Yii::$app->db;
+        $db = Yii::$app->getDb();
         $transaction = $db->beginTransaction();
         try {
             // Insert data
@@ -356,7 +356,7 @@ class BaseActiveRecord extends ActiveRecord
                 $userId = Yii::$app->getUser()->getId();
                 $now = time();
                 foreach ($insertAttributes as $attributeId) {
-                    $rows[] = [$this->id, static::className2Id(), $attributeId, Option::BOOLEAN_TRUE, static::DEFAULT_ORDERING_VALUE, $tenantId, $userId, $now, $userId, $now];
+                    $rows[] = [$this->id, static::className2Id(), $attributeId, Constant::BOOLEAN_TRUE, static::DEFAULT_ORDERING_VALUE, $tenantId, $userId, $now, $userId, $now];
                 }
                 if ($rows) {
                     $db->createCommand()->batchInsert('{{%entity_label}}', ['entity_id', 'entity_name', 'attribute_id', 'enabled', 'ordering', 'tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], $rows)->execute();
@@ -423,12 +423,12 @@ class BaseActiveRecord extends ActiveRecord
     {
         parent::afterDelete();
         // Delete attribute relation data and update attribute frequency value
-        $labels = Yii::$app->db->createCommand('SELECT [[id]], [[label_id]] FROM {{%entity_label}} WHERE [[entity_id]] = :entityId AND [[entity_name]] = :entityName')->bindValues([
+        $labels = Yii::$app->getDb()->createCommand('SELECT [[id]], [[label_id]] FROM {{%entity_label}} WHERE [[entity_id]] = :entityId AND [[entity_name]] = :entityName')->bindValues([
                 ':entityId' => $this->id,
                 ':entityName' => static::className2Id()
             ])->queryAll();
         if ($labels) {
-            Yii::$app->db->createCommand('DELETE FROM {{%entity_label}} WHERE [[id]] IN (' . implode(', ', ArrayHelper::getColumn($labels, 'id')) . ')')->execute();
+            Yii::$app->getDb()->createCommand('DELETE FROM {{%entity_label}} WHERE [[id]] IN (' . implode(', ', ArrayHelper::getColumn($labels, 'id')) . ')')->execute();
             Label::updateAll(['frequency' => -1], ['id' => ArrayHelper::getColumn($labels, 'label_id')]);
         }
 

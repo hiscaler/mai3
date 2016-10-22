@@ -10,7 +10,7 @@ use Yii;
  * @property integer $id
  * @property string $name
  * @property string $access_token
- * @property integer $status
+ * @property integer $enabled
  * @property integer $tenant_id
  * @property integer $created_by
  * @property integer $created_at
@@ -35,7 +35,7 @@ class TenantAccessToken extends BaseActiveRecord
     {
         return [
             [['name', 'access_token'], 'required'],
-            ['status', 'boolean'],
+            ['enabled', 'boolean'],
             [['tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['name', 'access_token'], 'string', 'max' => 255]
         ];

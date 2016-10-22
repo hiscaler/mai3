@@ -18,7 +18,7 @@ class ArticleSearch extends Article
     public function rules()
     {
         return [
-            [['status'], 'integer'],
+            [['enabled'], 'integer'],
             [['alias', 'title'], 'safe'],
         ];
     }
@@ -62,7 +62,7 @@ class ArticleSearch extends Article
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'status' => $this->status,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'alias', $this->alias])

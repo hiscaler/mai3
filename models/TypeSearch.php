@@ -17,7 +17,7 @@ class TypeSearch extends Type
     public function rules()
     {
         return [
-            [['id', 'ordering', 'status'], 'integer'],
+            [['id', 'ordering', 'enabled'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -56,7 +56,7 @@ class TypeSearch extends Type
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'status' => $this->status,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);

@@ -2,10 +2,9 @@
 
 namespace app\models;
 
-use Yii;
+use app\models\UserGroup;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\UserGroup;
 
 /**
  * UserGroupSearch represents the model behind the search form about `app\models\UserGroup`.

@@ -13,7 +13,7 @@ use yii\helpers\Inflector;
  * @property string $alias
  * @property string $name
  * @property integer $frequency
- * @property integer $status
+ * @property integer $enabled
  * @property integer $ordering
  * @property integer $tenant_id
  * @property integer $created_by
@@ -41,7 +41,7 @@ class Label extends BaseActiveRecord
             [['alias', 'name', 'ordering'], 'required'],
             ['alias', 'match', 'pattern' => '/^[a-z]+[.]?[a-z-]+[a-z]$/'],
             ['alias', 'unique', 'targetAttribute' => ['alias', 'tenant_id']],
-            [['status'], 'boolean'],
+            [['enabled'], 'boolean'],
             [['frequency', 'ordering', 'tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
             [['alias', 'name'], 'string', 'max' => 255]
         ];
@@ -53,8 +53,8 @@ class Label extends BaseActiveRecord
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'name' => Yii::t('attribute', 'Name'),
-            'frequency' => Yii::t('attribute', 'Frequency'),
+            'name' => Yii::t('label', 'Name'),
+            'frequency' => Yii::t('label', 'Frequency'),
         ]);
     }
 
@@ -70,8 +70,8 @@ class Label extends BaseActiveRecord
         $sql = 'SELECT [[id]], [[alias]], [[name]] FROM {{%label}} WHERE [[tenant_id]] = :tenantId';
         $params = [':tenantId' => Yad::getTenantId()];
         if (!$all) {
-            $sql .= ' AND [[status]] = :status';
-            $params[':status'] = Option::BOOLEAN_TRUE;
+            $sql .= ' AND [[enabled]] = :enabled';
+            $params[':enabled'] = Constant::BOOLEAN_TRUE;
         }
         $sql .= ' ORDER BY [[alias]] ASC, [[ordering]] ASC';
         $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($params)->queryAll();
@@ -119,7 +119,7 @@ class Label extends BaseActiveRecord
     {
         $sentence = Inflector::sentence(static::getEntityItems($entityId, $entityName), '、', null, '、');
         if (!empty($sentence)) {
-            $sentence = "<span class=\"attributes\">{$sentence}</span>";
+            $sentence = "<span class=\"lables\">{$sentence}</span>";
         }
 
         return $sentence;
@@ -131,7 +131,7 @@ class Label extends BaseActiveRecord
      * @param string $entityName
      * @return array
      */
-    public static function getEntityAttributeIds($entityId, $entityName)
+    public static function getEntityLabelIds($entityId, $entityName)
     {
         return Yii::$app->getDb()->createCommand('SELECT [[label_id]] FROM {{%entity_label}} WHERE [[entity_id]] = :entityId AND [[entity_name]] = :entityName')->bindValues([':entityId' => (int) $entityId, ':entityName' => $entityName])->queryColumn();
     }

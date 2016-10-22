@@ -18,7 +18,7 @@ class TenantUserGroupSearch extends TenantUserGroup
     public function rules()
     {
         return [
-            [['status'], 'integer'],
+            [['enabled'], 'integer'],
             [['alias', 'name'], 'safe'],
         ];
     }
@@ -53,7 +53,7 @@ class TenantUserGroupSearch extends TenantUserGroup
         }
 
         $query->andFilterWhere([
-            'status' => $this->status,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'alias', $this->alias])

@@ -15,7 +15,7 @@ use Yii;
  * @property string $input_values
  * @property string $input_default_value
  * @property integer $ordering
- * @property integer $status
+ * @property integer $enabled
  * @property integer $created_at
  * @property integer $created_by
  * @property integer $updated_at
@@ -54,7 +54,7 @@ class TypeProperty extends \yii\db\ActiveRecord
     {
         return [
             [['type_id', 'name', 'input_method'], 'required'],
-            [['type_id', 'return_type', 'ordering', 'status', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
+            [['type_id', 'return_type', 'ordering', 'enabled', 'created_at', 'created_by', 'updated_at', 'updated_by'], 'integer'],
             [['name'], 'string', 'max' => 30],
             [['input_method'], 'string', 'max' => 12],
             [['input_default_value'], 'string', 'max' => 255],
@@ -76,7 +76,7 @@ class TypeProperty extends \yii\db\ActiveRecord
             'input_values' => '录入选项',
             'input_default_value' => '默认值',
             'ordering' => '排序',
-            'status' => '状态',
+            'enabled' => '状态',
             'created_at' => '添加时间',
             'created_by' => '添加人',
             'updated_at' => '更新时间',

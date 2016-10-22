@@ -18,7 +18,7 @@ class BrandSearch extends Brand
     public function rules()
     {
         return [
-            [['id', 'status'], 'integer'],
+            [['id', 'enabled'], 'integer'],
             [['alias', 'name'], 'safe'],
         ];
     }
@@ -45,6 +45,11 @@ class BrandSearch extends Brand
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'ordering' => SORT_ASC,
+                ]
+            ]
         ]);
 
         $this->load($params);
@@ -57,7 +62,7 @@ class BrandSearch extends Brand
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'status' => $this->status,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'alias', $this->alias])
