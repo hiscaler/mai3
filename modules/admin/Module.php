@@ -20,17 +20,29 @@ class Module extends \yii\base\Module
     {
         parent::init();
         \Yii::$app->setComponents([
-            'errorHandler' => [
-                'class' => 'yii\web\ErrorHandler',
-                'errorAction' => '/admin/default/error',
-            ],
             'user' => [
                 'class' => 'yii\web\User',
                 'identityClass' => 'app\models\User',
+                'identityCookie' => ['name' => '_identity_admin', 'httpOnly' => true],
+                'idParam' => '__id_admin',
                 'enableAutoLogin' => true,
-                'loginUrl' => 'login'
+                'loginUrl' => ['/admin/default/login']
+            ],
+            'formatter' => [
+                'class' => 'app\modules\admin\extensions\Formatter',
+            ],
+            'response' => [
+                'class' => '\yii\web\Response',
+                'formatters' => [
+                    \yii\web\Response::FORMAT_JSON => [
+                        'class' => '\yii\web\JsonResponseFormatter',
+                        'prettyPrint' => YII_DEBUG,
+                        'encodeOptions' => JSON_NUMERIC_CHECK + JSON_UNESCAPED_SLASHES + JSON_UNESCAPED_UNICODE,
+                    ],
+                ],
             ],
         ]);
+        \Yii::$app->errorHandler->errorAction = 'admin/default/error';
     }
 
 }
