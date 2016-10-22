@@ -19,23 +19,36 @@ $this->params['menus'] = [
 
     <?= $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php Pjax::begin(); ?> 
+    <?php
+    Pjax::begin([
+        'formSelector' => '#form-search-items',
+        'timeout' => 6000,
+    ]);
+    ?> 
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-            'id',
             [
                 'attribute' => 'sn',
-                'contentOptions' => ['class' => 'sn'],
+                'contentOptions' => ['class' => 'item-sn'],
             ],
-            'name',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return '<span class="pk">' . $model['id'] . '</span>' . yii\helpers\Html::a($model['name'], ['view', 'id' => $model['id']]);
+                },
+            ],
             [
                 'attribute' => 'market_price',
                 'contentOptions' => ['class' => 'price'],
             ],
-            // 'member_price',
+            [
+                'attribute' => 'member_price',
+                'contentOptions' => ['class' => 'price'],
+            ],
             // 'cost_price',
             // 'picture_path',
             [
@@ -57,19 +70,35 @@ $this->params['menus'] = [
             [
                 'attribute' => 'default',
                 'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean'],
+                'contentOptions' => ['class' => 'boolean pointer default-handler'],
             ],
             [
-                'attribute' => 'enabled',
+                'attribute' => 'online',
                 'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean'],
+                'contentOptions' => ['class' => 'boolean pointer online-handler'],
             ],
             [
-                'attribute' => 'status',
-                'contentOptions' => ['class' => 'data-status'],
+                'attribute' => 'on_off_datetime',
+                'format' => 'datetime',
+                'contentOptions' => ['class' => 'rb-on-off-datetime datetime'],
+            ],
+            [
+                'attribute' => 'view_require_credits',
+                'contentOptions' => ['class' => 'number'],
+            ],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'headerOptions' => array('class' => 'buttons-3 last'),
             ],
         ],
     ]);
     ?>
     <?php Pjax::end(); ?>
 </div>
+
+<?php \app\modules\admin\components\JsBlock::begin() ?>
+<script type="text/javascript">
+    yadjet.actions.toggle("table td.online-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
+    yadjet.actions.toggle("table td.default-handler img", "<?= yii\helpers\Url::toRoute('set-default') ?>");
+</script>
+<?php \app\modules\admin\components\JsBlock::end() ?>

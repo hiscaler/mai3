@@ -13,6 +13,7 @@ use yii\widgets\ActiveForm;
 
         <?php
         $form = ActiveForm::begin([
+                'id' => 'form-search-items',
                 'action' => ['index'],
                 'method' => 'get',
         ]);
@@ -22,6 +23,12 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'id') ?>
 
             <?= $form->field($model, 'product_id') ?>
+        </div>
+
+        <div class="entry">
+            <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(null, true), ['prompt' => '']) ?>
+
+            <?= $form->field($model, 'brand_id')->dropDownList(app\models\Brand::getList(), ['prompt' => '']) ?>
         </div>
 
         <div class="entry">
