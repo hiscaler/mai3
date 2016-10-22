@@ -2,9 +2,9 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Constant;
 use app\models\Label;
 use app\models\LabelSearch;
-use app\models\Option;
 use app\models\Yad;
 use PDO;
 use Yii;
@@ -29,7 +29,7 @@ class LabelsController extends GlobalController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'delete', 'toggle', 'toggle-entity-enabled'],
+                        'actions' => ['index', 'create', 'update', 'delete', 'toggle'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -40,7 +40,6 @@ class LabelsController extends GlobalController
                 'actions' => [
                     'delete' => ['post'],
                     'toggle' => ['post'],
-                    'toggle-entity-enabled' => ['post'],
                 ],
             ],
         ];
@@ -69,8 +68,9 @@ class LabelsController extends GlobalController
     public function actionCreate()
     {
         $model = new Label();
-        $model->status = Option::BOOLEAN_TRUE;
+        $model->enabled = Constant::BOOLEAN_TRUE;
         $model->ordering = Label::DEFAULT_ORDERING_VALUE;
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
@@ -112,11 +112,17 @@ class LabelsController extends GlobalController
         if ($model->frequency) {
             throw new NotAcceptableHttpException('The requested does not acceptable.');
         } else {
-            Yii::$app->db->createCommand()->update('{{%attribute}}', [
-                'deleted_at' => time(),
-                'deleted_by' => Yii::$app->user->id,
-                'enabled' => Option::BOOLEAN_FALSE
-                ], '[[id]] = :id', [':id' => $model->id])->execute();
+            $db = Yii::$app->getDb();
+            $transaction = $db->beginTransaction();
+            try {
+                $db->createCommand('DELETE FROM {{%label}} WHERE id = :id', [':id' => (int) $id])->execute();
+                $db->createCommand('DELETE FROM {{%entity_label}} WHERE label_id = :labelId', [':labelId' => (int) $id])->execute();
+                $transaction->commit();
+            } catch (\Exception $e) {
+                $transaction->rollBack();
+                throw $e->getMessage();
+            }
+
             return $this->redirect(['index']);
         }
     }
@@ -128,8 +134,8 @@ class LabelsController extends GlobalController
     public function actionToggle()
     {
         $id = Yii::$app->request->post('id');
-        $db = Yii::$app->db;
-        $command = $db->createCommand('SELECT [[enabled]] FROM {{%attribute}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
+        $db = Yii::$app->getDb();
+        $command = $db->createCommand('SELECT [[enabled]] FROM {{%label}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
         $command->bindValues([
             ':id' => (int) $id,
             ':tenantId' => Yad::getTenantId(),
@@ -139,51 +145,13 @@ class LabelsController extends GlobalController
         if ($value !== null) {
             $value = !$value;
             $now = time();
-            $db->createCommand()->update('{{%attribute}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->user->id, 'deleted_at' => null, 'deleted_by' => null], '[[id]] = :id', [':id' => (int) $id])->execute();
+            $db->createCommand()->update('{{%label}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
             $responseData = [
                 'success' => true,
                 'data' => [
                     'value' => $value,
-                    'updatedAt' => Yii::$app->formatter->asDate($now),
-                    'updatedBy' => Yii::$app->user->getIdentity()->username,
-                ],
-            ];
-        } else {
-            $responseData = [
-                'success' => false,
-                'error' => [
-                    'message' => '数据有误',
-                ],
-            ];
-        }
-
-        return new Response([
-            'format' => Response::FORMAT_JSON,
-            'data' => $responseData,
-        ]);
-    }
-
-    /**
-     * 关联的实体数据激活禁止操作
-     * @return Response
-     */
-    public function actionToggleEntityEnabled()
-    {
-        $id = Yii::$app->request->post('id');
-        $connection = Yii::$app->db;
-        $command = $connection->createCommand('SELECT [[entity_enabled]] FROM {{%attribute}} WHERE [[id]] = :id');
-        $command->bindValue(':id', (int) $id);
-        $value = $command->queryScalar();
-        if ($value !== null) {
-            $value = !$value;
-            $now = time();
-            $connection->createCommand()->update('{{%attribute}}', ['entity_enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->user->id], 'id = :id', [':id' => (int) $id])->execute();
-            $responseData = [
-                'success' => true,
-                'data' => [
-                    'value' => $value,
-                    'updatedAt' => Yii::$app->formatter->asDate($now),
-                    'updatedBy' => Yii::$app->user->getIdentity()->username,
+                    'updatedAt' => Yii::$app->getFormatter()->asDate($now),
+                    'updatedBy' => Yii::$app->getUser()->getIdentity()->username,
                 ],
             ];
         } else {
