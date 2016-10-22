@@ -3,7 +3,11 @@
 namespace app\modules\admin\controllers;
 
 use app\models\Specification;
+use app\models\TypeProperty;
+use app\models\Yad;
+use stdClass;
 use Yii;
+use yii\db\Query;
 use yii\web\Response;
 
 /**
@@ -13,6 +17,41 @@ use yii\web\Response;
  */
 class ApiController extends \yii\rest\Controller
 {
+
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action)) {
+            $formatter = Yii::$app->getFormatter();
+            $language = Yad::getLanguage();
+            if ($language) {
+                Yii::$app->language = $language;
+            }
+            $timezone = Yad::getTimezone();
+            if ($timezone) {
+                Yii::$app->timeZone = $timezone;
+            }
+
+            $formatter->defaultTimeZone = Yii::$app->timeZone;
+            $dateFormat = Yad::getTenantValue('dateFormat', 'php:Y-m-d');
+            if ($dateFormat) {
+                $formatter->dateFormat = $dateFormat;
+            }
+            $timeFormat = Yad::getTenantValue('timeFormat', 'php:H:i:s');
+            if ($timeFormat) {
+                $formatter->timeFormat = $timeFormat;
+            }
+            $datetimeFormat = Yad::getTenantValue('datetimeFormat', 'php:Y-m-d H:i:s');
+            if ($datetimeFormat) {
+                $formatter->datetimeFormat = $datetimeFormat;
+            }
+
+            Yii::$app->getResponse()->format = 'json';
+
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * 商品接口
@@ -24,7 +63,7 @@ class ApiController extends \yii\rest\Controller
         $db = Yii::$app->getDb();
         $res = $db->createCommand('SELECT [[id]], [[name]] FROM {{%product}} WHERE id = :id', [':id' => (int) $id])->queryOne();
         if ($res) {
-            $items = $db->createCommand('SELECT [[id]], [[sku_sn]], [[name]], [[market_price]], [[member_price]], [[picture_path]], [[clicks_count]], [[favorites_count]], [[sales_count]], [[stocks_count]], [[default]] FROM {{%item}} WHERE [[product_id]] = :productId', [':productId' => $res['id']])->queryAll();
+            $items = $db->createCommand('SELECT [[id]], [[sku_sn]], [[name]], [[market_price]], [[shop_price]], [[member_price]], [[picture_path]], [[clicks_count]], [[favorites_count]], [[sales_count]], [[stocks_count]], [[default]] FROM {{%item}} WHERE [[product_id]] = :productId', [':productId' => $res['id']])->queryAll();
             $res['items'] = $items;
         }
 
@@ -90,8 +129,8 @@ class ApiController extends \yii\rest\Controller
             $res['checkedSpecificationValues'] = $checkedSpecificationValues;
 
             if ($productId) {
-                $items = (new \yii\db\Query())
-                    ->select(['id', 'sn', 'name', 'market_price', 'member_price', 'picture_path', 'default', 'enabled', 'status'])
+                $items = (new Query())
+                    ->select(['id', 'sn', 'name', 'market_price', 'shop_price', 'member_price', 'picture_path', 'default', 'enabled', 'online', 'status'])
                     ->from('{{%item}}')
                     ->where(['product_id' => $productId])
                     ->indexBy('id')
@@ -114,10 +153,14 @@ class ApiController extends \yii\rest\Controller
                     $items[$key]['specificationValueString'] = implode(',', $items[$key]['values']);
                     $items[$key]['price'] = [
                         'market' => $item['market_price'],
+                        'shop' => $item['shop_price'],
                         'member' => $item['member_price'],
                     ];
-                    $items[$key]['default'] = $item['default'] ? true : false;
+                    $default = $item['default'] ? true : false;
+                    $items[$key]['default'] = $default;
+                    $items[$key]['_default_id'] = $default ? $key : null;
                     $items[$key]['enabled'] = $item['enabled'] ? true : false;
+                    $items[$key]['online'] = $item['online'] ? true : false;
                     unset($items[$key]['market_price'], $items[$key]['member_price']);
 
                     if (!isset($items[$key]['text'])) {
@@ -148,7 +191,7 @@ class ApiController extends \yii\rest\Controller
         $data = Yii::$app->getDb()->createCommand('SELECT * FROM {{%type_property}} WHERE [[type_id]] = :typeId', [':typeId' => (int) $typeId])->queryAll();
         foreach ($data as $key => $item) {
             $item['value'] = null;
-            if ($item['input_method'] == \app\models\TypeProperty::INPUT_METHOD_DROPDOWNLIST) {
+            if ($item['input_method'] == TypeProperty::INPUT_METHOD_DROPDOWNLIST) {
                 $inputValues = [];
                 foreach (explode(PHP_EOL, $item['input_values']) as $row) {
                     $row = explode(':', $row);
@@ -169,17 +212,17 @@ class ApiController extends \yii\rest\Controller
 
     public function actionProductProperties($productId, $typeId)
     {
-        $typeProperties = (new \yii\db\Query())->select('*')->from('{{%type_property}}')
+        $typeProperties = (new Query())->select('*')->from('{{%type_property}}')
             ->where(['type_id' => (int) $typeId])
             ->indexBy('id')
             ->all();
-        $productPropertyValues = (new \yii\db\Query())->select('value')->from('{{%product_property}}')
+        $productPropertyValues = (new Query())->select('value')->from('{{%product_property}}')
             ->where(['product_id' => (int) $productId])
             ->indexBy('property_id')
             ->column();
         foreach ($typeProperties as $key => $item) {
             $item['value'] = isset($productPropertyValues[$key]) ? $productPropertyValues[$key] : null;
-            if ($item['input_method'] == \app\models\TypeProperty::INPUT_METHOD_DROPDOWNLIST) {
+            if ($item['input_method'] == TypeProperty::INPUT_METHOD_DROPDOWNLIST) {
                 $inputValues = [];
                 foreach (explode(PHP_EOL, $item['input_values']) as $row) {
                     $row = explode(':', $row);
@@ -196,6 +239,90 @@ class ApiController extends \yii\rest\Controller
             'format' => Response::FORMAT_JSON,
             'data' => $typeProperties,
         ]);
+    }
+
+    /**
+     * 数据验证规则
+     * @return Response
+     */
+    public function actionValidators()
+    {
+        $validators = [
+            'required' => [
+                'class' => '\yii\validators\RequiredValidator',
+                'label' => Yii::t('meta', 'Required Validator'),
+            ],
+            'integer' => [
+                'class' => '\yii\validators\IntegerValidator',
+                'label' => Yii::t('meta', 'Integer Validator'),
+                'options' => [
+                    'min' => null,
+                    'max' => null,
+                    'message' => null,
+                ]
+            ],
+            'string' => [
+                'class' => '\yii\validators\StringValidator',
+                'label' => Yii::t('meta', 'String Validator'),
+                'options' => [
+                    'length' => null,
+                    'min' => null,
+                    'max' => null,
+                    'message' => null,
+                    'encoding' => Yii::$app->charset
+                ]
+            ],
+            'email' => [
+                'class' => '\yii\validators\EmailValidator',
+                'label' => Yii::t('meta', 'Email Validator'),
+            ],
+            'url' => [
+                'class' => '\yii\validators\UrlValidator',
+                'label' => Yii::t('meta', 'Url Validator'),
+            ],
+            'date' => [
+                'class' => '\yii\validators\DateValidator',
+                'label' => Yii::t('meta', 'Date Validator'),
+                'options' => [
+                    'format' => null,
+                    'timeZone' => Yii::$app->getTimeZone(),
+                ]
+            ],
+        ];
+
+        foreach ($validators as $name => $config) {
+            if (!isset($config['options']) || empty($config['options'])) {
+                $config['messages'] = $config['options'] = new \stdClass();
+            } else {
+                $messages = [];
+                foreach ($config['options'] as $opt => $value) {
+                    $messages[$opt] = Yii::t('meta', ucwords($name) . ' ' . ucwords($opt));
+                }
+                $config['messages'] = $messages;
+            }
+            $validators[$name] = $config;
+        }
+
+        return $validators;
+    }
+
+    /**
+     * 指定数据的验证规则
+     * @param integer $metaId
+     * @return yii\web\Response
+     */
+    public function actionMetaValidators($metaId)
+    {
+        $metaValidators = Yii::$app->getDb()->createCommand('SELECT [[name]], [[options]] FROM {{%meta_validator}} WHERE [[meta_id]] = :metaId', [':metaId' => (int) $metaId])->queryAll();
+        foreach ($metaValidators as $key => $item) {
+            $options = unserialize($item['options']);
+            if (!$options) {
+                $options = new \stdClass();
+            }
+            $metaValidators[$key]['options'] = $options;
+        }
+
+        return $metaValidators;
     }
 
 }
