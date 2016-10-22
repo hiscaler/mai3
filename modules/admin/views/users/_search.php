@@ -1,8 +1,6 @@
 <?php
 
 use app\models\Option;
-use app\models\Tenant;
-use app\models\User;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 

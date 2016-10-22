@@ -14,17 +14,17 @@ use app\models\User;
 
         <?php $form = ActiveForm::begin(); ?>
 
-        <?= $form->field($model, 'username')->textInput(['maxlength' => 12]) ?>
+        <?= $form->field($model, 'username')->textInput(['maxlength' => true]) ?>
 
         <?php if ($model->isNewRecord): ?>
-            <?= $form->field($model, 'password')->passwordInput(['maxlength' => 12, 'class' => 'g-text']) ?>
+            <?= $form->field($model, 'password')->passwordInput(['maxlength' => true, 'class' => 'g-text']) ?>
 
-            <?= $form->field($model, 'confirm_password')->passwordInput(['maxlength' => 12, 'class' => 'g-text']) ?>
+            <?= $form->field($model, 'confirm_password')->passwordInput(['maxlength' => true, 'class' => 'g-text']) ?>
         <?php endif; ?>
 
-        <?= $form->field($model, 'nickname')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'nickname')->textInput(['maxlength' => true]) ?>
 
-        <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
+        <?= $form->field($model, 'email')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'status')->dropDownList(User::statusOptions(), ['prompt' => '']) ?>
 

@@ -15,6 +15,8 @@ use yii\widgets\ActiveForm;
 
         <?= $form->field($model, 'type')->dropDownList(app\models\UserGroup::typeOptions()) ?>
 
+        <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
+
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'icon_path')->fileInput() ?>

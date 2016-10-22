@@ -2,7 +2,9 @@
 /* @var $this yii\web\View */
 /* @var $model app\models\UserGroup */
 
-$this->title = Yii::t('app', 'Create User Group');
+$this->title = Yii::t('app', 'Create {modelClass}', [
+        'modelClass' => Yii::t('model', 'User Group'),
+    ]);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User Groups'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
@@ -12,10 +14,10 @@ $this->params['menus'] = [
 ?>
 <div class="user-group-create">
 
-<?=
-$this->render('_form', [
-    'model' => $model,
-])
-?>
+    <?=
+    $this->render('_form', [
+        'model' => $model,
+    ])
+    ?>
 
 </div>

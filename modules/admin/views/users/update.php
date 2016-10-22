@@ -3,8 +3,8 @@
 /* @var $model app\models\Slide */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-            'modelClass' => Yii::t('model', 'User'),
-        ]) . ' ' . $model->user_id;
+        'modelClass' => Yii::t('model', 'User'),
+    ]) . ' ' . $model->username;
 
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Users'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->username, 'url' => ['view', 'id' => $model->id]];
@@ -18,7 +18,7 @@ $this->params['menus'] = [
 <div class="slide-update">
 
     <?=
-    $this->render('_createTenantUserForm', [
+    $this->render('_form', [
         'model' => $model,
     ])
     ?>

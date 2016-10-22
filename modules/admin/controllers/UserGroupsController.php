@@ -3,8 +3,10 @@
 namespace app\modules\admin\controllers;
 
 use app\models\UserGroup;
-use app\models\UserGroupSearch;
 use Yii;
+use yii\data\ActiveDataProvider;
+use yii\db\Query;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\NotFoundHttpException;
 
@@ -21,6 +23,16 @@ class UserGroupsController extends GlobalController
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -36,12 +48,28 @@ class UserGroupsController extends GlobalController
      */
     public function actionIndex()
     {
-        $searchModel = new UserGroupSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $query = (new Query())
+            ->from('{{%user_group}}')
+            ->orderBy(['min_credits' => SORT_ASC]);
+
+        $userGroupDataProvider = new ActiveDataProvider([
+            'query' => $query->where(['type' => UserGroup::TYPE_USER_GROUP]),
+            'pagination' => [
+                'pageSize' => $query->count(),
+            ],
+        ]);
+
+        $systemGroupQuery = clone($query);
+        $systemGroupDataProvider = new ActiveDataProvider([
+            'query' => $systemGroupQuery->where(['type' => UserGroup::TYPE_SYSTEM_GROUP]),
+            'pagination' => [
+                'pageSize' => $systemGroupQuery->count(),
+            ],
+        ]);
 
         return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
+                'userGroupDataProvider' => $userGroupDataProvider,
+                'systemGroupDataProvider' => $systemGroupDataProvider,
         ]);
     }
 
@@ -53,6 +81,7 @@ class UserGroupsController extends GlobalController
     public function actionCreate()
     {
         $model = new UserGroup();
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
