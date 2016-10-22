@@ -18,7 +18,7 @@ class m151110_140123_create_label_table extends Migration
             'name' => $this->string(20)->notNull()->comment('推送位名称'),
             'frequency' => $this->integer()->notNull()->defaultValue(0)->comment('权重'),
             'ordering' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
-            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'tenant_id' => $this->integer()->notNull()->comment('所属站点'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),

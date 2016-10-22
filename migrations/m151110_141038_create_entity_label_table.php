@@ -16,7 +16,7 @@ class m151110_141038_create_entity_label_table extends Migration
             'entity_name' => $this->string(20)->notNull()->comment('数据名称'),
             'label_id' => $this->integer()->notNull()->comment('推送位 id'),
             'ordering' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
-            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'tenant_id' => $this->integer()->notNull()->comment('所属站点'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),

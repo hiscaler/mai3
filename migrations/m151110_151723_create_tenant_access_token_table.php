@@ -17,7 +17,7 @@ class m151110_151723_create_tenant_access_token_table extends Migration
             'id' => $this->primaryKey(),
             'name' => $this->string(30)->notNull()->comment('名称'),
             'access_token' => $this->string(32)->notNull()->comment('Access Token'),
-            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),

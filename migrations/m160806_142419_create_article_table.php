@@ -21,7 +21,7 @@ class m160806_142419_create_article_table extends Migration
             'description' => $this->text()->comment('描述'),
             'content' => $this->text()->notNull()->comment('正文'),
             'picture_path' => $this->string(100)->comment('图片'),
-            'status' => $this->boolean()->defaultValue(1)->notNull()->comment('状态'),
+            'enabled' => $this->boolean()->defaultValue(1)->notNull()->comment('状态'),
             'tenant_id' => $this->smallInteger()->notNull()->comment('所属站点'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),

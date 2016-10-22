@@ -18,7 +18,7 @@ class m151110_142455_create_tenant_user_table extends Migration
             'role' => $this->integer()->notNull()->defaultValue(0)->comment('角色'),
             'rule_id' => $this->integer()->notNull()->defaultValue(0)->comment('规则'),
             'user_group_id' => $this->integer()->notNull()->defaultValue(0)->comment('用户分组'),
-            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),

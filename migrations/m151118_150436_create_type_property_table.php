@@ -21,7 +21,7 @@ class m151118_150436_create_type_property_table extends Migration
             'input_values' => $this->text()->comment('录入选项'),
             'input_default_value' => $this->string()->comment('默认值'),
             'ordering' => $this->smallInteger()->notNull()->defaultValue(1)->comment('排序'),
-            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),
             'updated_at' => $this->integer()->notNull()->comment('更新时间'),

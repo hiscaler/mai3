@@ -16,7 +16,7 @@ class m151117_111259_create_specification_value_table extends Migration
             'text' => $this->string(30)->notNull()->comment('规格值名称'),
             'icon_path' => $this->string(100)->comment('规格图标'),
             'ordering' => $this->smallInteger()->notNull()->defaultValue(1)->comment('排序'),
-            'status' => $this->boolean()->notNull()->defaultValue(1)->comment('状态'),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'tenant_id' => $this->integer()->notNull()->comment('站点 id'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),

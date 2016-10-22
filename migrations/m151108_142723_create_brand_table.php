@@ -1,6 +1,5 @@
 <?php
 
-use yii\db\Schema;
 use yii\db\Migration;
 
 class m151108_142723_create_brand_table extends Migration
@@ -16,7 +15,7 @@ class m151108_142723_create_brand_table extends Migration
             'description' => $this->text()->comment('描述'),
             'ordering' => $this->integer()->notNull()->defaultValue(0)->comment('排序'),
             'tenant_id' => $this->integer()->notNull()->comment('所属站点'),
-            'status' => $this->boolean()->defaultValue(1)->notNull()->comment('状态'),
+            'enabled' => $this->boolean()->defaultValue(1)->notNull()->comment('激活'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),
             'updated_at' => $this->integer()->notNull()->comment('更新时间'),

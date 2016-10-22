@@ -15,7 +15,7 @@ class m151115_132504_create_payment_config_table extends Migration
             'config' => $this->text()->notNull(),
             'description' => $this->text()->notNull(),
             'ordering' => $this->smallInteger()->notNull()->defaultValue(1),
-            'status' => $this->boolean()->notNull()->defaultValue(1),
+            'enabled' => $this->boolean()->notNull()->defaultValue(1),
             'tenant_id' => $this->integer()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'created_by' => $this->integer()->notNull(),

@@ -23,7 +23,7 @@ class m151110_112841_create_tenant_table extends Migration
             'datetime_format' => $this->string(20)->notNull()->comment('日期时间格式'),
             'domain_name' => $this->string(100)->notNull()->comment('域名'),
             'description' => $this->text()->comment('描述'),
-            'status' => $this->boolean()->defaultValue(1)->notNull()->comment('状态'),
+            'enabled' => $this->boolean()->defaultValue(1)->notNull()->comment('激活'),
             'created_at' => $this->integer()->notNull()->comment('添加时间'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),
             'updated_at' => $this->integer()->notNull()->comment('更新时间'),
