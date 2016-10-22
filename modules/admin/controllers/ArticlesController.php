@@ -2,18 +2,22 @@
 
 namespace app\modules\admin\controllers;
 
-use Yii;
 use app\models\Article;
 use app\models\ArticleSearch;
-use yii\web\NotFoundHttpException;
+use app\models\Yad;
+use PDO;
+use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * 文章管理
  * 
  * @author hiscaler <hiscaler@gmail.com>
  */
-class ArticlesController extends Controller
+class ArticlesController extends GlobalController
 {
 
     /**
@@ -22,10 +26,21 @@ class ArticlesController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'view', 'delete', 'toggle', 'remove-picture'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'toggle' => ['post'],
                 ],
             ],
         ];
@@ -66,6 +81,7 @@ class ArticlesController extends Controller
     public function actionCreate()
     {
         $model = new Article();
+        $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -106,6 +122,70 @@ class ArticlesController extends Controller
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * 激活禁止操作
+     * @return Response
+     */
+    public function actionToggle()
+    {
+        $id = Yii::$app->request->post('id');
+        $db = Yii::$app->getDb();
+        $command = $db->createCommand('SELECT [[enabled]] FROM {{%article}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
+        $command->bindValues([
+            ':id' => (int) $id,
+            ':tenantId' => Yad::getTenantId(),
+        ]);
+        $command->bindValue(':id', (int) $id, PDO::PARAM_INT);
+        $value = $command->queryScalar();
+        if ($value !== null) {
+            $value = !$value;
+            $now = time();
+            $db->createCommand()->update('{{%article}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
+            $responseData = [
+                'success' => true,
+                'data' => [
+                    'value' => $value,
+                    'updatedAt' => Yii::$app->getFormatter()->asDate($now),
+                    'updatedBy' => Yii::$app->getUser()->getIdentity()->username,
+                ],
+            ];
+        } else {
+            $responseData = [
+                'success' => false,
+                'error' => [
+                    'message' => '数据有误',
+                ],
+            ];
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $responseData,
+        ]);
+    }
+
+    /**
+     * 移除图片
+     * @param integer $id
+     * @return Response
+     */
+    public function actionRemovePicture($id)
+    {
+        $success = Yii::$app->getDb()->createCommand('UPDATE {{%article}} SET [[picture_path]] = null WHERE [[id]] = :id', [':id' => (int) $id])->execute() ? true : false;
+
+        $responseBody = [
+            'success' => $success
+        ];
+        if (!$success) {
+            $responseBody['error']['message'] = 'Delete faild.';
+        }
+
+        return new Response([
+            'format' => Response::FORMAT_JSON,
+            'data' => $responseBody
+        ]);
     }
 
     /**
