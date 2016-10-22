@@ -2,7 +2,10 @@
 
 namespace app\modules\admin\widgets;
 
+use app\models\Tenant;
+use Yii;
 use yii\base\Widget;
+use yii\helpers\ArrayHelper;
 
 /**
  * 全局管理控制面板
@@ -14,65 +17,47 @@ class GlobalControlPanel extends Widget
 
     public function getItems()
     {
-        $controllerId = $this->view->context->id;
-        return [
-            [
-                'label' => '系统管理',
-                'items' => [
-                    [
-                        'label' => '站点管理',
-                        'url' => ['tenants/index'],
-                        'active' => $controllerId == 'tenants',
-                    ],
-                    [
-                        'label' => '系统用户管理',
-                        'url' => ['users/index'],
-                        'active' => $controllerId == 'users',
-                    ],
-                ]
-            ],
-            [
-                'label' => '站点管理',
-                'items' => [
-                    [
-                        'label' => '推送位管理',
-                        'url' => ['labels/index'],
-                        'active' => $controllerId == 'labels',
-                    ],
-                    [
-                        'label' => '会员组管理',
-                        'url' => ['user-groups/index'],
-                        'active' => $controllerId == 'user-groups',
-                    ],
-                ]
-            ],
-            [
-                'label' => '内容管理',
-                'items' => [
-                    [
-                        'label' => '广告管理',
-                        'url' => ['ads/index'],
-                        'active' => $controllerId == 'ads',
-                    ],
-                    [
-                        'label' => '资讯管理',
-                        'url' => ['news/index'],
-                        'active' => $controllerId == 'news',
-                    ],
-                    [
-                        'label' => '文章管理',
-                        'url' => ['articles/index'],
-                        'active' => $controllerId == 'articles',
-                    ],
-                ]
-            ],
-        ];
+
+        $items = [];
+        $controller = $this->view->context;
+        $controllerId = $controller->id;
+        $modules = ArrayHelper::getValue(Yii::$app->params, 'modules', []);
+
+        $tenantModules = Tenant::modules();
+        foreach ($modules as $group => $ms) {
+            $rawItems = [];
+            foreach ($ms as $key => $value) {
+                if ((isset($value['forceEmbed']) && $value['forceEmbed']) || in_array($key, $tenantModules)) {
+                    $url = $value['url'];
+                    $urlControllerId = null;
+                    foreach (explode('/', $url[0]) as $d) {
+                        if (!empty($d)) {
+                            $urlControllerId = $d;
+                            break;
+                        }
+                    }
+                    $activeConditions = isset($value['activeConditions']) ? in_array($controllerId, $value['activeConditions']) : $controllerId == $urlControllerId;
+                    $rawItems[] = [
+                        'label' => Yii::t('app', $value['label']),
+                        'url' => $url,
+                        'active' => $activeConditions,
+                    ];
+                }
+            }
+
+            if ($rawItems) {
+                $items[$group] = [
+                    'label' => Yii::t('app', Yii::t('app', $group)),
+                ];
+                $items[$group]['items'] = $rawItems;
+            }
+        }
+        
+        return $items;
     }
 
     public function run()
     {
-        $controller = $this->view->context;
-
         return $this->render('ControlPanel', [
                 'items' => $this->getItems(),
         ]);

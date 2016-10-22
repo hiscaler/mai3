@@ -2,6 +2,8 @@
 
 namespace app\modules\admin\widgets;
 
+use Yii;
+
 /**
  * 店铺管理控制面板
  *
@@ -15,66 +17,56 @@ class ShopControlPanel extends \yii\base\Widget
         $controllerId = $this->view->context->id;
         return [
             [
-                'label' => '品牌管理',
+                'label' => Yii::t('app', 'Brands'),
                 'url' => ['brands/index'],
                 'active' => $controllerId == 'brands',
             ],
             [
-                'label' => '分类管理',
-                'url' => ['categories/index'],
-                'active' => $controllerId == 'categories',
-            ],
-            [
-                'label' => '商品规格管理',
+                'label' => Yii::t('app', 'Specifications'),
                 'url' => ['specifications/index'],
                 'active' => $controllerId == 'specifications',
             ],
             [
-                'label' => '商品类型管理',
+                'label' => Yii::t('app', 'Types'),
                 'url' => ['types/index'],
                 'active' => $controllerId == 'types',
             ],
+//            [
+//                'label' => Yii::t('app', 'Payment Configs'),
+//                'url' => ['payment-configs/index'],
+//                'active' => $controllerId == 'payment-configs',
+//            ],
             [
-                'label' => '支付管理',
-                'url' => ['payment-configs/index'],
-                'active' => $controllerId == 'payment-configs',
-            ],
-            [
-                'label' => '邮费模版管理',
-                'url' => ['posts/index'],
-                'active' => $controllerId == 'posts',
-            ],
-            [
-                'label' => '商品管理',
+                'label' => Yii::t('app', 'Products'),
                 'url' => ['products/index'],
                 'active' => in_array($controllerId, ['products', 'items']),
                 'items' => [
                     [
-                        'label' => '商品管理',
+                        'label' => Yii::t('app', 'Products'),
                         'url' => ['products/index'],
                         'active' => $controllerId == 'products',
                     ],
                     [
-                        'label' => '单品管理',
+                        'label' => Yii::t('app', 'Items'),
                         'url' => ['items/index'],
                         'active' => $controllerId == 'items',
                     ],
                 ]
             ],
             [
-                'label' => '会员管理',
+                'label' => Yii::t('app', 'Members'),
                 'url' => ['members/index'],
                 'active' => $controllerId == 'members',
             ],
             [
-                'label' => '订单管理',
+                'label' => Yii::t('app', 'Orders'),
                 'url' => ['orders/index'],
                 'active' => $controllerId == 'orders',
             ],
             [
-                'label' => '评论管理',
-                'url' => ['comments/index'],
-                'active' => $controllerId == 'comments',
+                'label' => Yii::t('app', 'Item Comments'),
+                'url' => ['item-comments/index'],
+                'active' => $controllerId == 'item-comments',
             ],
         ];
     }

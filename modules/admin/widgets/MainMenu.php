@@ -2,45 +2,68 @@
 
 namespace app\modules\admin\widgets;
 
-use app\models\User;
 use Yii;
 use yii\base\Widget;
+use yii\helpers\ArrayHelper;
 
 /**
  * 顶部菜单
+ * 
+ * @author hiscaler <hiscaler@gmail.com>
  */
 class MainMenu extends Widget
 {
 
     public function getItems()
     {
+        $controllerId = $this->view->context->id;
+        $globalControllerIds = ['global'];
+        $modules = ArrayHelper::getValue(Yii::$app->params, 'modules', []);
+        $firstControllerId = null;
+        foreach ($modules as $ms) {
+            foreach ($ms as $item) {
+                $urlControllerId = null;
+                foreach (explode('/', $item['url'][0]) as $d) {
+                    if (!empty($d)) {
+                        $urlControllerId = $d;
+                        break;
+                    }
+                }
+                if ($urlControllerId) {
+                    $globalControllerIds[] = $urlControllerId;
+                    $firstControllerId === null && $firstControllerId = $urlControllerId;
+                }
+            }
+        }
 
-        $controller = $this->view->context;
-        $controllerId = $controller->id;
-        $actionId = $controller->action->id;
-        return [
+        $items = [
             [
                 'label' => '首页',
                 'url' => ['default/index'],
                 'active' => $controllerId == 'default',
             ],
-            [
-                'label' => '全局管理',
-                'url' => ['global/index'],
-                'active' => in_array($controllerId, ['global', 'tenants', 'users', 'user-groups', 'labels', 'ads', 'news', 'articles']),
-            ],
-            [
-                'label' => '店铺管理',
-                'url' => ['shop/index'],
-                'active' => in_array($controllerId, ['shop', 'brands', 'categories', 'types', 'specifications', 'payment-configs', 'posts', 'items', 'members', 'orders', 'comments']),
-            ],
         ];
+        if ($firstControllerId) {
+            $items[] = [
+                'label' => '全局管理',
+                'url' => ["{$firstControllerId}/index"],
+                'active' => in_array($controllerId, $globalControllerIds),
+            ];
+        }
+
+        $items[] = [
+            'label' => '店铺管理',
+            'url' => ['shop/index'],
+            'active' => in_array($controllerId, ['shop', 'brands', 'categories', 'types', 'specifications', 'payment-configs', 'posts', 'items', 'members', 'orders', 'item-comments']),
+        ];
+
+        return $items;
     }
 
     public function run()
     {
         return $this->render('MainMenu', [
-                'items' => $this->getItems(),
+                    'items' => $this->getItems(),
         ]);
     }
 

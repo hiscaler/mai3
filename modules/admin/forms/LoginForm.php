@@ -3,7 +3,6 @@
 namespace app\modules\admin\forms;
 
 use app\models\User;
-use app\models\UserLoginLog;
 use Yii;
 use yii\base\Model;
 
@@ -61,14 +60,14 @@ class LoginForm extends Model
     {
         if ($this->validate()) {
             $user = $this->getUser();
-            $logined = Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
-           
+            $logined = Yii::$app->getUser()->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+
             if ($logined) {
                 // Record login information
-                Yii::$app->db->createCommand('UPDATE {{%user}} SET [[login_count]] = [[login_count]] + 1, [[last_login_ip]] = :loginIp, [[last_login_time]] = :loginTime WHERE [[id]] = :id')->bindValues([
+                Yii::$app->getDb()->createCommand('UPDATE {{%user}} SET [[login_count]] = [[login_count]] + 1, [[last_login_ip]] = :loginIp, [[last_login_time]] = :loginTime WHERE [[id]] = :id')->bindValues([
                     ':loginIp' => ip2long(Yii::$app->getRequest()->userIP),
                     ':loginTime' => time(),
-                    ':id' => Yii::$app->user->id
+                    ':id' => Yii::$app->getUser()->getId()
                 ])->execute();
                 // Write user login log
 //                UserLoginLog::write();
@@ -88,7 +87,7 @@ class LoginForm extends Model
     public function getUser()
     {
         if ($this->_user === false) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByUsername($this->username, 'user');
         }
 
         return $this->_user;

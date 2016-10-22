@@ -6,6 +6,8 @@ use app\modules\admin\widgets\MainMenu;
 use yii\helpers\Html;
 
 app\modules\admin\assets\AppAsset::register($this);
+
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -24,13 +26,12 @@ app\modules\admin\assets\AppAsset::register($this);
             <div id="page">
                 <!-- Header -->
                 <div id="header">
-                    <div id="logo"><?php echo Html::a(Html::img(Yii::$app->getRequest()->getBaseUrl() . '/admin/images/logo.png'), Yii::$app->homeUrl); ?></div>
+                    <div id="logo"><?php echo Html::a(Html::img($baseUrl . '/images/logo.png'), Yii::$app->homeUrl); ?></div>
                     <div id="main-menu">
                         <?= MainMenu::widget() ?>
                     </div>
                     <div id="header-account-manage">
-                        您好，<?= Yii::$app->getUser()->getIdentity()->username ?> [<a href="<?= \yii\helpers\Url::toRoute(['default/logout']) ?>">退出</a>]
-                        <a href="<?= \yii\helpers\Url::toRoute(Yii::$app->homeUrl) ?>" target="_blank">店铺首页</a>
+                        <?= app\modules\admin\widgets\Toolbar::widget(); ?>
                     </div>
                 </div>
                 <!-- // Header -->
@@ -50,6 +51,7 @@ app\modules\admin\assets\AppAsset::register($this);
         <?php $this->endBody() ?>
         <script type="text/javascript">
             Mai3.urls.item.delete = '<?= \yii\helpers\Url::toRoute(['items/delete-sku', 'id' => 0]) ?>';
+            yadjet.icons.boolean = ['<?= $baseUrl ?>/images/no.png', '<?= $baseUrl ?>/images/yes.png'];
         </script>
     </body>
 </html>

@@ -4,7 +4,7 @@
 
 use yii\helpers\Html;
 
-backend\assets\AppAsset::register($this);
+app\modules\admin\assets\AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -18,10 +18,7 @@ backend\assets\AppAsset::register($this);
     </head>
     <body id="mai3-app">
         <?php $this->beginBody() ?>
-
-
         <?= $content ?>
-
         <?php $this->endBody() ?>
     </body>
 </html>

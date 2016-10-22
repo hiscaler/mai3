@@ -69,10 +69,10 @@
     background: #FFF6BF;
 }
 .grid-view table.table tr.even {
-    background: #FFF;
+    background: #FAFCFF;
 }
 .grid-view table.table tr.odd {
-    background: #FAFCFF;
+    background: #FFF;
 }
 .grid-view table.table tr.block {
     background: #FFF6BF;
@@ -118,7 +118,6 @@
 }
 .grid-view table.table tr td img {
     border: none;
-    vertical-align: middle;
 }
 .grid-view .link-column img {
     border: 0;
@@ -177,23 +176,11 @@
     color: #999;
     text-align: center;
 }
-.grid-view table.table td.pk a {
-    color: #999;
-}
-.grid-view table.table td.enterprise-id {
-    color: #999;
-    width: 60px;
-    text-align: center;
-}
-.grid-view table.table td.reg-code {
-    width: 120px;
-}
-.grid-view table.table td.area-name {
+.grid-view table.table td.alias {
     width: 80px;
 }
-.grid-view table.table td.postal-code {
-    width: 60px;
-    text-align: center;
+.grid-view table.table td.pk a {
+    color: #999;
 }
 .grid-view table.table td.date {
     width: 65px;
@@ -255,6 +242,15 @@
     text-align: center;
 }
 .grid-view table.table td.industry {
+    width: 160px;
+}
+.grid-view table.table td.group-name {
+    width: 72px;
+}
+.grid-view table.table td.url-open-target {
+    width: 100px;
+}
+.grid-view table.table td.url {
     width: 160px;
 }
 .grid-view table.table td.node-name {
@@ -339,10 +335,6 @@
     background: url(../images/node-parameters.png) no-repeat center center;
     cursor: pointer;
 }
-/* friendly link */
-.grid-view table.table td.friendly-link-url-open-target {
-    width: 72px;
-}
 /* article */
 .grid-view table.table td.article-alias {
     width: 100px;
@@ -397,9 +389,20 @@
 .grid-view table.table td.file-upload-config-size {
     width: 100px;
 }
-
+.grid-view table.table td.order-sn {
+    width: 150px;
+    text-align: center;
+}
 .grid-view table.table td.price {
     width: 60px;
+    text-align: center;
+}
+.grid-view table.table td.quantity {
+    width: 60px;
+    text-align: center;
+}
+.grid-view table.table td.amount {
+    width: 80px;
     text-align: center;
 }
 .grid-view table.table td a.preview {
@@ -409,6 +412,14 @@
 .grid-view table.table td span.pk {
     color: #E7002E;
     margin-right: 5px;
+}
+.grid-view table.table td span.alias {
+    color: #000;
+    background-color: #f5f5f5;
+    border: #CCC solid 1px;
+    border-radius: 5px;
+    padding: 0 5px;
+    margin-left: 10px;
 }
 .grid-view table.table td span.attributes {
     color: #E7002E;
@@ -436,6 +447,13 @@
 .grid-view table.table th.buttons-9 { width: 180px; _widht: 190px; }
 .grid-view table.table th.buttons-10 { width: 200px; _widht: 210px; }
 /*******************************************************************************
+ * 商品评论
+ ******************************************************************************/
+.level-text {
+    width: 60px;
+    text-align: center;
+}
+/*******************************************************************************
  * IP Access Rule
  ******************************************************************************/
 .ip-access-rule-type {
@@ -453,6 +471,9 @@
  ******************************************************************************/
 #mai3-item-specification-values-combination-render td {
     text-align: center;
+}
+#mai3-item-specification-values-combination-render td.error input {
+    border-bottom: #E7002E solid 1px;
 }
 #mai3-item-specification-values-combination-render input {
     background: none;

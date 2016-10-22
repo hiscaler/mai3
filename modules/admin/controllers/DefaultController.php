@@ -3,7 +3,6 @@
 namespace app\modules\admin\controllers;
 
 use app\models\Constant;
-use app\models\Option;
 use app\models\User;
 use app\models\Yad;
 use app\modules\admin\forms\ChangeMyPasswordForm;
@@ -74,16 +73,16 @@ class DefaultController extends Controller
 
     public function actionLogin()
     {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
+        if (!Yii::$app->getUser()->isGuest) {
+            return $this->redirect(['default/index']);
         }
         $this->layout = false;
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            $tenantIds = Yii::$app->db->createCommand('SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId AND [[status]] = :status')->bindValues([
-                    ':userId' => Yii::$app->user->id,
-                    ':status' => Option::BOOLEAN_TRUE
+            $tenantIds = Yii::$app->getDb()->createCommand('SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId AND [[enabled]] = :enabled')->bindValues([
+                    ':userId' => Yii::$app->getUser()->getId(),
+                    ':enabled' => Constant::BOOLEAN_TRUE
                 ])->queryColumn();
             if (count($tenantIds) == 1) {
                 Yad::setTenantData($tenantIds[0]);
@@ -102,7 +101,7 @@ class DefaultController extends Controller
 
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        Yii::$app->getUser()->logout();
         // 清理 COOKIE 信息
         Yii::$app->getResponse()->getCookies()->remove('_tenant');
 
@@ -115,7 +114,6 @@ class DefaultController extends Controller
      */
     public function actionProfile()
     {
-        $this->layout = 'my';
         $model = $this->findCurrentUserModel();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -161,7 +159,7 @@ class DefaultController extends Controller
         $this->layout = 'my';
         $loginLogs = [];
         $formatter = Yii::$app->formatter;
-        $rawData = Yii::$app->db->createCommand('SELECT [[t.login_ip]], [[t.client_informations]], [[t.login_at]] FROM {{%user_login_log}} t WHERE [[t.user_id]] = :userId ORDER BY [[t.login_at]] DESC')->bindValue(':userId', Yii::$app->user->id, PDO::PARAM_INT)->queryAll();
+        $rawData = Yii::$app->getDb()->createCommand('SELECT [[t.login_ip]], [[t.client_informations]], [[t.login_at]] FROM {{%user_login_log}} t WHERE [[t.user_id]] = :userId ORDER BY [[t.login_at]] DESC')->bindValue(':userId', Yii::$app->getUser()->getId(), PDO::PARAM_INT)->queryAll();
         foreach ($rawData as $data) {
             $loginLogs[$formatter->asDate($data['login_at'])][] = $data;
         }
@@ -173,12 +171,12 @@ class DefaultController extends Controller
 
     /**
      * 设置当前用户管理的租赁
-     * @param integer $id
+     * @param integer $tenantId
      * @return mixed
      */
-    public function actionChangeTenant($id)
+    public function actionChangeTenant($tenantId)
     {
-        Yad::setTenantData($id);
+        Yad::setTenantData($tenantId);
 
         return $this->redirect(['default/index']);
     }
@@ -190,19 +188,19 @@ class DefaultController extends Controller
     public function actionChoiceTenant()
     {
         $this->layout = 'base';
-        $tenants = Yii::$app->db->createCommand('SELECT [[id]], [[name]], [[domain_name]], [[description]] FROM {{%tenant}} WHERE [[status]] = :status AND [[id]] IN (SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId)')->bindValues([
-                ':status' => Constant::BOOLEAN_TRUE,
+        $tenants = Yii::$app->getDb()->createCommand('SELECT [[id]], [[name]], [[domain_name]], [[description]] FROM {{%tenant}} WHERE [[enabled]] = :enabled AND [[id]] IN (SELECT [[tenant_id]] FROM {{%tenant_user}} WHERE [[user_id]] = :userId)')->bindValues([
+                ':enabled' => Constant::BOOLEAN_TRUE,
                 ':userId' => Yii::$app->getUser()->getId()
             ])->queryAll();
 
-        return $this->render('choiceTenant', [
+        return $this->render('choice-tenant', [
                 'tenants' => $tenants,
         ]);
     }
 
     public function findCurrentUserModel()
     {
-        if (($model = User::findOne(Yii::$app->user->id)) !== null) {
+        if (($model = User::findOne(Yii::$app->getUser()->getId())) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

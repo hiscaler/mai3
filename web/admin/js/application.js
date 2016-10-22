@@ -75,12 +75,152 @@ Number.prototype.toFixed = function (d) {
 })(jQuery);
 
 $(function () {
-    $('#header-account-manage li.children a:first').toggle(function () {
-        $(this).parent().addClass('drop').find('ul').show();
-    }, function () {
-        $(this).parent().removeClass('drop').find('ul').hide();
+    $('#header-account-manage li.change-tenant a:first').on('click', function () {
+        $(this).parent().find('ul').show();
+    });
+    $(document).on('pjax:error', function (xhr, textStatus, error, options) {
+        console.log(xhr);
+        console.log(textStatus);
+        console.log(error);
+        console.log(options);
+        layer.alert(textStatus.responseText);
+    });
+    $('.ajax').on('click', function () {
+        var $this = $(this);
+        $.ajax({
+            type: 'POST',
+            url: $this.attr('href'),
+            dataType: 'json',
+            success: function (response) {
+                if (response.success) {
+                    $this.remove();
+                } else {
+                    layer.alert(response.error.message);
+                }
+            }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
+            }
+        });
+        
+        return false;
     });
 });
+
+function clone(myObj) {
+    if (typeof (myObj) != 'object' || myObj == null)
+        return myObj;
+    var newObj = new Object();
+    for (var i in myObj) {
+        newObj[i] = clone(myObj[i]);
+    }
+
+    return newObj;
+}
+
+var yadjet = yadjet || {};
+yadjet.icons = yadjet.icon || {};
+yadjet.icons.boolean = [
+    '/images/no.png',
+    '/images/yes.png'
+];
+yadjet.utils = yadjet.utils || {
+    getCsrfParam: function () {
+        return $('meta[name=csrf-param]').attr('content');
+    },
+    getCsrfToken: function () {
+        return $('meta[name=csrf-token]').attr('content');
+    }
+};
+yadjet.actions = yadjet.actions || {
+    toggle: function (selector, url) {
+        var dataExt = arguments[2] ? arguments[2] : {};
+        var trData = arguments[3] ? arguments[3] : [];
+        $(selector).on('click', function (event) {
+            event.stopPropagation();
+            var $this = $(this);
+            var $tr = $this.parent().parent();
+            var data = {
+                id: $tr.attr('data-key'),
+                _csrf: yadjet.utils.getCsrfToken()
+            };
+            for (var key in dataExt) {
+                data[key] = dataExt[key];
+            }
+            console.info(trData);
+            for (var key in trData) {
+                // `data-key` To `dataKey`
+                var t = trData[key].toLowerCase();
+                t = t.replace(/\b\w+\b/g, function (word) {
+                    return word.substring(0, 1).toUpperCase() + word.substring(1);
+                });
+                t = t.replace('-', '');
+                t = t.substring(0, 1).toLowerCase() + t.substring(1);
+                data[t] = $tr.attr('data-' + trData[key]);
+            }
+            console.info(data);
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                dataType: 'json',
+                beforeSend: function (xhr) {
+                    $this.hide().parent().addClass('running-c-c');
+                }, success: function (response) {
+                    if (response.success) {
+                        var data = response.data;
+                        $this.attr('src', yadjet.icons.boolean[data.value ? 1 : 0]);
+                        if (data.updatedAt) {
+                            $tr.find('td.rb-updated-at').html(data.updatedAt);
+                        }
+                        if (data.updatedBy) {
+                            $tr.find('td.rb-updated-by').html(data.updatedBy);
+                        }
+                        if (data.onOffDatetime) {
+                            $tr.find('td.rb-on-off-datetime').html(data.onOffDatetime);
+                        }
+                    } else {
+                        layer.alert(response.error.message);
+                    }
+                    $this.show().parent().removeClass('running-c-c');
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
+                    $this.show().parent().removeClass('running-c-c');
+                }
+            });
+
+            return false;
+        });
+    },
+    gridColumnConfig: function () {
+        jQuery(document).on('click', '#menu-buttons li a.grid-column-config', function () {
+            var $this = $(this);
+            $.ajax({
+                type: 'GET',
+                url: $this.attr('href'),
+                beforeSend: function (xhr) {
+                    $.fn.lock();
+                }, success: function (response) {
+                    $.dialog({
+                        title: '表格栏位设定',
+                        content: response,
+                        lock: true,
+                        padding: '10px'
+                    }, function () {
+                        $.pjax.reload({container: '#' + $this.attr('data-reload-object')});
+                    });
+                    $.fn.unlock();
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
+                    $.fn.unlock();
+                }
+            });
+
+            return false;
+        });
+    }
+};
+
+yadjet.actions.gridColumnConfig();
 
 var Mai3 = Mai3 || {};
 Mai3.urls = Mai3.urls || {};
@@ -94,6 +234,11 @@ Mai3.urls = {
     },
     item: {
         delete: undefined
+    },
+    meta: {
+        validators: undefined,
+        metaValidators: undefined,
+        objectMeta: undefined
     }
 };
 Mai3.reference = Mai3.reference || {};
@@ -102,14 +247,15 @@ Mai3.reference = {
         snPrefix: null,
         name: null,
         price: {
-            member: 0,
-            market: 0
+            market: 0,
+            shop: 0,
+            member: 0
         }
     }
 };
 
 $(function () {
-    $('ul.tabs-common li a').on('click', function () {
+    $('.tabs-common li a').on('click', function () {
         var $t = $(this),
             $widget = $t.parent().parent().parent().parent();
         $t.parent().siblings().removeClass('active');
@@ -298,9 +444,24 @@ var vm = new Vue({
         },
         product: {
             properties: []
-        }
+        },
+        // 所有数据验证规则
+        validators: {},
+        meta: {
+            // 某个数据项的验证规则
+            validators: {}
+        },
+        // 对象的 meta 信息
+        metaObjects: {}
     },
     methods: {
+        // 判断对象是否为空
+        isEmptyObject: function (e) {
+            var t;  
+            for (t in e)  
+                return !1;
+            return !0;
+        },
         checkSpecificationValue: function (event) {
             var $obj = $(event.target),
                 specificationId = $obj.attr('data-specification'),
@@ -378,10 +539,16 @@ var vm = new Vue({
             }
 
             this.items = [];
+            // 原来的数据也需要保存
+            for (i in this._items) {
+                this.items.push(this._items[i]);
+            }
+            
+            console.info(arrResult);
             for (i in arrResult) {
                 var exists = false;
                 for (j in this._items) {
-                    if (_.difference(this._items[j].specificationValueString.split(','), arrResult[i]._id).length === 0) {
+                    if (_.intersection(this._items[j].specificationValueString.split(','), arrResult[i]._id).length === arrResult[i]._id.length) {
                         this.items.push(this._items[j]);
                         exists = true;
                         break;
@@ -391,25 +558,47 @@ var vm = new Vue({
                 if (exists) {
                     continue;
                 }
-
+                
                 this.items.push({
                     _isNew: true,
                     specificationValueArray: arrResult[i]._id,
                     specificationValueString: arrResult[i].id,
-                    sn: Mai3.reference.product.snPrefix + zeroFill(_.uniqueId(), 3),
+                    sn: Mai3.reference.product.snPrefix,
+                    _snError: _.isEmpty(this._items) && i === 0 ? false : true,
                     name: Mai3.reference.product.name + ' ' + arrResult[i].name,
                     text: arrResult[i].name,
                     price: {
-                        member: Mai3.reference.product.price.member,
-                        market: Mai3.reference.product.price.market
+                        market: Mai3.reference.product.price.market,
+                        shop: Mai3.reference.product.price.shop,
+                        member: Mai3.reference.product.price.member
                     },
                     default: false,
                     enabled: true
                 });
             }
         }
-    }
+    },
+    computed: {
+        // 当前 Meta 对象数据验证规则以及规则相关属性定义
+        metaValidators: function () {
+            var validators = [], validator;
+            for (var validatorName in this.validators) {
+                validator = clone(this.validators[validatorName]);
+                validator.name = validatorName;
+                validator.active = false;
+                for (var j in this.meta.validators) {
+                    if (this.meta.validators[j].name === validatorName) {
+                        validator.active = true;
+                        validator.options = this.meta.validators[j].options;
+                        break;
+                    }
+                }
+                validators.push(validator);
+            }
 
+            return validators;
+        }
+    }
 });
 
 Vue.http.options.root = '/root';
@@ -420,7 +609,7 @@ $('a#btn-add-type-property').on('click', function () {
     var $t = $(this);
     layer.open({
         type: 2,
-        area: ['500px', '500px'],
+        area: ['500px', '700px'],
         content: [$t.attr('href'), 'no'],
         btn: ['保存', '关闭'],
         yes: function (index, layero) {

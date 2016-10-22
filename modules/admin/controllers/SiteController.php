@@ -62,7 +62,7 @@ class SiteController extends Controller
 
     public function actionLogin()
     {
-        if (!\Yii::$app->user->isGuest) {
+        if (!\Yii::$app->getUser()->isGuest) {
             return $this->goHome();
         }
 
@@ -79,7 +79,7 @@ class SiteController extends Controller
 
     public function actionLogout()
     {
-        Yii::$app->user->logout();
+        Yii::$app->getUser()->logout();
 
         return $this->goHome();
     }

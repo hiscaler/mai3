@@ -36,7 +36,7 @@ $this->beginContent('@app/modules/admin/views/layouts/base.php');
         </div>
     </div>
     <div class="col-sub">
-        <?= \app\modules\admin\widgets\ControlPanel::widget() ?>
+        <?= \app\modules\admin\widgets\GlobalControlPanel::widget() ?>
     </div>
 </div>
 
