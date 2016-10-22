@@ -1,6 +1,5 @@
 <?php
 
-use yii\helpers\Html;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
@@ -19,7 +18,7 @@ $this->params['menus'] = [
 
 <div class="tabs-container">
     <ul class="tabs-common">
-        <li class="active"><a data-toggle="tab-base" href="#tab-base"> 基础资料</a></li>
+        <li class="active"><a data-toggle="tab-base" href="#tab-base">基础资料</a></li>
         <li><a data-toggle="tab-content" href="#tab-content">详情描述</a></li>
         <li><a data-toggle="tab-images" href="#tab-images">商品图片</a></li>
         <li><a data-toggle="tab-items" href="#tab-items">商品规格</a></li>
@@ -44,12 +43,15 @@ $this->params['menus'] = [
                             'market_price',
                             'shop_price',
                             'member_price',
-                            'picture_path',
+                            'picture_path:image',
                             'keywords',
                             'description:ntext',
                             'clicks_count',
                             'sales_count',
-                            'status',
+                            'status:boolean',
+                            'online:boolean',
+                            'on_off_datetime:datetime',
+                            'view_require_credits',
                             'created_at:datetime',
                             'created_by',
                             'updated_at:datetime',
@@ -109,7 +111,8 @@ $this->params['menus'] = [
                                 <th>市场价</th>
                                 <th>会员价</th>
                                 <th>默认</th>
-                                <th class="last">激活</th>
+                                <th>上架</th>
+                                <th class="last">上下架时间</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -124,7 +127,8 @@ $this->params['menus'] = [
                                     <td class="price"><?= $item['market_price'] ?></td>
                                     <td class="price"><?= $item['member_price'] ?></td>
                                     <td class="boolean"><?= $formatter->asBoolean($item['default']) ?></td>
-                                    <td class="boolean"><?= $formatter->asBoolean($item['enabled']) ?></td>
+                                    <td class="boolean"><?= $formatter->asBoolean($item['online']) ?></td>
+                                    <td class="datetime"><?= $formatter->asDatetime($item['on_off_datetime']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

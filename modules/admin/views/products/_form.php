@@ -31,42 +31,75 @@ use yii\widgets\ActiveForm;
 
                 <div id="tab-base" class="tab-pane active">
                     <div class="panel-body">
-                        <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(), ['prompt' => '']) ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(), ['prompt' => '']) ?>
 
-                        <?= $form->field($model, 'type_id')->dropDownList(\app\models\Type::getList(), ['prompt' => '', 'data-url' => yii\helpers\Url::toRoute(['type-raw-data'])]) ?>
+                            <?= $form->field($model, 'type_id')->dropDownList(\app\models\Type::getList(), array_merge(['prompt' => '', 'data-url' => yii\helpers\Url::toRoute(['type-raw-data'])], $model->isNewRecord ? [] : ['disabled' => 'disabled'])) ?>
+                        </div>
 
-                        <?= $form->field($model, 'brand_id')->dropDownList(\app\models\Brand::getList(), ['prompt' => '']) ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'brand_id')->dropDownList(\app\models\Brand::getList(), ['prompt' => '']) ?>
 
-                        <?= $form->field($model, 'sn')->textInput(['maxlength' => true]) ?>
+                            <?= $form->field($model, 'sn')->textInput(['maxlength' => true]) ?>
+                        </div>
 
-                        <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-                        <?= $form->field($model, 'market_price')->textInput() ?>
+                            <?= $form->field($model, 'market_price')->textInput() ?>
+                        </div>
 
-                        <?= $form->field($model, 'shop_price')->textInput() ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'shop_price')->textInput() ?>
 
-                        <?= $form->field($model, 'member_price')->textInput() ?>
+                            <?= $form->field($model, 'member_price')->textInput() ?>
+                        </div>
 
-                        <?= $form->field($model, 'picture_path')->fileInput() ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'picture_path')->fileInput() ?>
 
-                        <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
+                            <?= $form->field($model, 'keywords')->textInput(['maxlength' => true]) ?>
+                        </div>
+
+                        <!-- 扩展资料 -->
+                        <?php
+                        foreach ($metaItems as $key => $item) {
+                            echo $form->field($dynamicModel, $key)->{$item['input_type']}($item['input_candidate_value'])->label($item['label'])->hint($item['description']);
+                        }
+                        ?>
+                        <!-- // 扩展资料 -->
 
                         <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-                        <?= $form->field($model, 'ordering')->textInput() ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'online')->checkbox([], false) ?>
 
-                        <?= $form->field($model, 'clicks_count')->textInput() ?>
+                            <?= $form->field($model, 'status')->checkbox([], false) ?>
+                        </div>
 
-                        <?= $form->field($model, 'sales_count')->textInput() ?>
+                        <div class="entry">
+                            <?= $form->field($model, 'view_require_credits')->textInput() ?>
 
-                        <?= $form->field($model, 'status')->checkbox() ?>
+                            <?= $form->field($model, 'ordering')->textInput() ?>
+                        </div>
+                        
+                        <div class="entry">
+                            <?= $form->field($model, 'privilegeUsers')->checkboxList(app\models\Member::getListByUserGroup('vip')) ?>
+                        </div>
+
                     </div>
                 </div>
 
                 <!-- 详细描述 -->
                 <div id="tab-content" class="tab-pane" style="display: none;">
                     <div class="panel-body">
-                        <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
+                        <?=
+                        \yadjet\editor\UEditor::widget([
+                            'form' => $form,
+                            'model' => $model,
+                            'attribute' => 'content',
+                        ])
+                        ?>
                     </div>
                 </div>
                 <!-- // 详细描述 -->
@@ -146,9 +179,10 @@ use yii\widgets\ActiveForm;
                                                 <th class="item-sn">品号</th>
                                                 <th>品名</th>
                                                 <th class="price">市场价</th>
+                                                <th class="price">商城价</th>
                                                 <th class="price">会员价</th>
                                                 <th class="button-1">默认</th>
-                                                <th class="last button-1">激活</th>
+                                                <th class="last button-1">上架</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -158,12 +192,13 @@ use yii\widgets\ActiveForm;
                                                     <input type="hidden" name="Product[skuItems][id][]" value="{{ item.id }}" />
                                                     <input type="hidden" name="Product[skuItems][specification_value_ids][]" value="{{ item.specificationValueString }}" />
                                                 </td>
-                                                <td><input class="sn" type="text" name="Product[skuItems][sn][]" value="{{ item.sn }}" /></td>
+                                                <td v-bind:class="{'error': item._snError}"><input class="sn" type="text" name="Product[skuItems][sn][]" value="{{ item.sn }}" /></td>
                                                 <td><input class="name" type="text" name="Product[skuItems][name][]" value="{{ item.name }}" /></td>
                                                 <td><input class="price" type="text" name="Product[skuItems][market_price][]" value="{{ item.price.market }}" /></td>
+                                                <td><input class="price" type="text" name="Product[skuItems][shop_price][]" value="{{ item.price.shop }}" /></td>
                                                 <td><input class="price" type="text" name="Product[skuItems][member_price][]" value="{{ item.price.member }}" /></td>
-                                                <td><input type="radio" name="Product[skuItems][default][]" v-model="item.default" value="{{ $index }}" /></td>
-                                                <td><input type="checkbox" name="Product[skuItems][enabled][]" v-model="item.enabled" value="{{ $index }}" /></td>
+                                                <td><input type="radio" name="Product[skuItems][default][]" v-model="item._default_id" value="{{ item.id }}" /></td>
+                                                <td><input type="checkbox" name="Product[skuItems][online][]" v-model="item.online" value="{{ $index }}" /></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -176,7 +211,7 @@ use yii\widgets\ActiveForm;
                     </div>
                     <!-- // 商品规格 -->
                 </div>
-                
+
                 <!-- 商品属性 -->
                 <div id="tab-properties" class="tab-pane" style="display: none;">
                     <div class="panel-body">
@@ -185,13 +220,13 @@ use yii\widgets\ActiveForm;
                             <input type="hidden" name="Product[propertyItems][id][]" v-model="item.id" />
                             <input v-if="item.input_method == 0" type="text" name="Product[propertyItems][value][]" v-model="item.value" />
                             <select v-if="item.input_method == 2" name="Product[propertyItems][value][]" v-model="item.value">
-                                <option v-model="{{ v }}" v-for="v in item.input_values">{{ v }}</option>
+                                <option v-bind:value="v" v-for="v in item.input_values">{{ v }}</option>
                             </select>
                         </div>
                     </div>
                 </div>
                 <!-- // 商品属性 -->
-                
+
             </div>
             <div class="form-group buttons">
                 <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
@@ -207,25 +242,25 @@ use yii\widgets\ActiveForm;
 <script type="text/javascript">
     var url = '<?= \yii\helpers\Url::toRoute(['api/type', 'id' => $model['type_id'], 'productId' => $model['id']]) ?>';
     Vue.http.get(url).then((res) => {
-        vm.original = res.data;
-        vm.specifications = _.toArray(res.data.specifications);
-        vm._items = _.toArray(res.data.items);
-        vm.items = vm._items;
-        vm.rawSpecificationValues = res.data.checkedSpecificationValues;
+    vm.original = res.data;
+    vm.specifications = _.toArray(res.data.specifications);
+    vm._items = _.toArray(res.data.items);
+    vm.items = vm._items;
+    vm.rawSpecificationValues = res.data.checkedSpecificationValues;
     });
-    <?php if (!$model->isNewRecord): ?>
-    url = '<?= \yii\helpers\Url::toRoute(['api/product-properties', 'productId' => $model['id'], 'typeId' => $model['type_id']]) ?>';
-    Vue.http.get(url).then((res) => {
+<?php if (!$model->isNewRecord): ?>
+        url = '<?= \yii\helpers\Url::toRoute(['api/product-properties', 'productId' => $model['id'], 'typeId' => $model['type_id']]) ?>';
+        Vue.http.get(url).then((res) => {
         vm.product.properties = res.data;
-    });
-    Mai3.reference.product = {
+        });
+        Mai3.reference.product = {
         name: '<?= $model->name ?>',
-        snPrefix: '<?= $model->sn ?>',
-        price: {
+            snPrefix: '<?= $model->sn ?>',
+            price: {
             member: <?= $model->member_price ?>,
-            market: <?= $model->market_price ?>
-        }
-    };
-    <?php endif; ?>
+                market: <?= $model->market_price ?>
+            }
+        };
+<?php endif; ?>
 </script>
 <?php \app\modules\admin\components\JsBlock::end() ?>

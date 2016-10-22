@@ -2,11 +2,16 @@
 
 namespace app\modules\admin\controllers;
 
+use app\models\Meta;
 use app\models\Product;
 use app\models\ProductSearch;
 use app\models\Specification;
+use app\models\Type;
+use app\modules\admin\components\DynamicMetaModel;
 use Yii;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -21,6 +26,16 @@ class ProductsController extends ShopController
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => ['index', 'create', 'update', 'view', 'delete', 'delete-image', 'type-raw-data', 'update-image-description'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -66,12 +81,18 @@ class ProductsController extends ShopController
     {
         $model = new Product();
         $model->loadDefaultValues();
+        $metaItems = Meta::getItems($model);
+        $dynamicModel = DynamicMetaModel::make($metaItems);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $dynamicModel->load(Yii::$app->getRequest()->post()) && $model->validate()) {
+            $model->save();
+            Meta::saveValues($model, $dynamicModel); // 保存 Meta 数据
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                     'model' => $model,
+                    'metaItems' => $metaItems,
+                    'dynamicModel' => $dynamicModel,
             ]);
         }
     }
@@ -86,13 +107,18 @@ class ProductsController extends ShopController
     {
         $model = $this->findModel($id);
         $specifications = Specification::getList(true);
+        $metaItems = Meta::getItems($model);
+        $dynamicModel = DynamicMetaModel::make($metaItems, false);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $dynamicModel->load(Yii::$app->getRequest()->post()) && $model->save()) {
+            Meta::saveValues($model, $dynamicModel);
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                     'model' => $model,
                     'specifications' => $specifications,
+                    'metaItems' => $metaItems,
+                    'dynamicModel' => $dynamicModel,
             ]);
         }
     }
@@ -105,7 +131,13 @@ class ProductsController extends ShopController
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $exists = Yii::$app->getDb()->createCommand('SELECT COUNT(*) FROM {{%item}} WHERE [[product_id]] = :productId', [':productId' => $model['id']])->queryScalar();
+        if ($exists) {
+            throw new ForbiddenHttpException('该商品已有单品使用，禁止删除。');
+        } else {
+            $model->delete();
+        }
 
         return $this->redirect(['index']);
     }
@@ -135,7 +167,9 @@ class ProductsController extends ShopController
         return new Response([
             'format' => Response::FORMAT_JSON,
             'data' => $responseBody,
-        ]);
+            ])
+
+        ;
     }
 
     /**
@@ -177,7 +211,7 @@ class ProductsController extends ShopController
     {
         return new Response([
             'format' => Response::FORMAT_JSON,
-            'data' => \app\models\Type::getRawData($typeId),
+            'data' => Type::getRawData($typeId),
         ]);
     }
 

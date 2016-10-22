@@ -26,7 +26,8 @@ $this->params['menus'] = [
 
     <?php
     Pjax::begin([
-        'formSelector' => '#form-items-search',
+        'formSelector' => '#form-search-products',
+        'timeout' => 6000
     ]);
     echo GridView::widget([
         'dataProvider' => $dataProvider,
@@ -48,65 +49,79 @@ $this->params['menus'] = [
                 'value' => function($model) {
                     return Html::a($model['sn'], ['update', 'id' => $model['id']]);
                 },
-                'contentOptions' => ['class' => 'item-sn'],
-            ],
-            'name',
-            [
-                'attribute' => 'market_price',
-                'contentOptions' => ['class' => 'price'],
-            ],
-            [
-                'attribute' => 'shop_price',
-                'contentOptions' => ['class' => 'price'],
-            ],
-            [
-                'attribute' => 'member_price',
-                'contentOptions' => ['class' => 'price'],
-            ],
-            [
-                'attribute' => 'clicks_count',
-                'contentOptions' => ['class' => 'number'],
-            ],
-            [
-                'attribute' => 'sales_count',
-                'contentOptions' => ['class' => 'number'],
-            ],
-            [
-                'attribute' => 'status',
-                'format' => 'boolean',
-                'contentOptions' => ['class' => 'boolean pointer'],
-            ],
-            [
-                'attribute' => 'created_by',
-                'value' => function($model) {
+                    'contentOptions' => ['class' => 'item-sn'],
+                ],
+                'name',
+                [
+                    'attribute' => 'market_price',
+                    'contentOptions' => ['class' => 'price'],
+                ],
+                [
+                    'attribute' => 'shop_price',
+                    'contentOptions' => ['class' => 'price'],
+                ],
+                [
+                    'attribute' => 'member_price',
+                    'contentOptions' => ['class' => 'price'],
+                ],
+                [
+                    'attribute' => 'clicks_count',
+                    'contentOptions' => ['class' => 'number'],
+                ],
+                [
+                    'attribute' => 'sales_count',
+                    'contentOptions' => ['class' => 'number'],
+                ],
+                [
+                    'attribute' => 'status',
+                    'format' => 'boolean',
+                    'contentOptions' => ['class' => 'boolean pointer'],
+                ],
+                [
+                    'attribute' => 'online',
+                    'format' => 'boolean',
+                    'contentOptions' => ['class' => 'boolean pointer'],
+                ],
+                [
+                    'attribute' => 'on_off_datetime',
+                    'format' => 'datetime',
+                    'contentOptions' => ['class' => 'datetime'],
+                ],
+                [
+                    'attribute' => 'view_require_credits',
+                    'contentOptions' => ['class' => 'nubmer'],
+                ],
+                [
+                    'attribute' => 'created_by',
+                    'value' => function($model) {
 //                                return $model['creater']['nickname'];
-                },
-                'contentOptions' => ['class' => 'username']
-            ],
-            [
-                'attribute' => 'created_at',
-                'format' => 'date',
-                'contentOptions' => ['class' => 'date']
-            ],
-            [
-                'attribute' => 'updated_by',
-                'value' => function($model) {
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'created_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'attribute' => 'updated_by',
+                    'value' => function($model) {
 //                                return $model['updater']['nickname'];
-                },
-                'contentOptions' => ['class' => 'username']
+                    },
+                    'contentOptions' => ['class' => 'username']
+                ],
+                [
+                    'attribute' => 'updated_at',
+                    'format' => 'date',
+                    'contentOptions' => ['class' => 'date']
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'headerOptions' => array('class' => 'buttons-3 last'),
+                ],
             ],
-            [
-                'attribute' => 'updated_at',
-                'format' => 'date',
-                'contentOptions' => ['class' => 'date']
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'headerOptions' => array('class' => 'buttons-3 last'),
-            ],
-        ],
-    ]);
-    Pjax::end();
-    ?>
+        ]);
+        Pjax::end();
+        ?>
 
 </div>
