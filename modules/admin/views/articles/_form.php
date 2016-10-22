@@ -12,7 +12,13 @@ use yii\widgets\ActiveForm;
     <div class="form">
         <div class="article-form">
 
-            <?php $form = ActiveForm::begin(); ?>
+            <?php
+            $form = ActiveForm::begin([
+                    'options' => [
+                        'enctype' => 'multipart/form-data',
+                    ],
+            ]);
+            ?>
 
             <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
 
@@ -22,11 +28,26 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
-            <?= $form->field($model, 'content')->textarea(['rows' => 6]) ?>
+            <?=
+            \yadjet\editor\UEditor::widget([
+                'form' => $form,
+                'model' => $model,
+                'attribute' => 'content',
+            ])
+            ?>
 
-            <?= $form->field($model, 'picture_path')->fileInput() ?>
+            <?php
+            $template = '{label}{input}';
+            if (!$model->isNewRecord && !empty($model->picture_path)) {
+                $template .= Html::a(Yii::t('app', 'Delete'), ['remove-picture', 'id' => $model->id], ['class' => 'ajax']);
+            }
+            $template .= '{error}{hint}';
+            echo $form->field($model, 'picture_path', [
+                'template' => $template
+            ])->fileInput()
+            ?>
 
-            <?= $form->field($model, 'status')->textInput() ?>
+            <?= $form->field($model, 'enabled')->checkbox([], null) ?>
 
             <div class="form-group buttons">
                 <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
