@@ -7,20 +7,15 @@
 use yii\helpers\Html;
 
 $this->title = $name;
+
+$this->params['breadcrumbs'][] = Yii::t('app', 'Prompt Message');
 ?>
 <div class="site-error">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <div class="alert alert-danger">
+    <div class="message">
         <?= nl2br(Html::encode($message)) ?>
     </div>
-
-    <p>
-        The above error occurred while the Web server was processing your request.
-    </p>
-    <p>
-        Please contact us if you think this is a server error. Thank you.
-    </p>
 
 </div>

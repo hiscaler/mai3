@@ -140,6 +140,19 @@ input[type=text].disabled, select.disabled, input[type=password].disabled, input
     text-decoration: none;
 }
 /*******************************************************************************
+ * Site error
+ ******************************************************************************/
+.site-error {
+    padding: 50px 140px;
+}
+.site-error h1 {
+    background: url(../images/error-message.png) no-repeat left center;
+    padding-left: 40px;
+}
+.site-error .message {
+    color: #e4393c;
+}
+/*******************************************************************************
  * Message box
  ******************************************************************************/
 .alert, .notice, .success, .info {
