@@ -16,7 +16,7 @@ $baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
         <meta charset="<?= Yii::$app->charset ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= Html::csrfMetaTags() ?>
-        <title><?= Html::encode($this->title) ?> - <?= Yii::$app->name ?></title>
+        <title><?= Html::encode($this->title) ?> - <?= \app\models\Yad::getTenantName() ? : Yii::$app->name ?></title>
         <?php $this->head() ?>
     </head>
     <body id="mai3-app">
@@ -44,7 +44,7 @@ $baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
         </div>
         <div id="page-ft">
             <div id="footer">
-                Copyright &copy; <?= date('Y'); ?> by <?= Yii::$app->name; ?> All Rights Reserved.
+                Copyright &copy; <?= date('Y'); ?> by <?= \app\models\Lookup::getValue('as.site.name') ? : Yii::$app->name ?> All Rights Reserved.
             </div>
         </div>
 
