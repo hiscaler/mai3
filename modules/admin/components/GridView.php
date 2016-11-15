@@ -7,12 +7,16 @@ use yii\grid\DataColumn;
 
 /**
  * 根据项目需求改进后的 GridView，支持根据设定显示需要的列
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class GridView extends \yii\grid\GridView
 {
 
+    /**
+     * 对应的表格名称
+     * @var string
+     */
     public $name;
 
     protected function initColumns()
@@ -26,9 +30,9 @@ class GridView extends \yii\grid\GridView
                 $column = $this->createDataColumn($column);
             } else {
                 $column = Yii::createObject(array_merge([
-                            'class' => $this->dataColumnClass ? : DataColumn::className(),
-                            'grid' => $this
-                                        ], $column));
+                        'class' => $this->dataColumnClass ? : DataColumn::className(),
+                        'grid' => $this
+                            ], $column));
             }
 
             $attribute = false;
@@ -62,10 +66,11 @@ class GridView extends \yii\grid\GridView
 
     private function getColumnConfigs()
     {
-        return Yii::$app->getDb()->createCommand('SELECT [[name]], [[attribute]], [[css_class]], [[css_style]], [[visible]] FROM {{%grid_column_config}} WHERE [[name]] = :name AND [[user_id]] = :userId')->bindValues([
-                    ':name' => $this->name,
-                    ':userId' => Yii::$app->getUser()->getId(),
-                ])->queryAll();
+        return Yii::$app->getDb()->createCommand('SELECT [[name]], [[attribute]], [[css_class]], [[visible]] FROM {{%grid_column_config}} WHERE [[name]] = :name AND [[user_id]] = :userId AND [[tenant_id]] = :tenantId')->bindValues([
+                ':name' => $this->name,
+                ':userId' => Yii::$app->getUser()->getId(),
+                ':tenantId' => \app\models\Yad::getTenantId(),
+            ])->queryAll();
     }
 
 }

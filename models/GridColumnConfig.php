@@ -13,7 +13,6 @@ use yii\db\ActiveRecord;
  * @property string $name
  * @property string $attribute
  * @property string $css_class
- * @property string $css_style
  * @property integer $visible
  * @property integer $user_id
  */
@@ -36,8 +35,9 @@ class GridColumnConfig extends ActiveRecord
         return [
             [['name', 'attribute'], 'required'],
             [['user_id'], 'integer'],
-            [['visible'], 'boolean'],
-            [['name', 'attribute', 'css_class', 'css_style'], 'string', 'max' => 255]
+            [['visible'], 'boolean', 'default' => Constant::BOOLEAN_TRUE],
+            [['name', 'attribute'], 'string', 'max' => 30],
+            [['css_class'], 'string', 'max' => 120]
         ];
     }
 
@@ -50,7 +50,6 @@ class GridColumnConfig extends ActiveRecord
             'name' => Yii::t('gridColumnConfig', 'Name'),
             'attribute' => Yii::t('gridColumnConfig', 'Attribute'),
             'css_class' => Yii::t('gridColumnConfig', 'CSS Class'),
-            'css_style' => Yii::t('gridColumnConfig', 'CSS Style'),
             'visible' => Yii::t('gridColumnConfig', 'Visible'),
         ];
     }
@@ -63,8 +62,9 @@ class GridColumnConfig extends ActiveRecord
      */
     public static function getConfigs($name, $visibleColumn = null)
     {
-        $sql = 'SELECT [[name]], [[attribute]], [[css_class]], [[css_style]], [[visible]] FROM {{%grid_column_config}} WHERE [[user_id]] = :userId AND [[name]] = :name';
+        $sql = 'SELECT [[name]], [[attribute]], [[css_class]], [[visible]] FROM {{%grid_column_config}} WHERE [[tenant_id]] = :tenantId AND [[user_id]] = :userId AND [[name]] = :name';
         $bindValues = [
+            ':tenantId' => Yad::getTenantId(),
             ':userId' => Yii::$app->getUser()->getId(),
             ':name' => $name,
         ];
@@ -82,11 +82,12 @@ class GridColumnConfig extends ActiveRecord
      */
     public static function getInvisibleColumns($name)
     {
-        return Yii::$app->getDb()->createCommand('SELECT [[attribute]] FROM {{%grid_column_config}} WHERE [[user_id]] = :userId AND [[name]] = :name AND [[visible]] = :visible')->bindValues([
-            ':userId' => Yii::$app->getUser()->getId(),
-            ':name' => $name,
-            ':visible' => Constant::BOOLEAN_FALSE
-        ])->queryColumn();
+        return Yii::$app->getDb()->createCommand('SELECT [[attribute]] FROM {{%grid_column_config}} WHERE [[tenant_id]] = :tenantId AND [[user_id]] = :userId AND [[name]] = :name AND [[visible]] = :visible')->bindValues([
+                ':tenantId' => Yad::getTenantId(),
+                ':userId' => Yii::$app->getUser()->getId(),
+                ':name' => $name,
+                ':visible' => Constant::BOOLEAN_FALSE
+            ])->queryColumn();
     }
 
     // Events
