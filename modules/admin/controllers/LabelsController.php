@@ -16,7 +16,7 @@ use yii\web\Response;
 
 /**
  * 推送位管理
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class LabelsController extends GlobalController
@@ -62,10 +62,10 @@ class LabelsController extends GlobalController
 
     /**
      * Creates a new Label model.
-     * If creation is successful, the browser will be redirected to the 'index' page.
+     * If creation is successful, the browser will be redirected to the 'create' page.
      * @return mixed
      */
-    public function actionCreate()
+    public function actionCreate($ordering = 1)
     {
         $model = new Label();
         $model->enabled = Constant::BOOLEAN_TRUE;

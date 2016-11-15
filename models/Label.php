@@ -19,7 +19,7 @@ use yii\helpers\Inflector;
  * @property integer $created_by
  * @property integer $created_at
  * @property integer $updated_by
- * @property integer $updated_at 
+ * @property integer $updated_at
  */
 class Label extends BaseActiveRecord
 {
@@ -38,7 +38,7 @@ class Label extends BaseActiveRecord
     public function rules()
     {
         return [
-            [['alias', 'name', 'ordering'], 'required'],
+            [['name', 'ordering'], 'required'],
             ['alias', 'match', 'pattern' => '/^[a-z]+[.]?[a-z-]+[a-z]$/'],
             ['alias', 'unique', 'targetAttribute' => ['alias', 'tenant_id']],
             [['enabled'], 'boolean'],
@@ -97,7 +97,7 @@ class Label extends BaseActiveRecord
      */
     public static function getEntityItems($entityId, $entityName)
     {
-        $items = (new Query())->select('a.name')->from('{{%entity_lable}} t')
+        $items = (new Query())->select('a.name')->from('{{%entity_label}} t')
             ->leftJoin('{{%label}} a', '[[t.label_id]] = [[a.id]]')
             ->where([
                 't.entity_id' => (int) $entityId,
@@ -153,6 +153,9 @@ class Label extends BaseActiveRecord
         if (parent::beforeSave($insert)) {
             if ($insert) {
                 $this->frequency = 0;
+            }
+            if (empty($this->alias) && !empty($this->name)) {
+                $this->alias = Inflector::slug($this->name);
             }
 
             return true;
