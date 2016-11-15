@@ -21,7 +21,11 @@ $this->params['menus'] = [
 
     <?= $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php Pjax::begin(); ?>  
+    <?php
+    Pjax::begin([
+        'formSelector' => '#form-article-search',
+    ]);
+    ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,

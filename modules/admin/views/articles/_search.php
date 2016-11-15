@@ -13,14 +13,17 @@ use yii\widgets\ActiveForm;
 
         <?php
         $form = ActiveForm::begin([
+                'id' => 'form-article-search',
                 'action' => ['index'],
                 'method' => 'get',
         ]);
         ?>
 
-        <?= $form->field($model, 'alias') ?>
+        <div class="entry">
+            <?= $form->field($model, 'alias') ?>
 
-        <?= $form->field($model, 'title') ?>
+            <?= $form->field($model, 'title') ?>
+        </div>
 
         <?= $form->field($model, 'enabled')->dropDownList(\app\models\Option::booleanOptions(), ['prompt' => '']) ?>
 
