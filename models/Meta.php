@@ -60,7 +60,7 @@ class Meta extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['object_name', 'key', 'label', 'description', 'input_type', 'default_value'], 'required'],
+            [['object_name', 'key', 'label', 'description', 'input_type'], 'required'],
             [['return_value_type', 'enabled', 'tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at', 'deleted_by', 'deleted_at'], 'integer'],
             ['enabled', 'boolean'],
             [['object_name', 'key'], 'string', 'max' => 30],

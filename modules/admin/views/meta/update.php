@@ -9,7 +9,8 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 
 $this->params['menus'] = [
     ['label' => Yii::t('app', 'List'), 'url' => ['index']],
-    ['label' => Yii::t('app', 'Create'), 'url' => ['create']]
+    ['label' => Yii::t('app', 'Create'), 'url' => ['create']],
+    ['label' => Yii::t('app', 'View'), 'url' => ['view', 'id' => $model->id]]
 ];
 ?>
 <div class="meta-update">

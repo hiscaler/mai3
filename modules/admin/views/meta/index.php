@@ -39,21 +39,33 @@ $this->params['menus'] = [
             ],
             [
                 'attribute' => 'object_name_formatted',
-                'contentOptions' => ['class' => 'object-name'],
+                'contentOptions' => ['class' => 'meta-object-name center'],
             ],
-            'key',
-            'label',
-            'description',
+            [
+                'attribute' => 'key',
+                'contentOptions' => ['class' => 'meta-key'],
+            ],
+            [
+                'attribute' => 'label',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return $model['label'] . '<span>' . $model['description'] . '</span>';
+                },
+                'contentOptions' => ['class' => 'meta-label'],
+            ],
             [
                 'attribute' => 'input_type_text',
-                'contentOptions' => ['class' => 'input-type center'],
+                'contentOptions' => ['class' => 'meta-input-type center'],
             ],
             'input_candidate_value',
             [
                 'attribute' => 'return_value_type_text',
-                'contentOptions' => ['class' => 'return-value-type center'],
+                'contentOptions' => ['class' => 'meta-return-value-type center'],
             ],
-            'default_value',
+            [
+                'attribute' => 'default_value',
+                'contentOptions' => ['class' => 'meta-default-value'],
+            ],
             [
                 'attribute' => 'enabled',
                 'format' => 'boolean',

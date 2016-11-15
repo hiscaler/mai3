@@ -42,7 +42,7 @@ class MetaSearch extends Meta
      */
     public function search($params)
     {
-        $query = Meta::find();
+        $query = Meta::find()->where(['tenant_id' => Yad::getTenantId()]);
 
         // add conditions that should always apply here
 

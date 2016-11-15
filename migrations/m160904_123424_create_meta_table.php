@@ -22,7 +22,7 @@ class m160904_123424_create_meta_table extends Migration
             'input_type' => $this->string(16)->notNull()->comment('输入类型'),
             'input_candidate_value' => $this->text()->comment('输入候选值'),
             'return_value_type' => $this->smallInteger()->notNull()->defaultValue(0)->comment('返回值类型'),
-            'default_value' => $this->string(16)->notNull()->comment('默认值'),
+            'default_value' => $this->string(16)->comment('默认值'),
             'enabled' => $this->boolean()->notNull()->defaultValue(1)->comment('激活'),
             'tenant_id' => $this->smallInteger()->notNull()->comment('所属站点'),
             'created_by' => $this->integer()->notNull()->comment('添加人'),
@@ -30,7 +30,7 @@ class m160904_123424_create_meta_table extends Migration
             'updated_by' => $this->integer()->notNull()->comment('更新人'),
             'updated_at' => $this->integer()->notNull()->comment('更新时间'),
             'deleted_by' => $this->integer()->comment('删除人'),
-            'deleted_at' => $this->integer()->defaultValue(0)->comment('删除时间'),
+            'deleted_at' => $this->integer()->comment('删除时间'),
         ]);
     }
 

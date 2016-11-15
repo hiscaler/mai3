@@ -30,8 +30,14 @@ use yii\widgets\ActiveForm;
 
             <?= $form->field($model, 'return_value_type')->dropDownList(\app\models\Meta::returnValueTypeOptions()) ?>
         </div>
-
+        
         <?= $form->field($model, 'input_candidate_value')->textarea() ?>
+        
+        <div class="entry">
+            <?= $form->field($model, 'default_value')->textInput(['maxlength' => true]) ?>
+
+            <?= $form->field($model, 'enabled')->checkbox([], false) ?>
+        </div>
         
         <fieldset v-for="item in metaValidators">
             <legend>
@@ -52,10 +58,6 @@ use yii\widgets\ActiveForm;
                 暂无其他特定规则
             </div>
         </fieldset>
-
-        <?= $form->field($model, 'default_value')->textInput(['maxlength' => true]) ?>
-
-        <?= $form->field($model, 'enabled')->checkbox([], false) ?>
 
         <div class="form-group buttons">
             <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
