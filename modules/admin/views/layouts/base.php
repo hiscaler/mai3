@@ -44,7 +44,7 @@ $baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
         </div>
         <div id="page-ft">
             <div id="footer">
-                Copyright &copy; <?= date('Y'); ?> by <?= \app\models\Lookup::getValue('as.site.name') ? : Yii::$app->name ?> All Rights Reserved.
+                Copyright &copy; <?= date('Y'); ?> by <?= \app\models\Lookup::getValue('custom.site.name') ? : Yii::$app->name ?> All Rights Reserved.
             </div>
         </div>
 

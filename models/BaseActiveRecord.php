@@ -120,18 +120,18 @@ class BaseActiveRecord extends ActiveRecord
         }
     }
 
-    public function getNode()
-    {
-        return $this->hasOne(Node::className(), ['id' => 'node_id'])->select(['id', 'name']);
-    }
+//    public function getNode()
+//    {
+//        return $this->hasOne(Node::className(), ['id' => 'node_id'])->select(['id', 'name']);
+//    }
 
     /**
-     * 自定义属性
+     * 数据关联的推送位
      * @return ActiveRecord
      */
-    public function getCustomeAttributes()
+    public function getRelatedLabels()
     {
-        return $this->hasMany(Label::className(), ['id' => 'attribute_id'])
+        return $this->hasMany(Label::className(), ['id' => 'label_id'])
                 ->select(['id', 'name'])
                 ->viaTable('{{%entity_label}}', ['entity_id' => 'id'], function ($query) {
                     $query->where(['entity_name' => static::className2Id()]);
@@ -176,14 +176,14 @@ class BaseActiveRecord extends ActiveRecord
             'tags' => Yii::t('app', 'Tag'),
             'alias' => Yii::t('app', 'Alias'),
             'ordering' => Yii::t('app', 'Ordering'),
-            'node_id' => Yii::t('app', 'Node'),
+            'category_id' => Yii::t('app', 'Category'),
             'group_id' => Yii::t('app', 'Group'),
             'keywords' => Yii::t('app', 'Page Keywords'),
             'description' => Yii::t('app', 'Page Description'),
             'content' => Yii::t('app', 'Content'),
             'screenshot_path' => Yii::t('app', 'Screenshot'),
             'picture_path' => Yii::t('app', 'Picture'),
-            'hits_count' => Yii::t('app', 'Hits Count'),
+            'clicks_count' => Yii::t('app', 'Clicks Count'),
             'up_count' => Yii::t('app', 'Up Count'),
             'down_count' => Yii::t('app', 'Down Count'),
             'status' => Yii::t('app', 'Status'),

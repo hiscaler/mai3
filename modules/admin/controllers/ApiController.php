@@ -5,14 +5,13 @@ namespace app\modules\admin\controllers;
 use app\models\Specification;
 use app\models\TypeProperty;
 use app\models\Yad;
-use stdClass;
 use Yii;
 use yii\db\Query;
 use yii\web\Response;
 
 /**
  * 接口
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class ApiController extends \yii\rest\Controller

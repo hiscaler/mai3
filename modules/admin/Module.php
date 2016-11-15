@@ -31,6 +31,11 @@ class Module extends \yii\base\Module
             'formatter' => [
                 'class' => 'app\modules\admin\extensions\Formatter',
             ],
+            'assetManager' => [
+                'class' => '\yii\web\AssetManager',
+                'appendTimestamp' => true,
+                'bundles' => [],
+            ],
             'response' => [
                 'class' => '\yii\web\Response',
                 'formatters' => [

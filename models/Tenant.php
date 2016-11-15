@@ -212,13 +212,16 @@ class Tenant extends BaseActiveRecord
         $cmd = $db->createCommand();
 
         if ($insert) {
+            $userId = Yii::$app->getUser()->getId();
             $cmd->insert('{{%tenant_user}}', [
                 'tenant_id' => $this->id,
-                'user_id' => Yii::$app->getUser()->getId(),
+                'user_id' => $userId,
                 'role' => User::ROLE_ADMINISTRATOR,
                 'rule_id' => 0,
                 'enabled' => Constant::BOOLEAN_TRUE,
-                'user_group_id' => 0
+                'user_group_id' => 0,
+                'created_at' => time(),
+                'created_by' => $userId
             ])->execute();
             $insertModules = $modules;
             $deleteModules = [];

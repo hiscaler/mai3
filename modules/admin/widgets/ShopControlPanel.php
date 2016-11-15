@@ -22,14 +22,14 @@ class ShopControlPanel extends \yii\base\Widget
                 'active' => $controllerId == 'brands',
             ],
             [
-                'label' => Yii::t('app', 'Specifications'),
-                'url' => ['specifications/index'],
-                'active' => $controllerId == 'specifications',
-            ],
-            [
                 'label' => Yii::t('app', 'Types'),
                 'url' => ['types/index'],
                 'active' => $controllerId == 'types',
+            ],
+            [
+                'label' => Yii::t('app', 'Specifications'),
+                'url' => ['specifications/index'],
+                'active' => $controllerId == 'specifications',
             ],
 //            [
 //                'label' => Yii::t('app', 'Payment Configs'),

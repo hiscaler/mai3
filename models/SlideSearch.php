@@ -12,6 +12,7 @@ use app\models\Slide;
  */
 class SlideSearch extends Slide
 {
+
     /**
      * @inheritdoc
      */
@@ -41,12 +42,17 @@ class SlideSearch extends Slide
      */
     public function search($params)
     {
-        $query = Slide::find();
+        $query = Slide::find()->where(['tenant_id' => Yad::getTenantId()]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'ordering' => SORT_ASC,
+                ]
+            ]
         ]);
 
         $this->load($params);
@@ -75,4 +81,5 @@ class SlideSearch extends Slide
 
         return $dataProvider;
     }
+
 }

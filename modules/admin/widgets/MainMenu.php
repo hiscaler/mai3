@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * 顶部菜单
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class MainMenu extends Widget
@@ -54,7 +54,7 @@ class MainMenu extends Widget
         $items[] = [
             'label' => '店铺管理',
             'url' => ['shop/index'],
-            'active' => in_array($controllerId, ['shop', 'brands', 'categories', 'types', 'specifications', 'payment-configs', 'posts', 'items', 'members', 'orders', 'item-comments']),
+            'active' => in_array($controllerId, ['shop', 'brands', 'types', 'specifications', 'payment-configs', 'posts', 'products', 'items', 'members', 'orders', 'item-comments']),
         ];
 
         return $items;
@@ -63,7 +63,7 @@ class MainMenu extends Widget
     public function run()
     {
         return $this->render('MainMenu', [
-                    'items' => $this->getItems(),
+                'items' => $this->getItems(),
         ]);
     }
 

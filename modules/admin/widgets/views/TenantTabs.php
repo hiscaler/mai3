@@ -8,8 +8,8 @@ $formatter = Yii::$app->getFormatter();
 $tab = Yii::$app->getRequest()->get('tab', 'detail');
 ?>
 
-<div class="tabs-common">
-    <ul id="tenant-tabs">
+<div class="clearfix">
+    <ul id="tenant-tabs" class="tabs-common">
         <?php
         foreach ($items as $item):
             $cssClass = "panel-tenant-{$tab}" == $item['id'] ? ' class="active"' : '';
