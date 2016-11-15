@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
         </div>
 
         <div class="entry">
-            <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(null, true), ['prompt' => '']) ?>
+            <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(\app\models\Lookup::getValue('system.models.category.type.product', 0), null, true), ['prompt' => '']) ?>
 
             <?= $form->field($model, 'brand_id')->dropDownList(app\models\Brand::getList(), ['prompt' => '']) ?>
         </div>
