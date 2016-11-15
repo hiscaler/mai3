@@ -108,8 +108,7 @@ $this->params['menus'] = [
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'template' => '{update} {delete} {undo}',
-                    'headerOptions' => ['class' => 'last'],
-                    'contentOptions' => ['class' => 'buttons-2'],
+                    'headerOptions' => ['class' => 'buttons-2 last'],
                 ],
             ],
         ]);
@@ -120,4 +119,3 @@ $this->params['menus'] = [
 
 <?php
 $this->registerJs('yadjet.actions.toggle("table td.boolean-handler img", "' . Url::toRoute('toggle') . '");');
-        

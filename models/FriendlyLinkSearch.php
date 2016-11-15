@@ -17,7 +17,7 @@ class FriendlyLinkSearch extends FriendlyLink
     public function rules()
     {
         return [
-            [['group_id', 'type', 'url_open_target'], 'integer'],
+            [['group_id', 'type', 'url_open_target', 'enabled'], 'integer'],
             [['title', 'url'], 'safe'],
         ];
     }
@@ -42,13 +42,13 @@ class FriendlyLinkSearch extends FriendlyLink
      */
     public function search($params)
     {
-        $query = FriendlyLink::find()->with(['creater', 'updater'])->asArray(true);
+        $query = FriendlyLink::find()->where(['tenant_id' => Yad::getTenantId()])->with(['creater', 'updater'])->asArray(true);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'sort' => [
                 'defaultOrder' => [
-                    'updated_at' => SORT_DESC,
+                    'ordering' => SORT_ASC,
                 ]
             ]
         ]);
@@ -61,6 +61,7 @@ class FriendlyLinkSearch extends FriendlyLink
             'group_id' => $this->group_id,
             'type' => $this->type,
             'url_open_target' => $this->url_open_target,
+            'enabled' => $this->enabled,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])

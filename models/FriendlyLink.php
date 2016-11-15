@@ -125,7 +125,7 @@ class FriendlyLink extends BaseActiveRecord
 
     public static function groupOptions()
     {
-        return Lookup::getValue('m.models.friendly-link.group', []);
+        return Lookup::getValue('system.models.friendly-link.group', []);
     }
 
     public static function urlOpenTargetOptions()
