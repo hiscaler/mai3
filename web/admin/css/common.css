@@ -82,9 +82,9 @@ input[type=text].disabled, select.disabled, input[type=password].disabled, input
  * 通用 Tabs 样式
  ******************************************************************************/
 .tabs-common {
-    margin: 0 0 10px;
+    margin: 0;
 }
-.tabs-common ul {
+.tabs-common {
     display: block;
     height: 25px;
     border-bottom: 1px solid #E9E9E9;
@@ -123,6 +123,12 @@ input[type=text].disabled, select.disabled, input[type=password].disabled, input
 }
 .tabs-common li .badges {
     margin-left: 5px;
+}
+.panels {
+    border: 1px solid #E9E9E9;
+    border-top: none;
+    padding: 10px;
+    border-radius: 0 0 5px 5px
 }
 
 /*******************************************************************************

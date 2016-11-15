@@ -83,20 +83,6 @@
 .grid-view table.table tr.root .name {
     font-weight: bold;
 }
-.grid-view table.table tr td.enterprise-name em a {
-    float: right;
-    width: 16px;
-    height: 16px;
-    line-height: 1px;
-    display: inline-block;
-    font-size: 0;
-}
-.grid-view table.table tr td.enterprise-name em a.unpick {
-    background: url(../images/map-unpick.png) no-repeat center center;
-}
-.grid-view table.table tr td.enterprise-name em a.is-picked {
-    background: url(../images/map-is-picked.png) no-repeat center center;
-}
 .grid-view table.table tr.children-2 .name,
 .grid-view table.table tr.children-3 .name,
 .grid-view table.table tr.children-4 .name {
@@ -164,6 +150,10 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     color: #999;
+}
+.grid-view table.table td a.picture {
+    padding-right: 20px;
+    background: url(../images/picture.png) no-repeat right center;
 }
 .grid-view table.table td.checkbox {
     width: 20px;
@@ -369,17 +359,30 @@
     width: 280px;
 }
 /* meta */
-.grid-view table.table td.meta-name {
-    width: 120px;
-}
-.grid-view table.table td.meta-form-field-type {
+.grid-view table.table td.meta-object-name {
+    width: 80px;
+}.grid-view table.table td.meta-form-field-type {
     width: 90px;
 }
-.grid-view table.table td.meta-db-field-type {
+.grid-view table.table td.meta-key {
     width: 100px;
 }
-.grid-view table.table td.meta-validator-rule {
+.grid-view table.table td.meta-label {
     width: 100px;
+}
+.grid-view table.table td.meta-label span {
+    color: #ccc;
+    margin-left: 10px;
+    font-size: 12px;
+}
+.grid-view table.table td.meta-input-type {
+    width: 60px;
+}
+.grid-view table.table td.meta-return-value-type {
+    width: 60px;
+}
+.grid-view table.table td.meta-default-value {
+    width: 60px;
 }
 /* file upload configs */
 .grid-view table.table td.file-upload-config-attribute {

@@ -60,10 +60,12 @@ Number.prototype.toFixed = function (d) {
 (function ($) {
     $.fn.lock = function () {
         return this.unlock().each(function () {
-            if ($.css(this, 'position') === 'static')
+            if ($.css(this, 'position') === 'static') {
                 this.style.position = 'relative';
-            if ($.browser.msie)
+            }
+            if ($.browser.msie) {
                 this.style.zoom = 1;
+            }
             $(this).append('<div id="widget-lock-ui" class="lock-ui" style="position:absolute;width:100%;height:100%;top:0;left:0;z-index:1000;background-color:#000;cursor:wait;opacity:.7;filter: alpha(opacity=70);"><div>');
         });
     };
@@ -200,13 +202,14 @@ yadjet.actions = yadjet.actions || {
                 beforeSend: function (xhr) {
                     $.fn.lock();
                 }, success: function (response) {
-                    $.dialog({
+                    layer.open({
                         title: '表格栏位设定',
                         content: response,
                         lock: true,
-                        padding: '10px'
-                    }, function () {
-                        $.pjax.reload({container: '#' + $this.attr('data-reload-object')});
+                        padding: '10px',
+                        yes: function () {
+                            $.pjax.reload({container: '#' + $this.attr('data-reload-object')});
+                        }
                     });
                     $.fn.unlock();
                 }, error: function (XMLHttpRequest, textStatus, errorThrown) {
