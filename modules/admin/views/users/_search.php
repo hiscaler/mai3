@@ -8,32 +8,23 @@ use yii\widgets\ActiveForm;
 /* @var $model app\models\UserSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-<div class="form-outside search-form form-layout-column" style="display: none">
+<div class="form-outside form-search form-layout-column" style="display: none">
     <div class="user-search form">
 
         <?php
         $form = ActiveForm::begin([
-                    'id' => 'form-user-search',
-                    'action' => ['index'],
-                    'method' => 'get',
+                'id' => 'form-user-search',
+                'action' => ['index'],
+                'method' => 'get',
         ]);
         ?>
 
         <div class="entry">
             <?= $form->field($model, 'username') ?>
 
-            <?php echo $form->field($model, 'status')->dropDownList(Option::booleanOptions(), ['prompt' => '']) ?>
+            <?php echo $form->field($model, 'status')->dropDownList(\app\models\User::statusOptions(), ['prompt' => '']) ?>
         </div>
 
-        <div class="entry">
-            <?php //echo $form->field($model, 'user_group_id')->dropDownList(Tenant::userGroups(), ['prompt' => '']) ?>
-
-            <?php // echo $form->field($model, 'role')->dropDownList(User::roleOptions(), ['prompt' => '']) ?>
-        </div>
-
-        <div class="entry">
-            <?php // echo $form->field($model, 'rule_id')->dropDownList(Tenant::workflowRules(), ['prompt' => '']) ?>
-        </div>
 
         <div class="form-group buttons">
             <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>

@@ -7,16 +7,19 @@ use app\models\UserSearch;
 use app\models\Yad;
 use app\modules\admin\forms\ChangePasswordForm;
 use app\modules\admin\forms\RegisterForm;
+use PDO;
+use yadjet\helpers\ArrayHelper;
 use Yii;
 use yii\base\Security;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\NotFoundHttpException;
+use yii\web\Response;
 
 /**
  * 系统用户管理
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class UsersController extends GlobalController
@@ -29,7 +32,7 @@ class UsersController extends GlobalController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'create', 'update', 'delete', 'change-password'],
+                        'actions' => ['index', 'create', 'update', 'delete', 'change-password', 'auth'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -118,7 +121,7 @@ class UsersController extends GlobalController
                 ':userId' => $userId
             ];
             $db->createCommand()->delete('{{%tenant_user}}', '[[tenant_id]] = :tenantId AND [[user_id]] = :userId', $bindValues)->execute();
-            $db->createCommand('DELETE FROM {{%auth_node}} WHERE [[user_id]] = :userId AND [[node_id]] IN (SELECT [[id]] FROM {{%node}} WHERE [[tenant_id]] = :tenantId)')->bindValues($bindValues)->execute();
+            $db->createCommand('DELETE FROM {{%user_auth_category}} WHERE [[user_id]] = :userId AND [[category_id]] IN (SELECT [[id]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId)')->bindValues($bindValues)->execute();
         });
 
         return $this->redirect(['index']);
@@ -145,6 +148,96 @@ class UsersController extends GlobalController
         return $this->render('change-password', [
                 'user' => $user,
                 'model' => $model,
+        ]);
+    }
+
+    /**
+     * 用户节点权限控制
+     * @param integer $id
+     * @return Response
+     * @throws NotFoundHttpException
+     */
+    public function actionAuth($id)
+    {
+        $userId = (int) $id;
+        $tenantId = Yad::getTenantId();
+        $db = Yii::$app->getDb();
+        $userExists = $db->createCommand('SELECT COUNT(*) FROM {{%user}} WHERE [[id]] = :id AND [[id]] IN (SELECT [[user_id]] FROM {{%tenant_user}} WHERE [[tenant_id]] = :tenantId)')->bindValues([
+                ':id' => $userId,
+                ':tenantId' => $tenantId
+            ])->queryScalar();
+        if (!$userExists) {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
+        $existCategoryIds = $db->createCommand('SELECT [[category_id]] FROM {{%user_auth_category}} WHERE [[user_id]] = :userId AND [[category_id]] IN (SELECT [[id]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId)')->bindValues([
+                ':userId' => $userId,
+                ':tenantId' => $tenantId
+            ])->queryColumn();
+        $request = Yii::$app->getRequest();
+        if ($request->isPost && $request->isAjax) {
+            $choiceCategoryIds = $request->post('choiceCategoryIds');
+            if (!empty($choiceCategoryIds)) {
+                $choiceCategoryIds = explode(',', $choiceCategoryIds);
+                $insertCategoryIds = array_diff($choiceCategoryIds, $existCategoryIds);
+                $deleteCategoryIds = array_diff($existCategoryIds, $choiceCategoryIds);
+            } else {
+                $insertCategoryIds = [];
+                $deleteCategoryIds = $existCategoryIds; // 如果没有选择任何节点，表示删除所有已经存在节点
+            }
+
+            if ($insertCategoryIds || $deleteCategoryIds) {
+                $transaction = $db->beginTransaction();
+                try {
+                    if ($insertCategoryIds) {
+                        $insertRows = [];
+                        foreach ($insertCategoryIds as $nodeId) {
+                            $insertRows[] = [$userId, $nodeId, $tenantId];
+                        }
+                        if ($insertRows) {
+                            $db->createCommand()->batchInsert('{{%user_auth_category}}', ['user_id', 'category_id', 'tenant_id'], $insertRows)->execute();
+                        }
+                    }
+                    if ($deleteCategoryIds) {
+                        $db->createCommand()->delete('{{%user_auth_category}}', [
+                            'user_id' => $userId,
+                            'category_id' => $deleteCategoryIds
+                        ])->execute();
+                    }
+                    $transaction->commit();
+                } catch (\Exception $e) {
+                    $transaction->rollBack();
+                    return new Response([
+                        'format' => Response::FORMAT_JSON,
+                        'data' => [
+                            'success' => false,
+                            'error' => [
+                                'message' => $e->getMessage()
+                            ]
+                        ],
+                    ]);
+                }
+            }
+
+            return new Response([
+                'format' => Response::FORMAT_JSON,
+                'data' => [
+                    'success' => true
+                ],
+            ]);
+        }
+
+        $categories = $db->createCommand('SELECT [[id]], [[parent_id]] AS [[pId]], [[name]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId')->bindValue(':tenantId', $tenantId, PDO::PARAM_INT)->queryAll();
+        if ($existCategoryIds) {
+            foreach ($categories as $key => $node) {
+                if (in_array($node['id'], $existCategoryIds)) {
+                    $categories[$key]['checked'] = true;
+                }
+            }
+        }
+        $categories = ArrayHelper::toTree($categories, 'id', 'pId');
+
+        return $this->renderAjax('auth', [
+                'categories' => $categories,
         ]);
     }
 
