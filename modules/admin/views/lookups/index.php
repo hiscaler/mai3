@@ -13,8 +13,8 @@ $this->params['menus'] = [
 ];
 ?>
 
-<div class="tabs-common">
-    <ul>
+<div class="clearfix">
+    <ul class="tabs-common">
         <?php
         $i = 0;
         foreach (app\models\Lookup::getGroupOptions() as $group => $name):
@@ -32,8 +32,8 @@ $this->params['menus'] = [
 
     <?php if ($items): ?>
         <?php echo Html::beginForm(['index']); ?>
-        <div class="form">
-            <div class="panels">
+        <div class="panels">
+            <div class="form">
 
                 <?php
                 foreach ($items as $group => $data):
@@ -42,25 +42,15 @@ $this->params['menus'] = [
                         <?php if ($data) : ?>
                             <?php foreach ($data as $d) : ?>
                                 <div class="form-group">
-                                    <label>
-                                        <?php
-                                        $dotIndex = strpos($d['label'], '.');
-                                        if ($dotIndex === false) {
-                                            $label = $d['description'];
-                                        } else {
-                                            $label = \yii\helpers\Inflector::camel2words(substr($d['label'], $dotIndex + 1));
-                                        }
-                                        echo Yii::t('lookup', $label);
-                                        ?>
-                                    </label>
+                                    <label><?= $d['label'] ?></label>
                                     <?php
                                     switch ($d['input_method']) {
                                         case \app\models\Lookup::INPUT_METHOD_TEXTAREA:
                                             if ($d['return_type'] == app\models\Lookup::RETURN_TYPE_STRING) {
-                                                $input = Html::textarea($d['label'], unserialize($d['value']), ['class' => 'form-control']);
+                                                $input = Html::textarea($d['key'], unserialize($d['value']), ['class' => 'form-control']);
                                             } elseif ($d['return_type'] == app\models\Lookup::RETURN_TYPE_ARRAY) {
-                                                echo Html::hiddenInput('inputValues[' . \yii\helpers\Inflector::camel2id($d['label']) . ']', 1);
-                                                $input = Html::textarea($d['label'], $d['input_value'], ['class' => 'form-control']);
+                                                echo Html::hiddenInput('inputValues[' . \yii\helpers\Inflector::camel2id($d['key']) . ']', 1);
+                                                $input = Html::textarea($d['key'], $d['input_value'], ['class' => 'form-control']);
                                             } else {
                                                 $input = null;
                                             }
@@ -68,7 +58,7 @@ $this->params['menus'] = [
                                             break;
 
                                         case \app\models\Lookup::INPUT_METHOD_CHECKBOX:
-                                            $input = Html::checkbox($d['label'], unserialize($d['value']), ['uncheck' => 0]);
+                                            $input = Html::checkbox($d['key'], unserialize($d['value']), ['uncheck' => 0]);
                                             break;
 
                                         case \app\models\Lookup::INPUT_METHOD_DROPDOWNLIST:
@@ -79,15 +69,18 @@ $this->params['menus'] = [
                                                     $items[$v[0]] = $v[1];
                                                 }
                                             }
-                                            $input = Html::dropDownList($d['label'], unserialize($d['value']), $items, ['class' => 'form-control']);
+                                            $input = Html::dropDownList($d['key'], unserialize($d['value']), $items, ['class' => 'form-control']);
                                             break;
 
                                         default:
-                                            $input = Html::textInput(Yii::t('app', $d['label']), unserialize($d['value']), ['class' => 'form-control']);
+                                            $input = Html::textInput($d['key'], unserialize($d['value']), ['class' => 'form-control']);
                                             break;
                                     }
 
                                     echo $input;
+                                    if ($group == 'custom') {
+                                        echo Html::a(Yii::t('app', 'Update'), ['update', 'id' => $d['id']], ['class' => 'btn btn-primary']);
+                                    }
                                     ?>
                                 </div>
                             <?php endforeach; ?>

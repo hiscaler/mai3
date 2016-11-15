@@ -13,7 +13,7 @@ use yii\web\Response;
 
 /**
  * 基本设置管理
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class LookupsController extends Controller
@@ -26,7 +26,7 @@ class LookupsController extends Controller
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'list', 'create', 'update', 'view', 'delete', 'toggle'],
+                        'actions' => ['index', 'list', 'create', 'update', 'delete', 'toggle'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -68,7 +68,7 @@ class LookupsController extends Controller
                     } else {
                         $columns['value'] = serialize($value);
                     }
-                    $updateCommand->update('{{%lookup}}', $columns, ['label' => $key, 'type' => Lookup::TYPE_PUBLIC])->execute();
+                    $updateCommand->update('{{%lookup}}', $columns, ['key' => $key, 'type' => Lookup::TYPE_PUBLIC])->execute();
                 }
             }
             Lookup::refreshCache();
@@ -102,7 +102,7 @@ class LookupsController extends Controller
 
     /**
      * Creates a new Lookup model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
+     * If creation is successful, the browser will be redirected to the 'index' page.
      * @return mixed
      */
     public function actionCreate()
@@ -122,7 +122,7 @@ class LookupsController extends Controller
 
     /**
      * Updates an existing Lookup model.
-     * If update is successful, the browser will be redirected to the 'view' page.
+     * If update is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */

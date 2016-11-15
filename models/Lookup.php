@@ -10,6 +10,7 @@ use Yii;
  * @property integer $id
  * @property integer $type
  * @property integer $group
+ * @property string $key
  * @property string $label
  * @property string $description
  * @property string $value
@@ -70,18 +71,18 @@ class Lookup extends BaseActiveRecord
     public function rules()
     {
         return [
-            [['label', 'value', 'return_type', 'input_method', 'input_value', 'enabled'], 'required'],
+            [['key', 'label', 'value', 'return_type', 'input_method', 'enabled'], 'required'],
             [['label', 'value', 'description'], 'trim'],
             [['group'], 'integer'],
             [['group'], 'default', 'value' => self::GROUP_CUSTOM],
             [['type'], 'boolean'],
             [['type'], 'default', 'value' => self::TYPE_PUBLIC],
-            ['label', 'match', 'pattern' => '/^[a-z][a-z.].*[a-z]$/'],
+            ['key', 'match', 'pattern' => '/^[a-z][a-z.].*[a-z]$/'],
             ['label', 'unique'],
             ['enabled', 'default', 'value' => 0],
             ['enabled', 'boolean'],
             [['return_type', 'enabled', 'tenant_id', 'created_by', 'created_at', 'updated_by', 'updated_at'], 'integer'],
-            [['label'], 'string', 'max' => 60],
+            [['key', 'label'], 'string', 'max' => 60],
             [['input_method'], 'string', 'max' => 12],
             [['description', 'value', 'input_value'], 'string']
         ];
@@ -93,6 +94,7 @@ class Lookup extends BaseActiveRecord
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
+            'key' => Yii::t('lookup', 'Key'),
             'label' => Yii::t('lookup', 'Label'),
             'description' => Yii::t('lookup', 'Description'),
             'value' => Yii::t('lookup', 'Value'),
@@ -169,8 +171,8 @@ class Lookup extends BaseActiveRecord
      */
     public static function refreshCache()
     {
-        $labelValues = [];
-        $rawData = Yii::$app->getDb()->createCommand('SELECT [[label]], [[value]], [[return_type]], [[input_method]], [[input_value]] FROM ' . static::tableName() . ' WHERE [[tenant_id]] = :tenantId AND [[enabled]] = :enabled', [':tenantId' => Yad::getTenantId(), ':enabled' => Constant::BOOLEAN_TRUE])->queryAll();
+        $keyValues = [];
+        $rawData = Yii::$app->getDb()->createCommand('SELECT [[key]], [[value]], [[return_type]], [[input_method]], [[input_value]] FROM ' . static::tableName() . ' WHERE [[tenant_id]] = :tenantId AND [[enabled]] = :enabled', [':tenantId' => Yad::getTenantId(), ':enabled' => Constant::BOOLEAN_TRUE])->queryAll();
         foreach ($rawData as $data) {
             $value = unserialize($data['value']);
             switch ($data['return_type']) {
@@ -201,25 +203,25 @@ class Lookup extends BaseActiveRecord
                 default :
                     $value = is_string($value) ? $value : (string) $value;
             }
-            $labelValues[$data['label']] = $value;
+            $keyValues[$data['key']] = $value;
         }
 
-        Yii::$app->getCache()->set('cache.model.lookup.refresh-cache', $labelValues);
-        return $labelValues;
+        Yii::$app->getCache()->set('cache.model.lookup.refresh-cache', $keyValues);
+        return $keyValues;
     }
 
     /**
      * 根据设定的标签获取值
-     * @param string $label
+     * @param string $key
      * @param string $defaultValue
      * @return mixed
      */
-    public static function getValue($label, $defaultValue = null)
+    public static function getValue($key, $defaultValue = null)
     {
         $labelValues = Yii::$app->getCache()->get('cache.mode.lookup.refresh-cache');
         $labelValues === false && $labelValues = self::refreshCache();
 
-        return isset($labelValues[$label]) ? $labelValues[$label] : $defaultValue;
+        return isset($labelValues[$key]) ? $labelValues[$key] : $defaultValue;
     }
 
     // Events

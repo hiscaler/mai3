@@ -1,6 +1,5 @@
 <?php
 
-use app\modules\admin\components\GridView;
 use yii\helpers\StringHelper;
 use yii\helpers\Url;
 use yii\widgets\Pjax;
@@ -26,9 +25,9 @@ $this->params['menus'] = [
         'formSelector' => '#form-lookups',
         'linkSelector' => '#grid-view-lookups a',
     ]);
-    echo GridView::widget([
+    echo \yii\grid\GridView::widget([
         'id' => 'grid-view-lookups',
-        'name' => 'common-models-Lookup',
+//        'name' => 'common-models-Lookup',
         'dataProvider' => $dataProvider,
         'columns' => [
             [
