@@ -15,7 +15,7 @@ use yii\web\Response;
 
 /**
  * 分类管理
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class CategoriesController extends GlobalController
@@ -64,7 +64,7 @@ class CategoriesController extends GlobalController
      * If creation is successful, the browser will be redirected to the 'index' page.
      * @return mixed
      */
-    public function actionCreate($type = 0, $parentId = 0, $ordering = 1)
+    public function actionCreate($type, $parentId = 0, $ordering = 1)
     {
         $model = new Category();
         $model->type = $type;
@@ -73,7 +73,7 @@ class CategoriesController extends GlobalController
         $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['create', 'type' => $model->type, 'parentId' => $model->parent_id, 'ordering' => ++$model['ordering']]);
+            return $this->redirect(['create', 'type' => $model->type, 'parentId' => $model->parent_id, 'ordering' => $model['ordering'] + 1]);
         } else {
             return $this->render('create', [
                     'model' => $model,
@@ -92,7 +92,7 @@ class CategoriesController extends GlobalController
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['index', 'CategorySearch[type]' => $model->type]);
         } else {
             return $this->render('update', [
                     'model' => $model,
@@ -116,7 +116,7 @@ class CategoriesController extends GlobalController
             $model->delete();
         }
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'CategorySearch[type]' => $model->type]);
     }
 
     /**

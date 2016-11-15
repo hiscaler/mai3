@@ -50,8 +50,8 @@ class Category extends BaseActiveRecord
             [['enabled'], 'boolean'],
             [['enabled'], 'default', 'value' => Constant::BOOLEAN_TRUE],
             [['description'], 'string'],
-            [['alias'], 'string', 'max' => 20],
-            ['alias', 'match', 'pattern' => '/^[a-z]+[a-z-]+[a-z]$/'],
+            [['alias'], 'string', 'max' => 120],
+            ['alias', 'match', 'pattern' => '/^[a-z]+[a-z-\/]+[a-z]$/'],
             [['name'], 'string', 'max' => 30],
             [['parent_ids', 'icon_path'], 'string', 'max' => 100],
             [['parent_names'], 'string', 'max' => 255],
@@ -84,30 +84,123 @@ class Category extends BaseActiveRecord
      */
     public static function typeOptions()
     {
-        return Lookup::getValue('m.models.category.type', []);
+        return Lookup::getValue('system.models.category.type', []);
+    }
+
+    /**
+     * 生成数据缓存
+     */
+    private function generateCache()
+    {
+        self::getRawItems(false);
+        self::getRawItems(true);
+    }
+
+    /**
+     * 处理并生成分类数据缓存，供后续代码调取
+     * @param boolean $toTree
+     * @return array
+     */
+    private static function getRawItems($toTree = false, $tenantId = null)
+    {
+        $key = '__category_getRawItems_' . $toTree;
+        $cache = Yii::$app->getCache();
+        $cacheData = $cache->get($key);
+        if ($cacheData !== false) {
+            return $cacheData;
+        } else {
+            $items = [];
+            $rawData = Yii::$app->getDb()->createCommand('SELECT [[id]], [[type]], [[alias]], [[name]], [[parent_id]], [[icon_path]], [[enabled]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId ORDER BY [[level]] ASC', [':tenantId' => $tenantId ? : Yad::getTenantId()])->queryAll();
+            foreach ($rawData as $data) {
+                $items[$data['id']] = [
+                    'id' => $data['id'],
+                    'type' => $data['type'],
+                    'alias' => $data['alias'],
+                    'name' => $data['name'],
+                    'parent' => $data['parent_id'],
+                    'icon' => $data['icon_path'],
+                    'enabled' => $data['enabled'] ? true : false,
+                    'hasChildren' => false
+                ];
+                if ($data['parent_id'] && isset($items[$data['parent_id']])) {
+                    $items[$data['parent_id']]['hasChildren'] = true;
+                }
+            }
+            if ($toTree) {
+                $items = \yadjet\helpers\ArrayHelper::toTree($items, 'id', 'parent', 'children');
+            }
+            $cache->set($key, $items);
+
+            return $items;
+        }
+    }
+
+    private static function getRawItemsByType($type = 0, $all = false, $toTree = false)
+    {
+        $items = [];
+        foreach (self::getRawItems($toTree) as $key => $item) {
+            if ($item['type'] == $type) {
+                if ($all || $item['enabled']) {
+                    $items[$key] = $item;
+                }
+            }
+        }
+        return $items;
     }
 
     /**
      * 获取分类项目
-     * @return array
+     *
+     * @param integer $type
+     * @param mixed $prompt
+     * @param boolean $all
+     * @return string
      */
-    public static function getTree($top = null, $all = false)
+    public static function getTree($type, $prompt = null, $all = false)
     {
         $items = [];
-        if ($top) {
-            $items[] = $top;
+        if ($prompt) {
+            $items[] = $prompt;
         }
-        $bindValues = [':tenantId' => Yad::getTenantId()];
-        $sql = 'SELECT [[id]], [[name]], [[parent_id]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId';
-        if (!$all) {
-            $sql .= ' AND enabled = :enabled';
-            $bindValues[':enabled'] = Constant::BOOLEAN_TRUE;
-        }
-        $rawData = Yii::$app->getDb()->createCommand($sql)->bindValues($bindValues)->queryAll();
+        $rawData = self::getRawItemsByType($type, $all, true);
         if ($rawData) {
-            $data = TreeFormatHelper::dumpArrayTree(\yadjet\helpers\ArrayHelper::toTree($rawData, 'id', 'parent_id'));
-            foreach ($data as $value) {
-                $items[$value['id']] = $value['levelstr'] . $value['name'];
+            $rawData = TreeFormatHelper::dumpArrayTree($rawData);
+            foreach ($rawData as $data) {
+                $items[$data['id']] = $data['levelstr'] . $data['name'];
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * 获取用户可操作分类项目
+     *
+     * @param integer $type
+     * @param mixed $prompt
+     * @param boolean $all
+     * @param mixed|integer $userId
+     * @return string
+     */
+    public static function getOwnerTree($type, $prompt = null, $all = false, $userId = null)
+    {
+        $items = [];
+        if ($prompt) {
+            $items[] = $prompt;
+        }
+        $rawData = self::getRawItemsByType($type, $all, false);
+        $ownerCategoryIds = Yii::$app->getDb()->createCommand('SELECT [[category_id]] FROM {{%user_auth_category}} WHERE [[user_id]] = :userId', [':userId' => $userId ? : Yii::$app->getUser()->getId()])->queryColumn();
+        if ($ownerCategoryIds) {
+            foreach ($rawData as $key => $data) {
+                if (!in_array($data['id'], $ownerCategoryIds)) {
+                    unset($rawData[$key]);
+                }
+            }
+            if ($rawData) {
+                $rawData = TreeFormatHelper::dumpArrayTree(\yadjet\helpers\ArrayHelper::toTree($rawData, 'id', 'parent'));
+                foreach ($rawData as $data) {
+                    $items[$data['id']] = $data['levelstr'] . $data['name'];
+                }
             }
         }
 
@@ -156,7 +249,8 @@ class Category extends BaseActiveRecord
      */
     private static function hasChildren($id)
     {
-        return Yii::$app->getDb()->createCommand('SELECT COUNT(*) FROM {{%category}} WHERE parent_id = :parentId', [':parentId' => (int) $id])->queryScalar();
+        $rawData = self::getRawItems();
+        return isset($rawData[$id]) && $rawData[$id]['hasChildren'];
     }
 
     /**
@@ -164,20 +258,21 @@ class Category extends BaseActiveRecord
      * @param mixed|integer $parent
      * @return array
      */
-    public static function getChildren($parent = null)
+    public static function getChildren($parent = 0)
     {
         $children = [];
-        $sql = 'SELECT * FROM {{%category}} WHERE [[tenant_id]] = :tenantId';
-        $bindValues = [':tenantId' => Yad::getTenantId()];
+        $parent = (int) $parent;
+        $rawItems = self::getRawItems(true);
         if ($parent) {
-            $sql.= ' AND [[parent_id]] = :parentId';
-            $bindValues[':parentId'] = $parent;
-        }
-        $rawData = Yii::$app->getDb()->createCommand($sql, $bindValues)->queryAll();
-        foreach ($rawData as $data) {
-            $children[] = $data;
-            if (static::hasChildren($data['id'])) {
-                $children = array_merge($children, static::getChildren($data['id']));
+            foreach ($rawItems as $item) {
+                if ($item['id'] == $parent) {
+                    if ($item['hasChildren'] && $item['children']) {
+                        foreach ($item['children'] as $child) {
+                            $children = array_merge($children, \yadjet\helpers\ArrayHelper::treeToArray($child));
+                        }
+                        break;
+                    }
+                }
             }
         }
 
@@ -189,11 +284,13 @@ class Category extends BaseActiveRecord
      * @param mixed|integer $parent
      * @return array
      */
-    public static function getChildrenIds($parent = null)
+    public static function getChildrenIds($parent = 0)
     {
-        $children = static::getChildren($parent);
+        foreach (self::getChildren($parent) as $child) {
+            $ids[] = (int) $child['id'];
+        }
 
-        return $children ? \yii\helpers\ArrayHelper::getColumn($children, 'id') : [];
+        return $ids;
     }
 
     // 事件
@@ -212,6 +309,18 @@ class Category extends BaseActiveRecord
         } else {
             return false;
         }
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+        $this->generateCache();
+    }
+
+    public function afterDelete()
+    {
+        parent::afterDelete();
+        $this->generateCache();
     }
 
 }

@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
         </div>
 
         <div class="entry">
-            <?= $form->field($model, 'parent_id')->dropDownList(Category::getTree('顶级分类')) ?>
+            <?= $form->field($model, 'parent_id')->dropDownList(Category::getTree($model->type, '顶级分类')) ?>
 
             <?= $form->field($model, 'icon_path')->fileInput() ?>
         </div>
