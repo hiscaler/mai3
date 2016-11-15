@@ -1,6 +1,6 @@
 <?php
 
-use yii\grid\GridView;
+use app\modules\admin\components\GridView;
 use yii\helpers\Html;
 use yii\widgets\Pjax;
 
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->params['menus'] = [
     ['label' => Yii::t('app', 'List'), 'url' => ['index']],
     ['label' => Yii::t('app', 'Create'), 'url' => ['create']],
-    ['label' => Yii::t('app', 'Grid Column Config'), 'url' => ['grid-column-configs/index', 'name' => 'common-models-Album'], 'htmlOptions' => ['class' => 'grid-column-config', 'data-reload-object' => 'grid-view-album']],
+    ['label' => Yii::t('app', 'Grid Column Config'), 'url' => ['grid-column-configs/index', 'name' => 'app-models-Product'], 'htmlOptions' => ['class' => 'grid-column-config', 'data-reload-object' => 'grid-view-products']],
     ['label' => Yii::t('app', '搜索'), 'url' => '#'],
 ];
 ?>
@@ -27,9 +27,12 @@ $this->params['menus'] = [
     <?php
     Pjax::begin([
         'formSelector' => '#form-search-products',
-        'timeout' => 6000
+        'timeout' => 6000,
+        'linkSelector' => '#grid-view-products a',
     ]);
     echo GridView::widget([
+        'id' => 'grid-view-products',
+        'name' => 'app-models-Product',
         'dataProvider' => $dataProvider,
         'columns' => [
             [
@@ -87,10 +90,10 @@ $this->params['menus'] = [
                     'format' => 'datetime',
                     'contentOptions' => ['class' => 'datetime'],
                 ],
-                [
-                    'attribute' => 'view_require_credits',
-                    'contentOptions' => ['class' => 'nubmer'],
-                ],
+//                [
+//                    'attribute' => 'view_require_credits',
+//                    'contentOptions' => ['class' => 'nubmer'],
+//                ],
                 [
                     'attribute' => 'created_by',
                     'value' => function($model) {

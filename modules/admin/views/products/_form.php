@@ -9,7 +9,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="form-outside">
-    <div class="tenant-form form">  
+    <div class="tenant-form form">
         <?php
         $form = ActiveForm::begin([
                 'options' => [
@@ -18,6 +18,7 @@ use yii\widgets\ActiveForm;
                 ],
         ]);
         ?>
+        <?= $form->errorSummary($model) ?>
         <div class="tabs-container">
             <ul class="tabs-common">
                 <li class="active"><a data-toggle="tab-base" href="#tab-base"> 基础资料</a></li>
@@ -32,7 +33,7 @@ use yii\widgets\ActiveForm;
                 <div id="tab-base" class="tab-pane active">
                     <div class="panel-body">
                         <div class="entry">
-                            <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(), ['prompt' => '']) ?>
+                            <?= $form->field($model, 'category_id')->dropDownList(app\models\Category::getTree(\app\models\Lookup::getValue('system.models.category.type.product', 0)), ['prompt' => '']) ?>
 
                             <?= $form->field($model, 'type_id')->dropDownList(\app\models\Type::getList(), array_merge(['prompt' => '', 'data-url' => yii\helpers\Url::toRoute(['type-raw-data'])], $model->isNewRecord ? [] : ['disabled' => 'disabled'])) ?>
                         </div>
@@ -82,7 +83,7 @@ use yii\widgets\ActiveForm;
 
                             <?= $form->field($model, 'ordering')->textInput() ?>
                         </div>
-                        
+
                         <div class="entry">
                             <?= $form->field($model, 'privilegeUsers')->checkboxList(app\models\Member::getListByUserGroup('vip')) ?>
                         </div>
@@ -126,7 +127,7 @@ use yii\widgets\ActiveForm;
                             </div>
                         <?php endif ?>
 
-                        <div id="grid-goods-images" class="grid-view well">                            
+                        <div id="grid-goods-images" class="grid-view well">
                             <table class="table remove-margin-bottom-value">
                                 <caption>
                                     <a id="btn-add-new-goods-image-row" href="javascript:;" class="btn btn-primary btn-xs">添加一行</a>
@@ -157,7 +158,7 @@ use yii\widgets\ActiveForm;
                 <div id="tab-specifications" class="tab-pane" style="display: none;">
                     <div class="panel-body">
                         <div id="mai3-item-specifications">
-                            <div v-if="specifications.length > 0">                                    
+                            <div v-if="specifications.length > 0">
                                 <ul class="specifications-values">
                                     <li v-for="spec in specifications" v-bind:class="{active: $index === 0}">
                                         <em>{{ spec.name }}</em>
