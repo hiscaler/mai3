@@ -17,6 +17,8 @@ use yii\helpers\Inflector;
 class InitController extends Controller
 {
 
+    private $_userId = null;
+
     /**
      * 初始化默认管理用户
      * @return int
@@ -25,10 +27,8 @@ class InitController extends Controller
     {
         $username = 'admin';
         $db = Yii::$app->getDb();
-        $command = $db->createCommand('SELECT COUNT(*) FROM {{%user}} WHERE username = :username');
-        $command->bindValue(':username', $username, PDO::PARAM_STR);
-        $exist = $command->queryScalar();
-        if (!$exist) {
+        $userId = $db->createCommand('SELECT [[id]] FROM {{%user}} WHERE username = :username', [':username' => $username])->queryScalar();
+        if (!$userId) {
             $now = time();
             $security = new Security;
             $columns = [
@@ -50,71 +50,130 @@ class InitController extends Controller
                 'updated_at' => $now,
             ];
             $db->createCommand()->insert('{{%user}}', $columns)->execute();
+            $this->_userId = $db->getLastInsertID();
         } else {
-            echo "'{$username}' is exists.";
+            $this->_userId = $userId;
+            echo "'{$username}' is exists." . PHP_EOL;
         }
 
         return 0;
     }
 
     /**
+     * 初始化站点
+     */
+    public function _initTenant($tenantId)
+    {
+        echo "Begin init tenant data..." . PHP_EOL;
+        $db = Yii::$app->getDb();
+        $exists = $db->createCommand('SELECT COUNT(*) FROM {{%tenant}} WHERE [[id]] = :id', [':id' => $tenantId])->queryScalar();
+        if (!$exists) {
+            $now = time();
+            $db->createCommand()->insert('{{%tenant}}', [
+                'key' => date('Ymd') . sprintf('%04d', 1),
+                'name' => 'Default site',
+                'language' => 'zh-CN',
+                'timezone' => 'PRC',
+                'date_format' => 'php:Y-m-d',
+                'time_format' => 'php:H:i:s',
+                'datetime_format' => 'php:Y-m-d H:i:s',
+                'domain_name' => 'www.example.com',
+                'description' => 'This is default site.',
+                'enabled' => 1,
+                'created_at' => $now,
+                'created_by' => $this->_userId,
+                'updated_at' => $now,
+                'updated_by' => $this->_userId,
+            ])->execute();
+            $db->createCommand()->insert('{{%tenant_user}}', [
+                'user_id' => 1,
+                'tenant_id' => $tenantId,
+                'created_at' => $now,
+                'created_by' => $this->_userId,
+                'updated_at' => $now,
+                'updated_by' => $this->_userId,
+            ])->execute();
+            echo 'initialize successed.' . PHP_EOL;
+        } else {
+            echo 'Site is exists.' . PHP_EOL;
+        }
+
+        echo "Done." . PHP_EOL;
+    }
+
+    /**
      * 初始化配置资料
      * @return int
      */
-    public function _initLookups()
+    public function _initLookups($tenantId)
     {
         echo "Begin..." . PHP_EOL;
+        $db = Yii::$app->getDb();
+        $language = $db->createCommand('SELECT [[language]] FROM {{%tenant}} WHERE [[id]] = :id', [':id' => $tenantId])->queryScalar();
+        $language && Yii::$app->language = $language;
         $items = [
-            Lookup::GROUP_SEO => [
-                'as.meta.keywords' => [
+            Lookup::GROUP_CUSTOM => [
+                'custom.site.name' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => null,
                 ],
-                'as.meta.description' => [
+                'custom.site.icp' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
+                    'value' => null,
+                ],
+                'custom.site.statistics.code' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXTAREA,
+                    'value' => null,
+                ],
+                'custom.address' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
+                    'value' => null,
+                ],
+                'custom.tel' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
+                    'value' => null,
+                ],
+            ],
+            Lookup::GROUP_SEO => [
+                'seo.meta.keywords' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
+                    'value' => null,
+                ],
+                'seo.meta.description' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXTAREA,
                     'value' => null,
                 ],
             ],
             Lookup::GROUP_SYSTEM => [
-                'as.site.name' => [
-                    'returnType' => Lookup::RETURN_TYPE_STRING,
-                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
-                    'value' => null,
-                ],
-                'as.site.icp' => [
-                    'returnType' => Lookup::RETURN_TYPE_STRING,
-                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
-                    'value' => null,
-                ],
-                'as.site.statistics-code' => [
-                    'returnType' => Lookup::RETURN_TYPE_STRING,
-                    'inputMethod' => Lookup::INPUT_METHOD_TEXTAREA,
-                    'value' => null,
-                ],
                 // 是否激活安全选项
-                'as.security.enable' => [
+                'system.security.enable' => [
                     'returnType' => Lookup::RETURN_TYPE_BOOLEAN,
                     'inputMethod' => Lookup::INPUT_METHOD_CHECKBOX,
                     'value' => true,
                 ],
-                'as.security.change-password-interval-days' => [
+                'system.security.change-password-interval-days' => [
                     'returnType' => Lookup::RETURN_TYPE_INTEGER,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => 30,
                 ],
-                'as.offline' => [
+                'system.offline' => [
                     'returnType' => Lookup::RETURN_TYPE_BOOLEAN,
                     'inputMethod' => Lookup::INPUT_METHOD_CHECKBOX,
                     'value' => false,
                 ],
-                'as.offline.message' => [
+                'system.offline.message' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXTAREA,
                     'value' => null,
                 ],
-                'as.language' => [
+                'system.language' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_DROPDOWNLIST,
                     'inputValue' => implode(PHP_EOL, [
@@ -124,7 +183,7 @@ class InitController extends Controller
                     ]),
                     'value' => 'zh-CN',
                 ],
-                'as.timezone' => [
+                'system.timezone' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_DROPDOWNLIST,
                     'inputValue' => implode(PHP_EOL, [
@@ -147,23 +206,23 @@ class InitController extends Controller
                     ]),
                     'value' => 'PRC',
                 ],
-                'as.date-format' => [
+                'system.date-format' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => 'php:Y-m-d',
                 ],
-                'as.time-format' => [
+                'system.time-format' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => 'php:H:i:s',
                 ],
-                'as.datetime-format' => [
+                'system.datetime-format' => [
                     'returnType' => Lookup::RETURN_TYPE_STRING,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => 'php:Y-m-d H:i:s',
                 ],
                 // 用户注册默认状态
-                'as.user.signup.status' => [
+                'system.user.signup.default.status' => [
                     'returnType' => Lookup::RETURN_TYPE_INTEGER,
                     'inputMethod' => Lookup::INPUT_METHOD_DROPDOWNLIST,
                     'inputValue' => implode(PHP_EOL, [
@@ -173,65 +232,60 @@ class InitController extends Controller
                     'value' => User::STATUS_PENDING,
                 ],
                 // 用户注册赠送积分
-                'as.user.signup.credits' => [
+                'system.user.signup.default.credits' => [
                     'returnType' => Lookup::RETURN_TYPE_INTEGER,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => 0,
                 ],
                 // 用户推荐注册赠送积分
-                'as.user.signup.referral.credits' => [
+                'system.user.signup.referral.credits' => [
                     'returnType' => Lookup::RETURN_TYPE_INTEGER,
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => 0,
                 ],
-                // 模块设置
-                'm.models.friendly-link.group' => [
-                    'returnType' => Lookup::RETURN_TYPE_ARRAY,
-                    'inputMethod' => Lookup::INPUT_METHOD_TEXTAREA,
-                    'value' => [],
-                ]
             ],
         ];
-        $tenantId = 0;
-        $db = Yii::$app->getDb();
         $cmd = $db->createCommand();
-        $existsCmd = $db->createCommand('SELECT COUNT(*) FROM {{%lookup}} WHERE [[type]] = :type AND [[label]] = :label AND [[tenant_id]] = :tenantId');
+        $existsCmd = $db->createCommand('SELECT COUNT(*) FROM {{%lookup}} WHERE [[type]] = :type AND [[key]] = :key AND [[tenant_id]] = :tenantId');
         $now = time();
         foreach ($items as $group => $data) {
-            foreach ($data as $label => $item) {
+            foreach ($data as $key => $item) {
                 $type = isset($item['type']) ? $item['type'] : Lookup::TYPE_PUBLIC;
-                $label = trim($label);
+                $key = trim($key);
                 // Check exists, ignore it if exists.
                 $exists = $existsCmd->bindValues([
                         ':type' => $type,
-                        ':label' => $label,
+                        ':key' => $key,
                         ':tenantId' => $tenantId
                     ])->queryScalar();
                 if ($exists) {
-                    echo "{$label} is exists, ignore it..." . PHP_EOL;
+                    echo "{$key} is exists, ignore it..." . PHP_EOL;
                     continue;
                 }
 
-                echo "Insert {$label} ..." . PHP_EOL;
-                $index = strpos($label, '.');
-                if ($index !== false && in_array(substr($label, 0, $index), ['as', 'm'])) {
-                    $description = substr($label, $index + 1);
+                echo "Insert {$key} ..." . PHP_EOL;
+                $index = strpos($key, '.');
+                if ($index !== false && in_array(substr($key, 0, $index), ['custom', 'seo', 'system'])) {
+                    $label = substr($key, $index + 1);
+                    $label = Inflector::camel2words($label, '.');
+                } else {
+                    $label = Inflector::camel2words($key);
                 }
-                $description = Inflector::camel2words($label, '.');
                 $columns = [
                     'type' => $type,
                     'group' => $group,
-                    'label' => $label,
-                    'description' => $description,
+                    'key' => $key,
+                    'label' => Yii::t('lookup', $label),
+                    'description' => Yii::t('lookup', $label),
                     'value' => serialize(isset($item['value']) ? $item['value'] : ''),
                     'return_type' => isset($item['returnType']) ? $item['returnType'] : Lookup::RETURN_TYPE_STRING,
                     'input_method' => isset($item['inputMethod']) ? $item['inputMethod'] : Lookup::INPUT_METHOD_TEXT,
                     'input_value' => isset($item['inputValue']) ? $item['inputValue'] : '',
                     'enabled' => Constant::BOOLEAN_TRUE,
                     'tenant_id' => $tenantId,
-                    'created_by' => 0,
+                    'created_by' => $this->_userId,
                     'created_at' => $now,
-                    'updated_by' => 0,
+                    'updated_by' => $this->_userId,
                     'updated_at' => $now,
                 ];
                 $cmd->insert('{{%lookup}}', $columns)->execute();
@@ -242,10 +296,21 @@ class InitController extends Controller
         return 0;
     }
 
-    public function actionIndex()
+    /**
+     * yii init 1
+     * @param integer $tenantId
+     */
+    public function actionIndex($tenantId)
     {
-        $this->_initAdminUser();
-        $this->_initLookups();
+        $tenantId = (int) $tenantId;
+        if ($tenantId) {
+            $this->_initAdminUser();
+            $this->_initTenant($tenantId);
+            $this->_initLookups($tenantId);
+        } else {
+            echo "tenantId param error.";
+            exit(1);
+        }
     }
 
 }
