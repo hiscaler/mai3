@@ -36,9 +36,15 @@ $this->params['menus'] = [
             ],
             [
                 'attribute' => 'alias',
-                'headerOptions' => ['class' => 'alias'],
+                'contentOptions' => ['class' => 'alias'],
             ],
-            'name',
+            [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . \yii\helpers\Html::a($model['name'], ['update', 'id' => $model['id']]);
+                }
+            ],
             'description:ntext',
             [
                 'attribute' => 'enabled',
