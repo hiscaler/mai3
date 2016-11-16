@@ -20,9 +20,9 @@ use yii\widgets\ActiveForm;
         ?>
 
         <div class="entry">
-            <?= $form->field($model, 'id') ?>
+            <?= $form->field($model, 'sn') ?>
 
-            <?= $form->field($model, 'product_id') ?>
+            <?= $form->field($model, 'name') ?>
         </div>
 
         <div class="entry">
@@ -31,13 +31,7 @@ use yii\widgets\ActiveForm;
             <?= $form->field($model, 'brand_id')->dropDownList(app\models\Brand::getList(), ['prompt' => '']) ?>
         </div>
 
-        <div class="entry">
-            <?= $form->field($model, 'sn') ?>
-
-            <?= $form->field($model, 'name') ?>
-        </div>
-
-        <?php // echo $form->field($model, 'default') ?>
+        <?= $form->field($model, 'online')->dropDownList(app\models\Option::booleanOptions(), ['prompt' => '']) ?>
 
         <?php // echo $form->field($model, 'enabled') ?>
 

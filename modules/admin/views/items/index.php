@@ -24,7 +24,7 @@ $this->params['menus'] = [
         'formSelector' => '#form-search-items',
         'timeout' => 6000,
     ]);
-    ?> 
+    ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -38,7 +38,7 @@ $this->params['menus'] = [
                 'attribute' => 'name',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return '<span class="pk">' . $model['id'] . '</span>' . yii\helpers\Html::a($model['name'], ['view', 'id' => $model['id']]);
+                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . yii\helpers\Html::a($model['name'], ['view', 'id' => $model['id']]);
                 },
             ],
             [
@@ -93,12 +93,11 @@ $this->params['menus'] = [
         ],
     ]);
     ?>
+    <?php \app\modules\admin\components\JsBlock::begin() ?>
+        <script type="text/javascript">
+            yadjet.actions.toggle("table td.online-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
+            yadjet.actions.toggle("table td.default-handler img", "<?= yii\helpers\Url::toRoute('set-default') ?>");
+        </script>
+    <?php \app\modules\admin\components\JsBlock::end() ?>
     <?php Pjax::end(); ?>
 </div>
-
-<?php \app\modules\admin\components\JsBlock::begin() ?>
-<script type="text/javascript">
-    yadjet.actions.toggle("table td.online-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
-    yadjet.actions.toggle("table td.default-handler img", "<?= yii\helpers\Url::toRoute('set-default') ?>");
-</script>
-<?php \app\modules\admin\components\JsBlock::end() ?>
