@@ -28,14 +28,19 @@ $this->params['menus'] = [
                 'contentOptions' => ['class' => 'serial-number']
             ],
             [
+                'attribute' => 'name',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . yii\helpers\Html::a($model['name'], ['update', 'id' => $model['id']]);
+                }
+            ],
+            [
                 'attribute' => 'ordering',
                 'contentOptions' => ['class' => 'ordering'],
             ],
-            'name',
             [
                 'attribute' => 'type_text',
-                'headerOptions' => ['class' => 'specification-type'],
-                'contentOptions' => ['class' => 'center'],
+                'contentOptions' => ['class' => 'specification-type center'],
             ],
             [
                 'attribute' => 'enabled',

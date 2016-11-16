@@ -13,7 +13,7 @@ use yii\widgets\ActiveForm;
 ?>
 
 <div class="form-outside">
-    <div class="specifications-form form">            
+    <div class="specifications-form form">
 
         <?php $form = ActiveForm::begin(); ?>
         <div class="tabs-container">
@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
 
                         <?= $form->field($model, 'type')->radioList(Specification::typeOptions()) ?>
 
-                        <?= $form->field($model, 'ordering')->dropDownList(Option::orderingOptions(), ['prompt' => '']) ?>
+                        <?= $form->field($model, 'ordering')->textInput(['maxlength' => true]) ?>
 
                         <?= $form->field($model, 'enabled')->checkbox([], null) ?>
                     </div>
@@ -41,7 +41,7 @@ use yii\widgets\ActiveForm;
                         <div class="grid-view">
                             <table class="table">
                                 <caption>
-                                    <a id="btn-dynamic-add-specifications-row" href="javascript:;" class="btn">添加一行</a>
+                                    <a id="btn-dynamic-add-specifications-row" href="javascript:;" class="btn-circle">+</a>
                                 </caption>
                                 <thead>
                                     <tr>
@@ -61,9 +61,9 @@ use yii\widgets\ActiveForm;
                                             <tr id="row-<?= $index ?>">
                                                 <td class="ordering">
                                                     <?= $form->field($model, "valuesData[$index][id]", ['template' => '{input}'])->hiddenInput()->label(false) ?>
-                                                    <?= $form->field($model, "valuesData[$index][ordering]", ['template' => '{input}'])->dropDownList(Option::orderingOptions(), ['options' => ['selected' => 'selected']])->label(false) ?>
+                                                    <?= $form->field($model, "valuesData[$index][ordering]", ['template' => '{input}'])->textInput(['maxlength' => true])->label(false) ?>
                                                 </td>
-                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => 20, 'value' => $value['text']])->label(false) ?></td>
+                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => true, 'value' => $value['text']])->label(false) ?></td>
                                                 <td><?= $form->field($model, "valuesData[$index][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
                                                 <td class="boolean">
                                                     <?= $form->field($model, "valuesData[$index][enabled]", ['template' => '{input}'])->checkbox([], false)->label(false) ?>

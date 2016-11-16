@@ -36,7 +36,7 @@ $this->params['menus'] = [
                     'type_text',
                     'enabled:boolean',
                     'created_at:datetime',
-                    'updated_by:datetime',
+                    'updated_at:datetime',
                 ],
             ])
             ?>
