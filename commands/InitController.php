@@ -138,6 +138,28 @@ class InitController extends Controller
                     'inputMethod' => Lookup::INPUT_METHOD_TEXT,
                     'value' => null,
                 ],
+                // 分类可选择类型
+                'custom.models.category.type.news' => [
+                    'returnType' => Lookup::RETURN_TYPE_ARRAY,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXTAREA,
+                    'inputValue' => implode(PHP_EOL, [
+                        '1:资讯',
+                        '2:商品',
+                    ]),
+                    'value' => null,
+                ],
+                // 资讯分类类型
+                'custom.models.category.type.news' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
+                    'value' => 1,
+                ],
+                // 商品分类类型
+                'custom.models.category.type.product' => [
+                    'returnType' => Lookup::RETURN_TYPE_STRING,
+                    'inputMethod' => Lookup::INPUT_METHOD_TEXT,
+                    'value' => 2,
+                ],
             ],
             Lookup::GROUP_SEO => [
                 'seo.meta.keywords' => [
