@@ -14,7 +14,7 @@ use yii\db\Query;
 class NewsSearch extends News
 {
 
-    public $entityAttributeId;
+    public $entityLabelId;
 
     /**
      * @inheritdoc
@@ -23,7 +23,7 @@ class NewsSearch extends News
     {
         return [
             [['id', 'status', 'enabled', 'enabled_comment', 'published_at'], 'integer'],
-            [['category_id', 'entityAttributeId', 'title', 'author', 'source'], 'safe'],
+            [['category_id', 'entityLabelId', 'title', 'author', 'source'], 'safe'],
         ];
     }
 
@@ -89,8 +89,8 @@ class NewsSearch extends News
             ]);
         }
 
-        if ($this->entityAttributeId) {
-            $query->andWhere(['in', 'id', (new Query())->select(['entity_id'])->from('{{%entity_attribute}}')->where(['attribute_id' => $this->entityAttributeId, 'entity_name' => self::className2Id(get_parent_class())])]);
+        if ($this->entityLabelId) {
+            $query->andWhere(['in', 'id', (new Query())->select(['entity_id'])->from('{{%entity_label}}')->where(['label_id' => $this->entityLabelId, 'entity_name' => self::className2Id(get_parent_class())])]);
         }
 
         $query->andFilterWhere(['like', 'title', $this->title])
