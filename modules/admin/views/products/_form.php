@@ -130,7 +130,7 @@ use yii\widgets\ActiveForm;
                         <div id="grid-goods-images" class="grid-view well">
                             <table class="table remove-margin-bottom-value">
                                 <caption>
-                                    <a id="btn-add-new-goods-image-row" href="javascript:;" class="btn btn-primary btn-xs">添加一行</a>
+                                    <a id="btn-add-new-goods-image-row" href="javascript:;" class="btn-circle">+</a>
                                 </caption>
                                 <thead>
                                     <tr>
