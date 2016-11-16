@@ -69,11 +69,11 @@ class LabelsController extends GlobalController
     {
         $model = new Label();
         $model->enabled = Constant::BOOLEAN_TRUE;
-        $model->ordering = Label::DEFAULT_ORDERING_VALUE;
+        $model->ordering = (int) $ordering;
         $model->loadDefaultValues();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['index']);
+            return $this->redirect(['create', 'ordering' => $model->ordering + 1]);
         } else {
             return $this->render('create', [
                     'model' => $model,
