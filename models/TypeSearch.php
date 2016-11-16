@@ -44,6 +44,11 @@ class TypeSearch extends Type
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort' => [
+                'defaultOrder' => [
+                    'ordering' => SORT_ASC,
+                ]
+            ]
         ]);
 
         $this->load($params);

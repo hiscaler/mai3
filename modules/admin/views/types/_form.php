@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
                     <div class="panel-body">
                         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
-                        <?= $form->field($model, 'ordering')->dropDownList(Option::orderingOptions()) ?>
+                        <?= $form->field($model, 'ordering')->textInput(['maxlength' => true]) ?>
 
                         <?= $form->field($model, 'enabled')->checkbox([], false) ?>
                     </div>
@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
                             <table class="table">
                                 <thead>
                                 <caption>
-                                    <a id="btn-add-type-property" href="<?= yii\helpers\Url::toRoute(['create-property', 'typeId' => $model['id']]) ?>" class="btn">添加属性</a>
+                                    <a id="btn-add-type-property" href="<?= yii\helpers\Url::toRoute(['create-property', 'typeId' => $model['id']]) ?>" class="btn-circle">+</a>
                                 </caption>
                                 <tr>
                                     <th class="type-property-name">属性名称</th>
@@ -76,7 +76,6 @@ use yii\widgets\ActiveForm;
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th class="checkbox-column"></th>
                                             <th style="width: 100px;">规格名称</th>
                                             <th class="last">规格值</th>
                                         </tr>
@@ -86,12 +85,14 @@ use yii\widgets\ActiveForm;
                                         <?php foreach ($specifications as $spec): ?>
                                             <tr>
                                                 <td>
-                                                    <?= Html::checkbox('Type[specificationIdList][]', in_array($spec->id, $model->specificationIdList), ['value' => $spec->id]) ?>
+                                                    <label>
+                                                        <?= Html::checkbox('Type[specificationIdList][]', in_array($spec->id, $model->specificationIdList), ['value' => $spec->id]) ?>
+                                                        <?= $spec['name'] ?>
+                                                    </label>
                                                 </td>
-                                                <td><?= $spec['name'] ?></td>
-                                                <td>
+                                                <td class="wrap">
                                                     <?php foreach ($spec->values as $value): ?>
-                                                        <?= $value['text'] ?>　
+                                                        <label class="circle"><?= $value['text'] ?></label>
                                                     <?php endforeach; ?>
                                                 </td>
                                             </tr>
