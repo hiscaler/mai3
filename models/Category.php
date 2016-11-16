@@ -286,6 +286,7 @@ class Category extends BaseActiveRecord
      */
     public static function getChildrenIds($parent = 0)
     {
+        $ids = [];
         foreach (self::getChildren($parent) as $child) {
             $ids[] = (int) $child['id'];
         }
