@@ -63,7 +63,7 @@ use yii\widgets\ActiveForm;
                                                     <?= $form->field($model, "valuesData[$index][id]", ['template' => '{input}'])->hiddenInput()->label(false) ?>
                                                     <?= $form->field($model, "valuesData[$index][ordering]", ['template' => '{input}'])->textInput(['maxlength' => true])->label(false) ?>
                                                 </td>
-                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => true, 'value' => $value['text']])->label(false) ?></td>
+                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => true])->label(false) ?></td>
                                                 <td><?= $form->field($model, "valuesData[$index][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
                                                 <td class="boolean">
                                                     <?= $form->field($model, "valuesData[$index][enabled]", ['template' => '{input}'])->checkbox([], false)->label(false) ?>

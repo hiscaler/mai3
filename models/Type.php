@@ -147,6 +147,9 @@ class Type extends BaseActiveRecord
         try {
             // 关联品牌处理
             $brandIdList = $this->brandIdList;
+            if (!is_array($brandIdList)) {
+                $brandIdList = [];
+            }
             $insertBrands = $deleteBrands = [];
             if ($insert) {
                 $insertBrands = $brandIdList;
