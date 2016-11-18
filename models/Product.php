@@ -178,6 +178,15 @@ class Product extends BaseActiveRecord
     }
 
     /**
+     * 所属类型
+     * @return ActiveRecord
+     */
+    public function getType()
+    {
+        return $this->hasOne(Type::className(), ['id' => 'type_id']);
+    }
+
+    /**
      * 所属品牌
      * @return ActiveRecord
      */

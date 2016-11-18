@@ -158,20 +158,18 @@ use yii\widgets\ActiveForm;
                 <div id="tab-specifications" class="tab-pane" style="display: none;">
                     <div class="panel-body">
                         <div id="mai3-item-specifications">
-                            <div v-if="specifications.length > 0">
-                                <ul class="specifications-values">
-                                    <li v-for="spec in specifications" v-bind:class="{active: $index === 0}">
-                                        <em>{{ spec.name }}</em>
-                                        <div class="list">
-                                            <template v-for="value in spec.values">
-                                                <span>
-                                                    <input v-on:click="checkSpecificationValue" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}" checked="{{ value.checked }}" data-specification="{{ spec.id }}">
-                                                    <label id="label-{{ value.id }}" for="specification-value-{{ value.id }}">{{ value.value }}</label>
-                                                </span>
-                                            </template>
-                                        </div>
-                                    </li>
-                                </ul>
+                            <div class="specifications-values" v-if="specifications.length > 0">
+                                <fieldset v-for="spec in specifications" v-bind:class="{active: $index === 0}">
+                                    <legend>{{ spec.name }}</legend>
+                                    <div class="list">
+                                        <template v-for="value in spec.values">
+                                            <span>
+                                                <input v-on:click="checkSpecificationValue" type="checkbox" id="specification-value-{{ value.id }}" name="specificationValues[]" value="{{ value.id }}" checked="{{ value.checked }}" data-specification="{{ spec.id }}">
+                                                <label id="label-{{ value.id }}" for="specification-value-{{ value.id }}">{{ value.value }}</label>
+                                            </span>
+                                        </template>
+                                    </div>
+                                </fieldset>
                                 <div class="grid-view" id="mai3-item-specification-values-combination-render">
                                     <table class="table table-bordered">
                                         <thead>

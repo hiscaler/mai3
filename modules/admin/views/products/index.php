@@ -44,6 +44,7 @@ $this->params['menus'] = [
                 'attribute' => 'ordering',
                 'contentOptions' => ['class' => 'ordering'],
             ],
+            'type.name',
             'category.name',
             'brand.name',
             [
