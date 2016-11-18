@@ -84,7 +84,7 @@ class ApiController extends \yii\rest\Controller
         $res = $db->createCommand('SELECT [[id]], [[name]] FROM {{%type}} WHERE id = :id', [':id' => (int) $id])->queryOne();
         if ($res) {
             // 品牌
-            $brands = $db->createCommand('SELECT [[id]], [[alias]], [[name]], [[icon_path]], [[description]] FROM {{%brand}} WHERE id IN (SELECT [[brand_id]] FROM {{%type_brand}} WHERE [[type_id]] = :typeId)', [':typeId' => $res['id']])->queryAll();
+            $brands = $db->createCommand('SELECT [[id]], [[alias]], [[name]], [[icon_path]], [[description]] FROM {{%brand}} WHERE id IN (SELECT [[brand_id]] FROM {{%type_brand}} WHERE [[type_id]] = :typeId) ORDER BY [[ordering]] ASC', [':typeId' => $res['id']])->queryAll();
             $res['brands'] = $brands;
 
             // 规格
@@ -96,7 +96,7 @@ class ApiController extends \yii\rest\Controller
                 $itemSpecificationValues = [];
             }
             $specifications = [];
-            $specificationsRawData = $db->createCommand('SELECT [[t.id]], [[t.name]], [[t.type]], [[t.ordering]], [[sv.id]] AS [[value_id]], [[sv.text]], [[sv.icon_path]] FROM {{%specification}} t LEFT JOIN {{%specification_value}} sv ON [[t.id]] = [[sv.specification_id]] WHERE [[t.id]] IN (SELECT [[specification_id]] FROM {{%type_specification}} WHERE [[type_id]] = :typeId)', [':typeId' => $res['id']])->queryAll();
+            $specificationsRawData = $db->createCommand('SELECT [[t.id]], [[t.name]], [[t.type]], [[t.ordering]], [[sv.id]] AS [[value_id]], [[sv.text]], [[sv.icon_path]] FROM {{%specification}} t LEFT JOIN {{%specification_value}} sv ON [[t.id]] = [[sv.specification_id]] WHERE [[t.id]] IN (SELECT [[specification_id]] FROM {{%type_specification}} WHERE [[type_id]] = :typeId) ORDER BY [[t.ordering]] ASC', [':typeId' => $res['id']])->queryAll();
             foreach ($specificationsRawData as $data) {
                 $checked = $itemSpecificationValues && in_array($data['value_id'], $itemSpecificationValues) ? true : false;
                 if (!isset($specifications[$data['id']])) {
