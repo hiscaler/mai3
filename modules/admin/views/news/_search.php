@@ -29,7 +29,7 @@ use yii\widgets\ActiveForm;
         <div class="entry">
             <?= $form->field($model, 'category_id')->dropDownList(\app\models\Category::getOwnerTree(\app\models\Lookup::getValue('system.models.category.type.news', 0)), ['prompt' => '', 'multiple' => 'multiple']) ?>
 
-            <?= $form->field($model, 'entityAttributeId')->dropDownList(\app\models\Label::getItems(true), ['prompt' => '', 'multiple' => 'multiple'])->label(Yii::t('app', 'Entity Attributes')) ?>
+            <?= $form->field($model, 'entityLabelId')->dropDownList(\app\models\Label::getItems(true), ['prompt' => '', 'multiple' => 'multiple'])->label(Yii::t('app', 'Entity Labels')) ?>
         </div>
 
         <div class="entry">
@@ -59,10 +59,10 @@ $baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
 $this->registerJsFile($baseUrl . '/chosen/chosen.jquery.min.js', ['depends' => 'yii\web\JqueryAsset']);
 $this->registerCssFile($baseUrl . '/chosen/chosen.min.css');
 $js = <<<EOT
-$('#newssearch-category_id, #newssearch-entityattributeid').chosen({
+$('#newssearch-category_id, #newssearch-entitylabelid').chosen({
     no_results_text: '无匹配节点：',
     placeholder_text_multiple: '点击此处，在空白框内输入或选择节点名称',
-    width: '80%',
+    width: '60%',
     search_contains: true,
     allow_single_deselect: true
 });
