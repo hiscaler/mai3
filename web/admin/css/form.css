@@ -94,7 +94,7 @@ form .form-group div label {
     padding-left: 0;
     margin-left: 0;
     font-weight: normal;
-    padding: 0 20px 0 0;
+    padding: 0 10px;
 }
 form .form-group label.item {
     width: 70px;
@@ -380,13 +380,6 @@ div.form .buttons {
 /*******************************************************************************
  * specifications form
  ******************************************************************************/
-.specifications-form #tab-values table caption .btn {
-    border-color: #E9E9E9;
-    border-bottom: none;
-    border-radius: 0 3px 0 0;
-    margin-left: -5px;
-    background-color: #F5F5F5;
-}
 .specifications-form #tab-values table select {
     width: 60px;
 }

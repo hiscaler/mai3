@@ -26,6 +26,10 @@
     overflow: hidden;
     white-space: nowrap;
 }
+.grid-view table.table th.wrap, .grid-view table.table td.wrap {
+    word-break: break-all; /* for ie */
+    white-space: normal; /* for chrome */
+}
 .grid-view table.table th.pointer, .grid-view table.table td.pointer {
     cursor: pointer;
 }
@@ -42,6 +46,34 @@
 }
 .grid-view table.table th.last {
     background: #F5F5F5;
+}
+.grid-view table.table caption .btn-circle {
+    margin: 7px 0 0 2px;
+    font-size: 18px;
+    position: absolute;
+    border: #ccc solid 1px;
+    width: 16px;
+    height: 16px;
+    line-height: 14px;
+    border-radius: 16px;
+    display: inline-block;
+    text-align: center;
+    background-color: #4362BF;
+    color: #FFF;
+    vertical-align: top;
+}
+.grid-view table.table caption .btn-circle:hover {
+    text-decoration: none;
+    font-weight: bold;
+}
+.grid-view table.table td label.circle {
+    display: inline;
+    float: left;
+    margin: 5px;
+    border-radius: 4px;
+    border: #CCC solid 1px;
+    padding: 3px 10px;
+    background-color: #F5F5F5;
 }
 .grid-view table.table th a {
     color: #7d8389;
@@ -218,6 +250,9 @@
 .grid-view table.table td.ordering {
     width: 40px;
     text-align: center;
+}
+.grid-view table.table td.ordering input {
+    width: 40px;
 }
 .grid-view table.table td.icon {
     width: 34px;
@@ -449,6 +484,12 @@
 .grid-view table.table th.buttons-8 { width: 160px; _widht: 170px; }
 .grid-view table.table th.buttons-9 { width: 180px; _widht: 190px; }
 .grid-view table.table th.buttons-10 { width: 200px; _widht: 210px; }
+/*******************************************************************************
+ * Specifications
+ ******************************************************************************/
+.grid-view table.table td.specification-type {
+    width: 80px;
+}
 /*******************************************************************************
  * 商品评论
  ******************************************************************************/

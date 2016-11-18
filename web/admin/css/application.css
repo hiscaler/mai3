@@ -789,27 +789,30 @@ ul.list li em {
 #mai3-item-specifications .specifications-values {
     display: block;
 }
-#mai3-item-specifications .specifications-values li {
+#mai3-item-specifications .specifications-values {
     display: block;
     border-bottom: #F5F5F5 solid 1px;
-    line-height: 36px;
     clear: both;
 }
-#mai3-item-specifications .specifications-values li.last {
-    border-bottom: none;
+#mai3-item-specifications .specifications-values fieldset {
+    margin: 4px 10px;
 }
-#mai3-item-specifications .specifications-values li em {
-    display: block;
-    width: 80px;
-    float: left;
-    font-weight: bold;
-    text-align: right;
+#mai3-item-specifications .specifications-values fieldset legend {
+    margin-left: 30px;
 }
-#mai3-item-specifications .specifications-values li span {
-    margin: 0 10px;
+#mai3-item-specifications .specifications-values fieldset .list {
+    padding: 0 2px;
+}
+#mai3-item-specifications .specifications-values span {
+    margin: 0 10px 5px 10px;
     border-radius: 4px;
     padding: 3px 6px;
     border: #ccc solid 1px;
+    display: inline-block;
+    word-wrap: break-word;
+}
+#mai3-item-specifications .specifications-values fieldset span input[type="checkbox"] {
+    vertical-align: middle;
 }
 
 /*******************************************************************************
