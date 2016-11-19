@@ -52,7 +52,7 @@ class LabelsController extends GlobalController
     public function actionIndex()
     {
         $searchModel = new LabelSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->getRequest()->queryParams);
 
         return $this->render('index', [
                 'searchModel' => $searchModel,
@@ -72,7 +72,7 @@ class LabelsController extends GlobalController
         $model->ordering = (int) $ordering;
         $model->loadDefaultValues();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             return $this->redirect(['create', 'ordering' => $model->ordering + 1]);
         } else {
             return $this->render('create', [
@@ -91,7 +91,7 @@ class LabelsController extends GlobalController
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('update', [
@@ -133,7 +133,7 @@ class LabelsController extends GlobalController
      */
     public function actionToggle()
     {
-        $id = Yii::$app->request->post('id');
+        $id = Yii::$app->getRequest()->post('id');
         $db = Yii::$app->getDb();
         $command = $db->createCommand('SELECT [[enabled]] FROM {{%label}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
         $command->bindValues([

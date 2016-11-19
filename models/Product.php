@@ -254,8 +254,9 @@ class Product extends BaseActiveRecord
         $userId = Yii::$app->getUser()->getId();
         $now = time();
         $db = Yii::$app->getDb();
+        $cmd = $db->createCommand();
         if ($insert) {
-            $db->createCommand()->insert('{{%product_content}}', [
+            $cmd->insert('{{%product_content}}', [
                 'product_id' => $this->id,
                 'content' => $this->content,
                 'created_at' => $now,
@@ -265,7 +266,7 @@ class Product extends BaseActiveRecord
             ])->execute();
         } else {
             if ($this->content != $this->_content) {
-                $db->createCommand()->update('{{%product_content}}', [
+                $cmd->update('{{%product_content}}', [
                     'content' => $this->content,
                     'updated_at' => $now,
                     'updated_by' => $userId
@@ -281,7 +282,7 @@ class Product extends BaseActiveRecord
                 $updateItemsColumns['brand_id'] = $this->brand_id;
             }
             if ($updateItemsColumns) {
-                $db->createCommand()->update('{{%item}}', $updateItemsColumns, ['prodcut_id' => $this->id])->execute();
+                $cmd->update('{{%item}}', $updateItemsColumns, ['prodcut_id' => $this->id])->execute();
             }
         }
 
@@ -331,15 +332,14 @@ class Product extends BaseActiveRecord
             }
 
             if ($batchInsertRows) {
-                $db->createCommand()->batchInsert('{{%product_image}}', array_keys($columns), $batchInsertRows)->execute();
+                $cmd->batchInsert('{{%product_image}}', array_keys($columns), $batchInsertRows)->execute();
             }
         }
 
         // SKU 处理
         $skuItems = $this->skuItems;
         $tenantId = Yad::getTenantId();
-        $cmd = $db->createCommand();
-        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item}} WHERE [[sn]] = :sn AND product_id = ' . $this->id);
+        $skuCmd = $db->createCommand('SELECT [[id]] FROM {{%item}} WHERE [[sn]] = :sn AND [[product_id]] = ' . $this->id);
         if (isset($skuItems['id']) && $skuItems['id']) {
             foreach ($skuItems['id'] as $key => $id) {
                 $id = (int) $id;
@@ -412,7 +412,7 @@ class Product extends BaseActiveRecord
         if (isset($propertyItems['id'], $propertyItems['value']) && $propertyItems['value'] && $propertyItems['id'] && count($propertyItems['id']) == count($propertyItems['value'])) {
             // @todo 需要优化
             if (!$insert) {
-                $db->createCommand()->delete('{{%product_property}}', ['product_id' => $this->id])->execute();
+                $cmd->delete('{{%product_property}}', ['product_id' => $this->id])->execute();
             }
             $propertyItems = array_combine($propertyItems['id'], $propertyItems['value']);
             $batchInsertRows = [];
@@ -425,13 +425,13 @@ class Product extends BaseActiveRecord
                 $batchInsertRows[] = array_values($columns);
             }
             if ($batchInsertRows) {
-                $db->createCommand()->batchInsert('{{%product_property}}', array_keys($columns), $batchInsertRows)->execute();
+                $cmd->batchInsert('{{%product_property}}', array_keys($columns), $batchInsertRows)->execute();
             }
         }
 
         // 特权用户处理
         $privilegeUsers = $this->privilegeUsers;
-        $db->createCommand()->delete('{{%product_privilege_user}}', ['product_id' => $this->id])->execute();
+        $cmd->delete('{{%product_privilege_user}}', ['product_id' => $this->id])->execute();
         if (!empty($privilegeUsers) && is_array($privilegeUsers)) {
             $batchInsertRows = [];
             foreach ($privilegeUsers as $userId) {
@@ -441,7 +441,7 @@ class Product extends BaseActiveRecord
                 ];
             }
             if ($batchInsertRows) {
-                $db->createCommand()->batchInsert('{{%product_privilege_user}}', ['product_id', 'user_id'], $batchInsertRows)->execute();
+                $cmd->batchInsert('{{%product_privilege_user}}', ['product_id', 'user_id'], $batchInsertRows)->execute();
             }
         }
     }
