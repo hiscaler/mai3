@@ -68,19 +68,19 @@ class TypeProperty extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => Yii::t('app', 'Id'),
             'type_id' => '商品类型 id',
-            'name' => '属性名称',
-            'return_type' => '返回值类型',
-            'input_method' => '录入方式',
-            'input_values' => '录入选项',
-            'input_default_value' => '默认值',
-            'ordering' => '排序',
-            'enabled' => '状态',
-            'created_at' => '添加时间',
-            'created_by' => '添加人',
-            'updated_at' => '更新时间',
-            'updated_by' => '更新人',
+            'name' => Yii::t('typeProperty', 'Name'),
+            'return_type' => Yii::t('typeProperty', 'Return Type'),
+            'input_method' => Yii::t('typeProperty', 'Input Method'),
+            'input_values' => Yii::t('TypeProperty', 'Input Values'),
+            'input_default_value' => Yii::t('TypeProperty', 'Input Default Value'),
+            'ordering' => Yii::t('app', 'Ordering'),
+            'enabled' => Yii::t('app', 'Enabled'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'created_by' => Yii::t('app', 'Created By'),
+            'updated_at' => Yii::t('app', 'Updated At'),
+            'updated_by' => Yii::t('app', 'Updated By'),
         ];
     }
 

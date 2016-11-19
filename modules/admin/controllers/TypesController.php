@@ -17,7 +17,7 @@ use yii\web\Response;
 
 /**
  * 商品类型管理
- * 
+ *
  * @author hiscaler <hiscaler@gmail.com>
  */
 class TypesController extends ShopController
@@ -53,7 +53,7 @@ class TypesController extends ShopController
     public function actionIndex()
     {
         $searchModel = new TypeSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->getRequest()->queryParams);
 
         return $this->render('index', [
                 'searchModel' => $searchModel,
@@ -85,7 +85,7 @@ class TypesController extends ShopController
         $model->brandIdList = $model->specificationIdList = [];
         $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
@@ -109,7 +109,7 @@ class TypesController extends ShopController
         $specifications = Specification::findAll(['tenant_id' => Yad::getTenantId()]);
         $model->specificationIdList = $db->createCommand('SELECT specification_id FROM {{%type_specification}} WHERE [[type_id]] = :typeId')->bindValue(':typeId', $model->id)->queryColumn();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
@@ -150,7 +150,7 @@ class TypesController extends ShopController
         $model = new TypeProperty();
         $model->type_id = $type['id'];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->getRequest()->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create-property', [
@@ -165,7 +165,7 @@ class TypesController extends ShopController
      */
     public function actionToggle()
     {
-        $id = Yii::$app->request->post('id');
+        $id = Yii::$app->getRequest()->post('id');
         $db = Yii::$app->getDb();
         $command = $db->createCommand('SELECT [[enabled]] FROM {{%type}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId');
         $command->bindValues([
@@ -213,7 +213,7 @@ class TypesController extends ShopController
         if (($model = Type::findOne($id)) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+            throw new NotFoundHttpException('The getRequest()ed page does not exist.');
         }
     }
 

@@ -143,6 +143,7 @@ class Type extends BaseActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
         $db = Yii::$app->getDb();
+        $cmd = $db->createCommand();
         $transaction = $db->beginTransaction();
         try {
             // 关联品牌处理
@@ -165,10 +166,10 @@ class Type extends BaseActiveRecord
                     foreach ($insertBrands as $brandId) {
                         $batchRows[] = [$this->id, $brandId];
                     }
-                    $db->createCommand()->batchInsert('{{%type_brand}}', ['type_id', 'brand_id'], $batchRows)->execute();
+                    $cmd->batchInsert('{{%type_brand}}', ['type_id', 'brand_id'], $batchRows)->execute();
                 }
                 if ($deleteBrands) {
-                    $db->createCommand()->delete('{{%type_brand}}', ['brand_id' => $deleteBrands])->execute();
+                    $cmd->delete('{{%type_brand}}', ['brand_id' => $deleteBrands])->execute();
                 }
             }
 
@@ -189,10 +190,10 @@ class Type extends BaseActiveRecord
                     foreach ($insertSpecifications as $specificationId) {
                         $batchRows[] = [$this->id, $specificationId];
                     }
-                    $db->createCommand()->batchInsert('{{%type_specification}}', ['type_id', 'specification_id'], $batchRows)->execute();
+                    $cmd->batchInsert('{{%type_specification}}', ['type_id', 'specification_id'], $batchRows)->execute();
                 }
                 if ($deleteSpecifications) {
-                    $db->createCommand()->delete('{{%type_specification}}', ['specification_id' => $deleteSpecifications])->execute();
+                    $cmd->delete('{{%type_specification}}', ['specification_id' => $deleteSpecifications])->execute();
                 }
             }
 

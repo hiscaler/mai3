@@ -8,36 +8,29 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="item-type-search">
+<div class="form-outside form-search form-layout-column" style="display: none">
+    <div class="type-search form">
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
+        <?php
+        $form = ActiveForm::begin([
+                'id' => 'form-type-search',
+                'action' => ['index'],
+                'method' => 'get',
+        ]);
+        ?>
 
-    <?= $form->field($model, 'id') ?>
+        <div class="entry">
+            <?= $form->field($model, 'name') ?>
 
-    <?= $form->field($model, 'name') ?>
+            <?= $form->field($model, 'enabled')->dropDownList(\app\models\Option::booleanOptions(), ['prompt' => '']) ?>
+        </div>
 
-    <?= $form->field($model, 'ordering') ?>
+        <div class="form-group buttons">
+            <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
+            <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
+        </div>
 
-    <?= $form->field($model, 'enabled') ?>
+        <?php ActiveForm::end(); ?>
 
-    <?= $form->field($model, 'tenant_id') ?>
-
-    <?php // echo $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'created_by') ?>
-
-    <?php // echo $form->field($model, 'updated_at') ?>
-
-    <?php // echo $form->field($model, 'updated_by') ?>
-
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

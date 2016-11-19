@@ -17,7 +17,7 @@ class TypeSearch extends Type
     public function rules()
     {
         return [
-            [['id', 'ordering', 'enabled'], 'integer'],
+            [['enabled'], 'integer'],
             [['name'], 'safe'],
         ];
     }
@@ -40,7 +40,7 @@ class TypeSearch extends Type
      */
     public function search($params)
     {
-        $query = Type::find();
+        $query = Type::find()->where(['tenant_id' => Yad::getTenantId()]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -60,7 +60,6 @@ class TypeSearch extends Type
         }
 
         $query->andFilterWhere([
-            'id' => $this->id,
             'enabled' => $this->enabled,
         ]);
 

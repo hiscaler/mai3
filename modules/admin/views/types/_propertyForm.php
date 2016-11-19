@@ -11,14 +11,14 @@ use yii\widgets\ActiveForm;
 <div class="type-property-form form-outside">
     <div class="form">
         <?php $form = ActiveForm::begin(); ?>
-        
+
         <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
         <?= $form->field($model, 'return_type')->dropDownList(\app\models\TypeProperty::returnTypeOptions()) ?>
 
         <?= $form->field($model, 'input_method')->dropDownList(\app\models\TypeProperty::inputMethodOptions()) ?>
 
-        <?= $form->field($model, 'input_values')->textarea() ?>
+        <?= $form->field($model, 'input_values')->textarea(['style' => 'width: 300px']) ?>
 
         <?= $form->field($model, 'input_default_value')->textInput(['maxlength' => true]) ?>
 
