@@ -42,7 +42,7 @@ class SpecificationSearch extends Specification
      */
     public function search($params)
     {
-        $query = Specification::find();
+        $query = Specification::find()->where(['tenant_id' => Yad::getTenantId()]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,

@@ -17,8 +17,13 @@ $this->params['menus'] = [
 ?>
 <div class="specifications-index">
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <?= $this->render('_search', ['model' => $searchModel]); ?>
 
+    <?php
+    yii\widgets\Pjax::begin([
+        'formSelector' => '#form-specifications-search',
+    ]);
+    ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
@@ -79,10 +84,12 @@ $this->params['menus'] = [
     ]);
     ?>
 
-</div>
+    <?php \app\modules\admin\components\JsBlock::begin() ?>
+        <script type="text/javascript">
+            yadjet.actions.toggle("table td.enabled-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
+        </script>
+    <?php \app\modules\admin\components\JsBlock::end() ?>
 
-<?php \app\modules\admin\components\JsBlock::begin() ?>
-    <script type="text/javascript">
-        yadjet.actions.toggle("table td.enabled-handler img", "<?= yii\helpers\Url::toRoute('toggle') ?>");
-    </script>
-<?php \app\modules\admin\components\JsBlock::end() ?>
+    <?php yii\widgets\Pjax::end(); ?>
+
+</div>

@@ -69,8 +69,8 @@ class Specification extends BaseActiveRecord
     public static function typeOptions()
     {
         return [
-            static::TYPE_TEXT => '文字',
-            static::TYPE_ICON => '图标',
+            static::TYPE_TEXT => Yii::t('specification', 'Text'),
+            static::TYPE_ICON => Yii::t('specification', 'Icon'),
         ];
     }
 
@@ -116,6 +116,7 @@ class Specification extends BaseActiveRecord
     {
         parent::afterSave($insert, $changedAttributes);
         $db = Yii::$app->getDb();
+        $cmd = $db->createCommand();
         $values = $this->valuesData;
         $tenantId = Yad::getTenantId();
         $now = time();
@@ -132,6 +133,7 @@ class Specification extends BaseActiveRecord
                 $insertValues[] = array_values($insertColumns);
             }
         } else {
+            $specificationValueCmd = $db->createCommand('SELECT [[text]], [[icon_path]], [[ordering]], [[enabled]] FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId AND [[specification_id]] = :specificationId');
             foreach ($values as $value) {
                 if (empty($value['text'])) {
                     continue;
@@ -140,7 +142,7 @@ class Specification extends BaseActiveRecord
                 $valueId = isset($value['id']) && $value['id'] ? $value['id'] : null;
                 if ($valueId) {
                     // Update
-                    $specificationValue = $db->createCommand('SELECT [[text]], [[icon_path]], [[ordering]], [[enabled]] FROM {{%specification_value}} WHERE [[id]] = :id AND [[tenant_id]] = :tenantId AND [[specification_id]] = :specificationId')->bindValues([':id' => $valueId, ':tenantId' => $tenantId, ':specificationId' => $this->id])->queryOne();
+                    $specificationValue = $specificationValueCmd->bindValues([':id' => $valueId, ':tenantId' => $tenantId, ':specificationId' => $this->id])->queryOne();
                     if ($specificationValue) {
                         if ($value['text'] != $specificationValue['text'] || $value['icon_path'] != $specificationValue['icon_path'] || $value['ordering'] != $specificationValue['ordering'] || $value['enabled'] != $specificationValue['enabled']) {
                             $updateColumns = [
@@ -159,7 +161,7 @@ class Specification extends BaseActiveRecord
                             if ($value['enabled'] != $specificationValue['enabled']) {
                                 $updateColumns['enabled'] = $value['enabled'];
                             }
-                            $db->createCommand()->update('{{%specification_value}}', $updateColumns, ['id' => $valueId, 'tenant_id' => $tenantId, 'specification_id' => $this->id])->execute();
+                            $cmd->update('{{%specification_value}}', $updateColumns, ['id' => $valueId, 'tenant_id' => $tenantId, 'specification_id' => $this->id])->execute();
                         }
                     }
                 } else {
@@ -170,7 +172,7 @@ class Specification extends BaseActiveRecord
             }
         }
         if ($insertValues) {
-            $db->createCommand()->batchInsert('{{%specification_value}}', array_keys($insertColumns), $insertValues)->execute();
+            $cmd->batchInsert('{{%specification_value}}', array_keys($insertColumns), $insertValues)->execute();
         }
     }
 
