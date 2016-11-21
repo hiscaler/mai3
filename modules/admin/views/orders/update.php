@@ -6,7 +6,7 @@ $this->title = Yii::t('app', 'Update {modelClass}: ', [
         'modelClass' => Yii::t('model', 'Order'),
     ]) . $model->sn;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('model', 'Order'), 'url' => ['index']];
-$this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
+$this->params['breadcrumbs'][] = ['label' => $model->sn, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
 <div class="order-update">
