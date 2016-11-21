@@ -38,7 +38,7 @@ $this->params['menus'] = [
             [
                 'attribute' => 'id',
                 'header' => '#',
-                'contentOptions' => ['class' => 'id'],
+                'contentOptions' => ['class' => 'serial-number']
             ],
             [
                 'attribute' => 'ordering',

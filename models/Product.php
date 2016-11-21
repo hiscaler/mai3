@@ -140,9 +140,12 @@ class Product extends BaseActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'category_id' => Yii::t('product', 'Category'),
-            'type_id' => Yii::t('product', 'Type'),
-            'brand_id' => Yii::t('product', 'Brand'),
+            'category_id' => Yii::t('category', 'Name'),
+            'category.name' => Yii::t('category', 'Name'),
+            'type_id' => Yii::t('type', 'Name'),
+            'type.name' => Yii::t('type', 'Name'),
+            'brand_id' => Yii::t('brand', 'Name'),
+            'brand.name' => Yii::t('brand', 'Name'),
             'sn' => Yii::t('product', 'Sn'),
             'name' => Yii::t('product', 'Name'),
             'market_price' => Yii::t('product', 'Market Price'),

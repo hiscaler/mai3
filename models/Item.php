@@ -70,8 +70,8 @@ class Item extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'product_id' => Yii::t('item', 'Product ID'),
-            'category_id' => Yii::t('product', 'Category'),
-            'brand_id' => Yii::t('product', 'Brand'),
+            'category_id' => Yii::t('category', 'Name'),
+            'brand_id' => Yii::t('brand', 'Name'),
             'sn' => Yii::t('item', 'Sn'),
             'name' => Yii::t('item', 'Name'),
             'market_price' => Yii::t('item', 'Market Price'),
