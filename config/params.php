@@ -8,13 +8,13 @@ return [
     ],
     'modules' => [
         /**
-          'app-models-Article' => [
-          'id' => 'articles', // 控制器名称（唯一）
-          'label' => 'Articles', //  需要翻译的文本（app.php）
-          'url' => ['/articles/index'], // 访问 URL
-          'activeConditions' => [], // 激活条件，填写控制器 id
-          'forceEmbed' => true, // 是否强制显示在控制面板中
-          ],
+        'app-models-Article' => [
+            'id' => 'articles', // 控制器名称（唯一）
+            'label' => 'Articles', //  需要翻译的文本（app.php）
+            'url' => ['/articles/index'], // 访问 URL
+            'activeConditions' => [], // 激活条件，填写控制器 id
+            'forceEmbed' => true, // 是否强制显示在控制面板中
+        ],
          */
         'System Manage' => [
             'app-models-Tenant' => [
