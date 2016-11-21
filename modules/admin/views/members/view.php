@@ -92,10 +92,10 @@ $this->params['menus'] = [
     <!-- // 扩展信息 -->
 
     <div id="panel-credits" class="tab-pane" style="display: none;">
-        <a href="<?= \yii\helpers\Url::toRoute(['add-credits', 'id' => $model['id']]) ?>">添加积分</a>
         <?php
         echo GridView::widget([
             'dataProvider' => $creditLogsDataProvider,
+            'caption' => yii\helpers\Html::a('+', ['add-credits', 'id' => $model['id']], ['class' => 'btn-circle']),
             'columns' => [
                 [
                     'class' => 'yii\grid\SerialColumn',
