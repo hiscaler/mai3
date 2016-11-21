@@ -90,10 +90,34 @@ class Category extends BaseActiveRecord
     /**
      * 生成数据缓存
      */
-    private function generateCache()
+    public static function generateCache($toTree = false, $tenantId = null)
     {
-        self::getRawItems(false);
-        self::getRawItems(true);
+        $tenantId = $tenantId ? : Yad::getTenantId();
+        $items = [];
+        $rawData = Yii::$app->getDb()->createCommand('SELECT [[id]], [[type]], [[alias]], [[name]], [[parent_id]], [[icon_path]], [[enabled]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId ORDER BY [[level]] ASC', [':tenantId' => $tenantId])->queryAll();
+        foreach ($rawData as $data) {
+            $items[$data['id']] = [
+                'id' => $data['id'],
+                'type' => $data['type'],
+                'alias' => $data['alias'],
+                'name' => $data['name'],
+                'parent' => $data['parent_id'],
+                'icon' => $data['icon_path'],
+                'enabled' => $data['enabled'] ? true : false,
+                'hasChildren' => false
+            ];
+            if ($data['parent_id'] && isset($items[$data['parent_id']])) {
+                $items[$data['parent_id']]['hasChildren'] = true;
+            }
+        }
+        $cache = Yii::$app->getCache();
+        $cache->set('__category_items_common_' . $tenantId, $items);
+        if ($toTree) {
+            $items = \yadjet\helpers\ArrayHelper::toTree($items, 'id', 'parent', 'children');
+            $cache->set('__category_items_tree_' . $tenantId, $items);
+        }
+
+        return $items;
     }
 
     /**
@@ -103,36 +127,15 @@ class Category extends BaseActiveRecord
      */
     private static function getRawItems($toTree = false, $tenantId = null)
     {
-        $key = '__category_getRawItems_' . $toTree;
+        $key = '__category_items';
+        $key = ($toTree ? '_tree_' : '_common_') . ($tenantId? : Yad::getTenantId());
         $cache = Yii::$app->getCache();
-        $cacheData = $cache->get($key);
-        if ($cacheData !== false) {
-            return $cacheData;
-        } else {
-            $items = [];
-            $rawData = Yii::$app->getDb()->createCommand('SELECT [[id]], [[type]], [[alias]], [[name]], [[parent_id]], [[icon_path]], [[enabled]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId ORDER BY [[level]] ASC', [':tenantId' => $tenantId ? : Yad::getTenantId()])->queryAll();
-            foreach ($rawData as $data) {
-                $items[$data['id']] = [
-                    'id' => $data['id'],
-                    'type' => $data['type'],
-                    'alias' => $data['alias'],
-                    'name' => $data['name'],
-                    'parent' => $data['parent_id'],
-                    'icon' => $data['icon_path'],
-                    'enabled' => $data['enabled'] ? true : false,
-                    'hasChildren' => false
-                ];
-                if ($data['parent_id'] && isset($items[$data['parent_id']])) {
-                    $items[$data['parent_id']]['hasChildren'] = true;
-                }
-            }
-            if ($toTree) {
-                $items = \yadjet\helpers\ArrayHelper::toTree($items, 'id', 'parent', 'children');
-            }
-            $cache->set($key, $items);
-
-            return $items;
+        $items = $cache->get($key);
+        if ($items === false) {
+            $items = self::generateCache($toTree, $tenantId);
         }
+
+        return $items;
     }
 
     private static function getRawItemsByType($type = 0, $all = false, $toTree = false)
@@ -145,6 +148,7 @@ class Category extends BaseActiveRecord
                 }
             }
         }
+
         return $items;
     }
 
@@ -315,13 +319,13 @@ class Category extends BaseActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
-        $this->generateCache();
+        self::generateCache();
     }
 
     public function afterDelete()
     {
         parent::afterDelete();
-        $this->generateCache();
+        self::generateCache();
     }
 
 }

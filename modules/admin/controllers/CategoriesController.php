@@ -138,6 +138,7 @@ class CategoriesController extends GlobalController
             $value = !$value;
             $now = time();
             $db->createCommand()->update('{{%category}}', ['enabled' => $value, 'updated_at' => $now, 'updated_by' => Yii::$app->getUser()->getId()], '[[id]] = :id', [':id' => (int) $id])->execute();
+            Category::generateCache();
             $responseData = [
                 'success' => true,
                 'data' => [
