@@ -7,7 +7,6 @@ use Yii;
 /**
  * This is the model class for table "{{%news_content}}".
  *
- * @property integer $id
  * @property integer $news_id
  * @property string $content
  */
@@ -20,6 +19,16 @@ class NewsContent extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%news_content}}';
+    }
+
+    public function getPrimaryKey($asArray = false)
+    {
+        static::primaryKey();
+    }
+
+    public static function primaryKey()
+    {
+        return ['news_id'];
     }
 
     /**
