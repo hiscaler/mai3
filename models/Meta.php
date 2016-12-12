@@ -367,6 +367,50 @@ class Meta extends \yii\db\ActiveRecord
         }
     }
 
+    /**
+     * 获取自定义字段内容值
+     * @param \yii\db\ActiveRecord $activeRecord
+     * @param integer $objectId
+     * @param array $keys 需要获取字段列表
+     * @return array
+     */
+    public static function getValues(\yii\db\ActiveRecord $activeRecord, $objectId, $keys = array())
+    {
+        $values = [];
+        foreach ($keys as $key) {
+            $values[$key] = [
+                'id' => null,
+                'label' => null,
+                'description' => null,
+                'value' => null,
+            ];
+        }
+
+        $where = [
+            'object_name' => strtr($activeRecord->tableName(), ['{{%' => '', '}}' => ''])
+        ];
+        if ($keys) {
+            $where['key'] = $keys;
+        }
+        $rawValues = (new \yii\db\Query())
+            ->select(['m.id', 'm.key', 'm.label', 'm.description', 't.value'])
+            ->from('{{%meta_value}} t')
+            ->leftJoin('{{%meta}} m', '[[t.meta_id]] = [[m.id]]')
+            ->where([ 't.object_id' => (int) $objectId,])
+            ->andWhere(['in', 't.meta_id', (new \yii\db\Query())->select(['id'])->from('{{%meta}}')->where($where)])
+            ->all();
+        foreach ($rawValues as $data) {
+            $values[$data['key']] = [
+                'id' => $data['id'],
+                'label' => $data['label'],
+                'description' => $data['description'],
+                'value' => $data['value'],
+            ];
+        }
+
+        return $values;
+    }
+
     public static function getValue($objectName, $key, $objectId)
     {
         $value = null;
