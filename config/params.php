@@ -332,7 +332,9 @@ return [
         ],
         'app-models-Product' => [
             'ordering',
-            'category_id',
+            'category.name',
+            'type.name',
+            'brand.name',
             'sn',
             'name',
             'market_price',

@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
                                     <tr>
                                         <th>排序</th>
                                         <th>规格值名称</th>
-                                        <th style="width: 120px">规格图标</th>
+                                        <th>规格图标</th>
                                         <th>激活</th>
                                         <th class="button-1 last"></th>
                                     </tr>
@@ -63,8 +63,8 @@ use yii\widgets\ActiveForm;
                                                     <?= $form->field($model, "valuesData[$index][id]", ['template' => '{input}'])->hiddenInput()->label(false) ?>
                                                     <?= $form->field($model, "valuesData[$index][ordering]", ['template' => '{input}'])->textInput(['maxlength' => true])->label(false) ?>
                                                 </td>
-                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => true])->label(false) ?></td>
-                                                <td><?= $form->field($model, "valuesData[$index][icon_path]", ['template' => '{input}'])->fileInput()->label(false) ?></td>
+                                                <td><?= $form->field($model, "valuesData[$index][text]", ['template' => '{input}'])->textInput(['maxlength' => true, 'style' => 'width: 96%'])->label(false) ?></td>
+                                                <td class="file-input"><?= $form->field($model, "valuesData[$index][icon_path]", ['template' => '{input}'])->fileInput(['class' => 'file-input'])->label(false) ?></td>
                                                 <td class="boolean">
                                                     <?= $form->field($model, "valuesData[$index][enabled]", ['template' => '{input}'])->checkbox([], false)->label(false) ?>
 

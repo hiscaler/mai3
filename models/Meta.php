@@ -175,7 +175,7 @@ class Meta extends \yii\db\ActiveRecord
                         }
                     }
                 } catch (Exception $exc) {
-                    
+
                 }
             }
         }
@@ -396,7 +396,7 @@ class Meta extends \yii\db\ActiveRecord
             ->select(['m.id', 'm.key', 'm.label', 'm.description', 't.value'])
             ->from('{{%meta_value}} t')
             ->leftJoin('{{%meta}} m', '[[t.meta_id]] = [[m.id]]')
-            ->where([ 't.object_id' => (int) $objectId,])
+            ->where(['t.object_id' => (int) $objectId])
             ->andWhere(['in', 't.meta_id', (new \yii\db\Query())->select(['id'])->from('{{%meta}}')->where($where)])
             ->all();
         foreach ($rawValues as $data) {

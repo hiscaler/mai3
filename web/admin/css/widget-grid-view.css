@@ -298,6 +298,9 @@
 .grid-view table.table td.category-name {
     width: 90px;
 }
+.grid-view table.table .file-input {
+    width: 180px;
+}
 /* Ad */
 .grid-view table.table td.ad-space-alias {
     width: 100px;
