@@ -45,7 +45,9 @@ class Category extends ActiveRecord
             'name',
             'parentId' => 'parent_id',
             'level',
-            'icon' => 'icon_path',
+            'icon' => function () {
+                return \app\modules\api\helpers\Util::fixStaticAssetUrl($this->icon_path);
+            },
             'description',
             'enabled',
             'ordering',
