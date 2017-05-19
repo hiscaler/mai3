@@ -37,8 +37,8 @@ class Brand extends ActiveRecord
             'id',
             'alias',
             'name',
-            'iconPath' => function () {
-                return $this->icon_path;
+            'icon' => function () {
+                return !empty($this->icon_path) ? \app\modules\api\helpers\Util::fixStaticAssetUrl($this->icon_path) : null;
             },
             'description',
             'ordering',
