@@ -2,6 +2,7 @@
 
 namespace app\modules\api\helpers;
 
+use Yii;
 use yii\helpers\Inflector;
 
 /**
@@ -141,6 +142,46 @@ class Util
         }
 
         return $result;
+    }
+
+    /**
+     * 返回修正图片等资源文件后的文本内容
+     * @param string $textContent
+     * @return string
+     */
+    private static function _fixAssetPath($textContent)
+    {
+        if (is_string($textContent) && !empty($textContent)) {
+            $urlPrefix = isset(Yii::$app->params['api']['assetResourceUrlPrefix']) ? rtrim(Yii::$app->params['api']['assetResourceUrlPrefix'], '/') : null;
+            $assetResourceUrlPrefixReplacePairs = isset(Yii::$app->params['api']['assetResourceUrlPrefixReplacePairs']) ? Yii::$app->params['api']['assetResourceUrlPrefixReplacePairs'] : [];
+            foreach ($assetResourceUrlPrefixReplacePairs as $key => $path) {
+                if ($path) {
+                    if (strncasecmp($path, 'http', 4) != 0) {
+                        // 前缀不是 http 开头
+                        if (strpos($path, '{assetResourceUrlPrefix}') !== false) {
+                            $assetResourceUrlPrefixReplacePairs[$key] = str_replace('{assetResourceUrlPrefix}', $urlPrefix, $path);
+                        }
+                    }
+                } else {
+                    // $path is null
+                    $assetResourceUrlPrefixReplacePairs[$key] = $urlPrefix;
+                }
+            }
+
+            return $assetResourceUrlPrefixReplacePairs ? strtr($textContent, $assetResourceUrlPrefixReplacePairs) : $textContent;
+        } else {
+            return $textContent;
+        }
+    }
+
+    /**
+     * 处理图片、视频等静态资源的 URL 地址
+     * @param string $staticAssetUrl
+     * @return string
+     */
+    public static function fixStaticAssetUrl($staticAssetUrl)
+    {
+        return static::_fixAssetPath($staticAssetUrl);
     }
 
 }
