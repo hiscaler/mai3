@@ -8,13 +8,18 @@ namespace app\modules\api\controllers;
 class DefaultController extends Controller
 {
 
+    public $layout = false;
+
     /**
-     * Renders the index view for the module
-     * @return string
+     * @inheritdoc
      */
-    public function actionIndex()
+    public function actions()
     {
-        return $this->render('index');
+        return [
+            'error' => [
+                'class' => 'yii\web\ErrorAction',
+            ],
+        ];
     }
 
 }
