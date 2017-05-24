@@ -2,6 +2,8 @@
 
 namespace app\modules\api\models;
 
+use app\modules\api\helpers\Util;
+use Yii;
 use yii\db\ActiveRecord;
 
 /**
@@ -46,12 +48,15 @@ class Category extends ActiveRecord
             'parentId' => 'parent_id',
             'level',
             'icon' => function () {
-                return \app\modules\api\helpers\Util::fixStaticAssetUrl($this->icon_path);
+                return Util::fixStaticAssetUrl($this->icon_path);
             },
             'description',
             'enabled',
             'ordering',
             'createdAt' => 'created_at',
+            'createdAtPretty' => function () {
+                return Yii::$app->getFormatter()->asDatetime($this->created_at);
+            },
             'createdBy' => 'created_by',
             'updatedAt' => 'updated_at',
             'updatedBy' => 'updated_by',
