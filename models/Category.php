@@ -92,7 +92,7 @@ class Category extends BaseActiveRecord
      */
     public static function generateCache($toTree = false, $tenantId = null)
     {
-        $tenantId = $tenantId ? : Yad::getTenantId();
+        $tenantId = $tenantId ?: Yad::getTenantId();
         $items = [];
         $rawData = Yii::$app->getDb()->createCommand('SELECT [[id]], [[type]], [[alias]], [[name]], [[parent_id]], [[icon_path]], [[enabled]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId ORDER BY [[level]] ASC', [':tenantId' => $tenantId])->queryAll();
         foreach ($rawData as $data) {
@@ -128,7 +128,7 @@ class Category extends BaseActiveRecord
     private static function getRawItems($toTree = false, $tenantId = null)
     {
         $key = '__category_items';
-        $key = ($toTree ? '_tree_' : '_common_') . ($tenantId? : Yad::getTenantId());
+        $key = ($toTree ? '_tree_' : '_common_') . ($tenantId ?: Yad::getTenantId());
         $cache = Yii::$app->getCache();
         $items = $cache->get($key);
         if ($items === false) {
@@ -193,7 +193,7 @@ class Category extends BaseActiveRecord
             $items[] = $prompt;
         }
         $rawData = self::getRawItemsByType($type, $all, false);
-        $ownerCategoryIds = Yii::$app->getDb()->createCommand('SELECT [[category_id]] FROM {{%user_auth_category}} WHERE [[user_id]] = :userId', [':userId' => $userId ? : Yii::$app->getUser()->getId()])->queryColumn();
+        $ownerCategoryIds = Yii::$app->getDb()->createCommand('SELECT [[category_id]] FROM {{%user_auth_category}} WHERE [[user_id]] = :userId', [':userId' => $userId ?: Yii::$app->getUser()->getId()])->queryColumn();
         if ($ownerCategoryIds) {
             foreach ($rawData as $key => $data) {
                 if (!in_array($data['id'], $ownerCategoryIds)) {
