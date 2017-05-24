@@ -42,7 +42,7 @@ class ProductSearch extends Product
      */
     public function search($params)
     {
-        $query = Product::find()->with(['category']);
+        $query = Product::find()->with(['category'])->where(['tenant_id' => Yad::getTenantId()]);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
