@@ -91,7 +91,7 @@ class Type extends BaseActiveRecord
 
     public static function getList()
     {
-        return (new Query())->select('name')->from(static::tableName())->indexBy('id')->column();
+        return (new Query())->select('name')->from(static::tableName())->where(['tenant_id' => Yad::getTenantId()])->indexBy('id')->column();
     }
 
     /**
