@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
                                     <tr>
                                         <th>排序</th>
                                         <th>规格值名称</th>
-                                        <th>规格图标</th>
+                                        <th style="width: 120px">规格图标</th>
                                         <th>激活</th>
                                         <th class="button-1 last"></th>
                                     </tr>
