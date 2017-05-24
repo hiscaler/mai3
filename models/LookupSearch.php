@@ -9,12 +9,14 @@ use yii\data\ActiveDataProvider;
 /**
  * LookupSearch represents the model behind the search form about `app\models\Lookup`.
  */
-class LookupSearch extends Lookup {
+class LookupSearch extends Lookup
+{
 
     /**
      * @inheritdoc
      */
-    public function rules() {
+    public function rules()
+    {
         return [
             [['enabled'], 'integer'],
             [['label', 'description', 'return_type'], 'safe'],
@@ -24,7 +26,8 @@ class LookupSearch extends Lookup {
     /**
      * @inheritdoc
      */
-    public function scenarios() {
+    public function scenarios()
+    {
         // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
@@ -36,8 +39,9 @@ class LookupSearch extends Lookup {
      *
      * @return ActiveDataProvider
      */
-    public function search($params) {
-        $query = Lookup::find()->with(['creater', 'updater'])->asArray(true);
+    public function search($params)
+    {
+        $query = Lookup::find()->where(['tenant_id' => Yad::getTenantId()])->with(['creater', 'updater'])->asArray(true);
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -58,7 +62,7 @@ class LookupSearch extends Lookup {
         ]);
 
         $query->andFilterWhere(['like', 'label', $this->label])
-                ->andFilterWhere(['like', 'description', $this->description]);
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

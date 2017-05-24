@@ -75,7 +75,7 @@ class LookupsController extends Controller
         }
 
         $items = [];
-        $rawItems = $db->createCommand('SELECT * FROM {{%lookup}} WHERE [[type]] = :type', [':type' => Lookup::TYPE_PUBLIC])->queryAll();
+        $rawItems = $db->createCommand('SELECT * FROM {{%lookup}} WHERE [[type]] = :type AND [[tenant_id]] = :tenantId', [':type' => Lookup::TYPE_PUBLIC, ':tenantId' => \app\models\Yad::getTenantId()])->queryAll();
         foreach ($rawItems as $item) {
             $key = $item['group'];
             if (!isset($items[$key])) {
