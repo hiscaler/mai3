@@ -7,7 +7,7 @@ use Yii;
 /**
  * api module definition class
  */
-class Module extends \yii\base\Module
+class Module extends \yii\base\Module implements \yii\base\BootstrapInterface
 {
 
     /**
@@ -21,25 +21,14 @@ class Module extends \yii\base\Module
     public function init()
     {
         parent::init();
+        Yii::configure($this, require(__DIR__ . '/config/main.php'));
+
         Yii::$app->setComponents([
             'formatter' => [
                 'class' => 'app\modules\api\extensions\Formatter',
-                'dateFormat' => 'php:Y-n-j',
-                'datetimeFormat' => 'php:Y-n-j h:i:s',
+                'dateFormat' => 'php:Y-m-d',
+                'datetimeFormat' => 'php:Y-m-d h:i:s',
                 'nullDisplay' => '',
-            ],
-            'urlManager' => [
-                'class' => 'yii\web\urlManager',
-                'enablePrettyUrl' => true,
-                'enableStrictParsing' => false,
-                'showScriptName' => true,
-                'rules' => [
-                    'class' => 'yii\rest\UrlRule',
-                    // Client
-                    'GET,HEAD brands' => 'brand/index',
-                    'GET,HEAD brands/list' => 'brand/list',
-                    'GET,HEAD brands/<id:\d+>' => 'brand/view',
-                ],
             ],
             'request' => [
                 'class' => '\yii\web\Request',
@@ -77,7 +66,16 @@ class Module extends \yii\base\Module
                 'class' => '\yii\web\errorHandler',
                 'errorAction' => 'default/error',
             ],
+            'i18n' => null,
+            'assetManager' => null,
         ]);
+
+        \Yii::$app->getErrorHandler()->errorAction = 'api/default/error';
+    }
+
+    public function bootstrap($app)
+    {
+        \Yii::$app->urlManager->addRules(require(__DIR__ . '/config/rules.php'), false);
     }
 
 }
