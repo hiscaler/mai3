@@ -80,6 +80,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 类别选项
+     *
      * @return array
      */
     public static function typeOptions()
@@ -92,7 +93,7 @@ class Category extends BaseActiveRecord
      */
     public static function generateCache($toTree = false, $tenantId = null)
     {
-        $tenantId = $tenantId ? : Yad::getTenantId();
+        $tenantId = $tenantId ?: Yad::getTenantId();
         $items = [];
         $rawData = Yii::$app->getDb()->createCommand('SELECT [[id]], [[type]], [[alias]], [[name]], [[parent_id]], [[icon_path]], [[enabled]] FROM {{%category}} WHERE [[tenant_id]] = :tenantId ORDER BY [[level]] ASC', [':tenantId' => $tenantId])->queryAll();
         foreach ($rawData as $data) {
@@ -122,13 +123,14 @@ class Category extends BaseActiveRecord
 
     /**
      * 处理并生成分类数据缓存，供后续代码调取
+     *
      * @param boolean $toTree
      * @return array
      */
     private static function getRawItems($toTree = false, $tenantId = null)
     {
         $key = '__category_items';
-        $key = ($toTree ? '_tree_' : '_common_') . ($tenantId? : Yad::getTenantId());
+        $key = ($toTree ? '_tree_' : '_common_') . ($tenantId ?: Yad::getTenantId());
         $cache = Yii::$app->getCache();
         $items = $cache->get($key);
         if ($items === false) {
@@ -193,7 +195,7 @@ class Category extends BaseActiveRecord
             $items[] = $prompt;
         }
         $rawData = self::getRawItemsByType($type, $all, false);
-        $ownerCategoryIds = Yii::$app->getDb()->createCommand('SELECT [[category_id]] FROM {{%user_auth_category}} WHERE [[user_id]] = :userId', [':userId' => $userId ? : Yii::$app->getUser()->getId()])->queryColumn();
+        $ownerCategoryIds = Yii::$app->getDb()->createCommand('SELECT [[category_id]] FROM {{%user_auth_category}} WHERE [[user_id]] = :userId', [':userId' => $userId ?: Yii::$app->getUser()->getId()])->queryColumn();
         if ($ownerCategoryIds) {
             foreach ($rawData as $key => $data) {
                 if (!in_array($data['id'], $ownerCategoryIds)) {
@@ -231,6 +233,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 获取所有父节点数据
+     *
      * @param mixed|integer $id
      * @return array
      */
@@ -248,17 +251,20 @@ class Category extends BaseActiveRecord
 
     /**
      * 判断是否有子节点
+     *
      * @param integer $id
      * @return boolean
      */
     private static function hasChildren($id)
     {
         $rawData = self::getRawItems();
+
         return isset($rawData[$id]) && $rawData[$id]['hasChildren'];
     }
 
     /**
      * 获取所有子节点数据
+     *
      * @param mixed|integer $parent
      * @return array
      */
@@ -285,6 +291,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 获取所有子节点 id 集合
+     *
      * @param mixed|integer $parent
      * @return array
      */

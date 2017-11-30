@@ -3,7 +3,7 @@
 $params = require(__DIR__ . '/params.php');
 
 $config = [
- 'id' => 'api',
+    'id' => 'api',
     'components' => [
         'request' => [
             'class' => 'yii\web\Request',

@@ -150,6 +150,7 @@ class Ad extends BaseActiveRecord
 
     /**
      * Space relational
+     *
      * @return ActiveQueryInterface the relational query object.
      */
     public function getSpace()

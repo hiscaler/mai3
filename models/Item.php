@@ -94,6 +94,7 @@ class Item extends \yii\db\ActiveRecord
 
     /**
      * 所属商品
+     *
      * @return \yii\db\ActiveRecord
      */
     public function getProduct()
@@ -103,6 +104,7 @@ class Item extends \yii\db\ActiveRecord
 
     /**
      * 评论
+     *
      * @return ActiveRecord
      */
     public function getComments()
@@ -112,6 +114,7 @@ class Item extends \yii\db\ActiveRecord
 
     /**
      * 销售情况
+     *
      * @return ActiveRecord
      */
     public function getSales()

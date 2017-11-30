@@ -123,6 +123,7 @@ class Slide extends \yii\db\ActiveRecord
     public function getUrl_open_target_text()
     {
         $options = self::urlOpenTargetOptions();
+
         return isset($options[$this->url_open_target]) ? $options[$this->url_open_target] : null;
     }
 
@@ -143,6 +144,7 @@ class Slide extends \yii\db\ActiveRecord
                 $this->updated_at = time();
                 $this->updated_by = Yii::$app->getUser()->getId();
             }
+
             return true;
         } else {
             return false;

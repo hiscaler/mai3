@@ -97,6 +97,7 @@ class Util
      * 清理传入的整型值（非数字和零将全部清理掉）
      *
      * 0,1,2,3,3,abc 返回 1,2,3
+     *
      * @param string $string
      * @return array
      */
@@ -146,6 +147,7 @@ class Util
 
     /**
      * 返回修正图片等资源文件后的文本内容
+     *
      * @param string $textContent
      * @return string
      */
@@ -176,6 +178,7 @@ class Util
 
     /**
      * 处理图片、视频等静态资源的 URL 地址
+     *
      * @param string $staticAssetUrl
      * @return string
      */

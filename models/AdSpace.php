@@ -93,6 +93,7 @@ class AdSpace extends BaseActiveRecord
             if ($insert) {
                 $this->ads_count = 0;
             }
+
             return true;
         } else {
             return false;

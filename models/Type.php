@@ -23,18 +23,21 @@ class Type extends BaseActiveRecord
 
     /**
      * 关联品牌
+     *
      * @var array
      */
     public $brandIdList;
 
     /**
      * 关联规格
+     *
      * @var array
      */
     public $specificationIdList;
 
     /**
      * 自定义属性
+     *
      * @var array
      */
     public $propertiesList;
@@ -96,6 +99,7 @@ class Type extends BaseActiveRecord
 
     /**
      * 获取类型关联数据
+     *
      * @param string $id
      * @return array
      */

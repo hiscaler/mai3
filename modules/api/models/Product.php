@@ -79,6 +79,7 @@ class Product extends ActiveRecord
 
     /**
      * 所属分类
+     *
      * @return ActiveRecord
      */
     public function getCategory()
@@ -88,6 +89,7 @@ class Product extends ActiveRecord
 
     /**
      * 所属类型
+     *
      * @return ActiveRecord
      */
     public function getType()
@@ -97,6 +99,7 @@ class Product extends ActiveRecord
 
     /**
      * 所属品牌
+     *
      * @return ActiveRecord
      */
     public function getBrand()
@@ -106,6 +109,7 @@ class Product extends ActiveRecord
 
     /**
      * 商品图片
+     *
      * @return ActiveRecord
      */
     public function getImages()
@@ -115,6 +119,7 @@ class Product extends ActiveRecord
 
     /**
      * 商品单品
+     *
      * @return array
      */
     public function getItems()

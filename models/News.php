@@ -131,17 +131,20 @@ class News extends BaseActiveRecord
 
     /**
      * 保存资讯正文内容
+     *
      * @param ActiveReocrd $newsContent
      * @return boolean
      */
     public function saveContent($newsContent)
     {
         $newsContent->news_id = $this->id;
+
         return $newsContent->save();
     }
 
     /**
      * 处理正文内容中的图片，如果没有上传附件图片并且设定了图片的获取位置才会进行解析操作
+     *
      * @param ActiveRecord $model
      */
     public function processPicturePath($model)
@@ -152,7 +155,7 @@ class News extends BaseActiveRecord
                 Yii::$app->getDb()->createCommand()->update('{{%news}}', [
                     'is_picture_news' => Constant::BOOLEAN_TRUE,
                     'picture_path' => $picturePath,
-                    ], '[[id]] = :id', [':id' => $model->id])->execute();
+                ], '[[id]] = :id', [':id' => $model->id])->execute();
             }
         }
     }

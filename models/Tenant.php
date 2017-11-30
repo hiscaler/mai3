@@ -80,21 +80,23 @@ class Tenant extends BaseActiveRecord
 
     /**
      * 管理用户
+     *
      * @return array
      */
     public function getUsers()
     {
         return (new Query())
-                ->select(['u.id', 'u.username', 'u.nickname', 'u.email', 'u.status', 't.enabled', 't.role', 'tug.name AS group_name'])
-                ->from('{{%tenant_user}} t')
-                ->leftJoin('{{%user}} u', '[[t.user_id]] = [[u.id]]')
-                ->leftJoin('{{%tenant_user_group}} tug', '[[t.user_group_id]] = [[tug.id]]')
-                ->where(['t.tenant_id' => $this->id])
-                ->all();
+            ->select(['u.id', 'u.username', 'u.nickname', 'u.email', 'u.status', 't.enabled', 't.role', 'tug.name AS group_name'])
+            ->from('{{%tenant_user}} t')
+            ->leftJoin('{{%user}} u', '[[t.user_id]] = [[u.id]]')
+            ->leftJoin('{{%tenant_user_group}} tug', '[[t.user_group_id]] = [[tug.id]]')
+            ->where(['t.tenant_id' => $this->id])
+            ->all();
     }
 
     /**
      * 获取站点定义的 access token
+     *
      * @return ActiveRecord
      */
     public function getAccessTokens()
@@ -104,6 +106,7 @@ class Tenant extends BaseActiveRecord
 
     /**
      * 获取租赁站点管理用户分组
+     *
      * @param integer $tenantId
      * @return array
      */
@@ -127,6 +130,7 @@ class Tenant extends BaseActiveRecord
 
     /**
      * 获取租赁站点管理用户
+     *
      * @return array
      */
     public static function users()
@@ -147,6 +151,7 @@ class Tenant extends BaseActiveRecord
 
     /**
      * 租赁站点定义的审核流程规则
+     *
      * @return array
      */
     public static function workflowRules($tenantId = null)

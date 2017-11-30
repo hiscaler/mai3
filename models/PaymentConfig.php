@@ -72,6 +72,7 @@ class PaymentConfig extends BaseActiveRecord
 
     /**
      * 支付方式
+     *
      * @return array
      */
     public static function keyOptions()
@@ -87,7 +88,7 @@ class PaymentConfig extends BaseActiveRecord
 
     /**
      * 检测支付配置是否有效
-     * 
+     *
      * @param string $key
      * @return boolean
      */

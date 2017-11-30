@@ -75,7 +75,7 @@ class DownloadSearch extends Download
             'deleted_by' => $this->deleted_by,
         ]);
 
-        $query->andFilterWhere([ 'like', 'title', $this->title]);
+        $query->andFilterWhere(['like', 'title', $this->title]);
 
         return $dataProvider;
     }

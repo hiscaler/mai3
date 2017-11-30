@@ -154,6 +154,7 @@ class Download extends \yii\db\ActiveRecord
 
     /**
      * 地址类型
+     *
      * @return array
      */
     public static function pathTypeOptions()
