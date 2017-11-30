@@ -108,6 +108,7 @@ class BrandController extends Controller
         if ($model === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+
         return $model;
     }
 

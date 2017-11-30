@@ -115,6 +115,7 @@ class Lookup extends BaseActiveRecord
 
     /**
      * 分组选项
+     *
      * @return array
      */
     public static function getGroupOptions()
@@ -128,6 +129,7 @@ class Lookup extends BaseActiveRecord
 
     /**
      * 分组名称
+     *
      * @return string|mixed
      */
     public function getGroup_text()
@@ -167,6 +169,7 @@ class Lookup extends BaseActiveRecord
 
     /**
      * 刷新缓存
+     *
      * @return array
      */
     public static function refreshCache()
@@ -207,11 +210,13 @@ class Lookup extends BaseActiveRecord
         }
 
         Yii::$app->getCache()->set('cache.model.lookup.refresh-cache', $keyValues);
+
         return $keyValues;
     }
 
     /**
      * 根据设定的标签获取值
+     *
      * @param string $key
      * @param string $defaultValue
      * @return mixed

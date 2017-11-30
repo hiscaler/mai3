@@ -95,8 +95,9 @@ class ProductController extends Controller
     /**
      * 详情
      *
-     * @param integer $id
-     * @return  ActiveQuery
+     * @param $id
+     * @return array|null|\yii\db\ActiveRecord
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
@@ -108,6 +109,7 @@ class ProductController extends Controller
         if ($model === null) {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+
         return $model;
     }
 
