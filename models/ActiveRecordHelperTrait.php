@@ -9,6 +9,7 @@ trait ActiveRecordHelperTrait
 
     /**
      * `app\model\Post` To `app-model-Post`
+     *
      * @param string $className
      * @return string
      */
@@ -17,11 +18,13 @@ trait ActiveRecordHelperTrait
         if ($className === null) {
             $className = static::className();
         }
+
         return str_replace('\\', '-', $className);
     }
 
     /**
      * `app-model-Post` To `app\model\Post`
+     *
      * @param string $id
      * @return string
      */

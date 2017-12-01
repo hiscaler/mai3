@@ -12,12 +12,14 @@ class Member extends User
 
     /**
      * 用户类型
+     *
      * @var integer
      */
     public $type = self::TYPE_MEMBER;
 
     /**
      * 用户推荐码
+     *
      * @var string
      */
     public $referral;
@@ -35,7 +37,7 @@ class Member extends User
                 $referral = trim($this->referral);
                 if (!empty($referral)) {
                     $userId = Yii::$app->getDb()->createCommand('SELECT [[id]] FROM {{%user}} WHERE [[referral_code]] = :referralCode', [':referralCode' => $referral])->queryScalar();
-                    $this->referral_user_id = $userId ? : 0;
+                    $this->referral_user_id = $userId ?: 0;
                 }
             }
 

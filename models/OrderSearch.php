@@ -15,6 +15,7 @@ class OrderSearch extends Order
 
     /**
      * 下单人
+     *
      * @var string
      */
     public $username;

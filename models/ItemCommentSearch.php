@@ -16,6 +16,7 @@ class ItemCommentSearch extends ItemComment
 
     /**
      * 单品品名
+     *
      * @var string
      */
     public $item_name;

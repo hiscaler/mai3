@@ -19,6 +19,7 @@ class Option
 
     /**
      * Boolean options
+     *
      * @return array
      */
     public static function booleanOptions()
@@ -31,6 +32,7 @@ class Option
 
     /**
      * 排序下拉列表框数据
+     *
      * @param integer $start
      * @param integer $max
      * @return array
@@ -41,11 +43,13 @@ class Option
         for ($i = $start; $i <= $max; $i++) {
             $options[$i] = $i;
         }
+
         return $options;
     }
 
     /**
      * Data status values
+     *
      * @return array
      */
     public static function statusOptions()
@@ -69,11 +73,13 @@ class Option
                 $options[$modelName] = Yii::t('app', $item['label']);
             }
         }
+
         return $options;
     }
 
     /**
      * 模块列表
+     *
      * @param boolean $all // 是否返回所有模块
      * @return array
      */

@@ -88,6 +88,7 @@ class Specification extends BaseActiveRecord
 
     /**
      * 获取商品规格列表数据
+     *
      * @param boolean $all
      * @return array
      */

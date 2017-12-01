@@ -60,6 +60,7 @@ class Label extends BaseActiveRecord
 
     /**
      * 获取自定义属性列表
+     *
      * @param boolean $all // 是否查询出所有数据
      * @param boolean $group // 是否分组
      * @return array
@@ -91,6 +92,7 @@ class Label extends BaseActiveRecord
 
     /**
      * 根据实体编号和实体名称获取关联的自定义属性列表
+     *
      * @param integer $entityId
      * @param string $entityName
      * @return array
@@ -111,6 +113,7 @@ class Label extends BaseActiveRecord
 
     /**
      * 根据实体编号和实体名称获取关联的自定义属性内容（文本）
+     *
      * @param integer $entityId
      * @param string $entityName
      * @return string
@@ -127,6 +130,7 @@ class Label extends BaseActiveRecord
 
     /**
      * 根据实体编号和实体名称获取关联的自定义属性编号列表
+     *
      * @param integer $entityId
      * @param string $entityName
      * @return array
@@ -138,6 +142,7 @@ class Label extends BaseActiveRecord
 
     /**
      * 根据自定义属性 id 和 模型名称获取关联的数据 id
+     *
      * @param integer $labelId
      * @param string $entityName
      * @return array

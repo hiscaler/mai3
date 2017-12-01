@@ -2,19 +2,19 @@
 
 return [
     'adminEmail' => 'admin@example.com',
-    'user.passwordResetTokenExpire' => 1800, // ÃÜÂëÖØÖÃÓÐÐ§Ê±¼ä
+    'user.passwordResetTokenExpire' => 1800, // å¯†ç é‡ç½®æœ‰æ•ˆæ—¶é—´
     'fromMailAddress' => [
         'admin@example.com' => 'you name',
     ],
     'modules' => [
         /**
-        'app-models-Article' => [
-            'id' => 'articles', // ¿ØÖÆÆ÷Ãû³Æ£¨Î¨Ò»£©
-            'label' => 'Articles', //  ÐèÒª·­ÒëµÄÎÄ±¾£¨app.php£©
-            'url' => ['/articles/index'], // ·ÃÎÊ URL
-            'activeConditions' => [], // ¼¤»îÌõ¼þ£¬ÌîÐ´¿ØÖÆÆ÷ id
-            'forceEmbed' => true, // ÊÇ·ñÇ¿ÖÆÏÔÊ¾ÔÚ¿ØÖÆÃæ°åÖÐ
-        ],
+          'app-models-Article' => [
+          'id' => 'articles', // æŽ§åˆ¶å™¨åç§°ï¼ˆå”¯ä¸€ï¼‰
+          'label' => 'Articles', //  éœ€è¦ç¿»è¯‘çš„æ–‡æœ¬ï¼ˆapp.phpï¼‰
+          'url' => ['/articles/index'], // è®¿é—® URL
+          'activeConditions' => [], // æ¿€æ´»æ¡ä»¶ï¼Œå¡«å†™æŽ§åˆ¶å™¨ id
+          'forceEmbed' => true, // æ˜¯å¦å¼ºåˆ¶æ˜¾ç¤ºåœ¨æŽ§åˆ¶é¢æ¿ä¸­
+          ],
          */
         'System Manage' => [
             'app-models-Tenant' => [
@@ -376,4 +376,11 @@ return [
             'deleted_at'
         ]
     ],
+    'api' => [
+        'dbCacheTimes' => 360, // æ•°æ®åº“ç¼“å­˜æ—¶é—´ï¼ˆç§’ï¼‰0 è¡¨ç¤ºæ°¸ä¹…ç¼“å­˜ï¼Œnull è¡¨ç¤ºç¦æ­¢ç¼“å­˜
+        'assetResourceUrlPrefix' => '', // é™æ€èµ„æº URLï¼ˆæ¯”å¦‚ï¼šhttp://www.example.comï¼‰
+        'assetResourceUrlPrefixReplacePairs' => [
+            '/uploads/' => '{assetResourceUrlPrefix}/uploads/'
+        ]
+    ]
 ];

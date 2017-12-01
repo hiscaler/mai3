@@ -58,6 +58,7 @@ class UserGroup extends \yii\db\ActiveRecord
 
     /**
      * 用户积分最大值与最小值比较
+     *
      * @param string $attribute
      * @param array $params
      */
@@ -97,6 +98,7 @@ class UserGroup extends \yii\db\ActiveRecord
 
     /**
      * 用户组
+     *
      * @return array
      */
     public static function userGroupOptions()
@@ -106,6 +108,7 @@ class UserGroup extends \yii\db\ActiveRecord
 
     /**
      * 系统组
+     *
      * @return array
      */
     public static function systemGroupOptions()

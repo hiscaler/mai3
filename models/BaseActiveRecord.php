@@ -39,6 +39,7 @@ class BaseActiveRecord extends ActiveRecord
 
     /**
      * `app\model\Post` To `app-model-Post`
+     *
      * @param string $className
      * @return string
      */
@@ -48,11 +49,13 @@ class BaseActiveRecord extends ActiveRecord
         if ($className === null) {
             $className = static::className();
         }
+
         return str_replace('\\', '-', $className);
     }
 
     /**
      * `app-model-Post` To `app\model\Post`
+     *
      * @param string $id
      * @return string
      */
@@ -127,20 +130,22 @@ class BaseActiveRecord extends ActiveRecord
 
     /**
      * 数据关联的推送位
+     *
      * @return ActiveRecord
      */
     public function getRelatedLabels()
     {
         return $this->hasMany(Label::className(), ['id' => 'label_id'])
-                ->select(['id', 'name'])
-                ->viaTable('{{%entity_label}}', ['entity_id' => 'id'], function ($query) {
-                    $query->where(['entity_name' => static::className2Id()]);
-                }
-        );
+            ->select(['id', 'name'])
+            ->viaTable('{{%entity_label}}', ['entity_id' => 'id'], function ($query) {
+                $query->where(['entity_name' => static::className2Id()]);
+            }
+            );
     }
 
     /**
      * Creater relational
+     *
      * @return ActiveQueryInterface the relational query object.
      */
     public function getCreater()
@@ -150,6 +155,7 @@ class BaseActiveRecord extends ActiveRecord
 
     /**
      * Updater relational
+     *
      * @return ActiveQueryInterface the relational query object.
      */
     public function getUpdater()
@@ -159,6 +165,7 @@ class BaseActiveRecord extends ActiveRecord
 
     /**
      * Deleter relational
+     *
      * @return ActiveQueryInterface the relational query object.
      */
     public function getDeleter()
@@ -271,7 +278,7 @@ class BaseActiveRecord extends ActiveRecord
                     }
                 }
 
-                $this->created_by = Yii::$app->getUser()->getId() ? : 0;
+                $this->created_by = Yii::$app->getUser()->getId() ?: 0;
                 $this->created_at = time();
                 if ($this->hasAttribute('updated_at')) {
                     $this->updated_by = $this->created_by;
@@ -285,7 +292,7 @@ class BaseActiveRecord extends ActiveRecord
                     $this->enabled = $entityDefaultValues['enabled'];
                 }
                 if ($this->hasAttribute('updated_at')) {
-                    $this->updated_by = $this->updated_by ? : Yii::$app->getUser()->getId();
+                    $this->updated_by = $this->updated_by ?: Yii::$app->getUser()->getId();
                     $this->updated_at = time();
                 }
             }
@@ -415,7 +422,7 @@ class BaseActiveRecord extends ActiveRecord
             $transaction->commit();
         } catch (Exception $e) {
             $transaction->rollback();
-            new HttpException('500', $e->message);
+            new HttpException('500', $e->getMessage());
         }
     }
 
@@ -424,9 +431,9 @@ class BaseActiveRecord extends ActiveRecord
         parent::afterDelete();
         // Delete attribute relation data and update attribute frequency value
         $labels = Yii::$app->getDb()->createCommand('SELECT [[id]], [[label_id]] FROM {{%entity_label}} WHERE [[entity_id]] = :entityId AND [[entity_name]] = :entityName')->bindValues([
-                ':entityId' => $this->id,
-                ':entityName' => static::className2Id()
-            ])->queryAll();
+            ':entityId' => $this->id,
+            ':entityName' => static::className2Id()
+        ])->queryAll();
         if ($labels) {
             Yii::$app->getDb()->createCommand('DELETE FROM {{%entity_label}} WHERE [[id]] IN (' . implode(', ', ArrayHelper::getColumn($labels, 'id')) . ')')->execute();
             Label::updateAll(['frequency' => -1], ['id' => ArrayHelper::getColumn($labels, 'label_id')]);

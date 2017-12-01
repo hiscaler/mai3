@@ -136,6 +136,7 @@ class FileUploadConfig extends BaseActiveRecord
 
     /**
      * 默认配置
+     *
      * @return array
      */
     public static function defaultConfig()
@@ -154,6 +155,7 @@ class FileUploadConfig extends BaseActiveRecord
 
     /**
      * 返回指定的上传配置（可以返回多个）
+     *
      * @param array $pairs
      * @return array
      */
@@ -201,6 +203,7 @@ class FileUploadConfig extends BaseActiveRecord
 
     /**
      * 获取上传文件设置
+     *
      * @param string $modelName
      * @param string $attribute
      * @return array
@@ -209,11 +212,13 @@ class FileUploadConfig extends BaseActiveRecord
     {
         $configs = static::getConfigs();
         $key = "{$modelName}@{$attribute}";
+
         return isset($configs[$key]) ? $configs[$key] : static::defaultConfig();
     }
 
     /**
      * 获取有效模型名称列表
+     *
      * @return array
      */
     public static function validModelNames()
@@ -236,6 +241,7 @@ class FileUploadConfig extends BaseActiveRecord
 
     /**
      * 获取可设置上传设定的模型和字段属性名称列表
+     *
      * @return array
      */
     public static function modelAttributeOptions()

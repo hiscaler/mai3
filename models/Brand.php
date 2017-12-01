@@ -105,6 +105,7 @@ class Brand extends BaseActiveRecord
 
     /**
      * 获取品牌列表数据
+     *
      * @param boolean $all
      * @return array
      */

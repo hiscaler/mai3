@@ -69,6 +69,7 @@ class UserCreditLog extends \yii\db\ActiveRecord
 
     /**
      * 积分类型选择
+     *
      * @return array
      */
     public static function operationOptions()
@@ -93,6 +94,7 @@ class UserCreditLog extends \yii\db\ActiveRecord
 
     /**
      *  添加积分记录
+     *
      * @param integer $userId
      * @param string $operation
      * @param integer $credits

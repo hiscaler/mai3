@@ -91,12 +91,14 @@ class Order extends \yii\db\ActiveRecord
 
     /**
      * 生成订单号
+     *
      * @return string
      */
     public static function generateSn()
     {
         $today = \yadjet\helpers\DatetimeHelper::getTodayRange();
         $count = Yii::$app->getDb()->createCommand('SELECT COUNT(*) FROM {{%order}} WHERE [[created_at]] BETWEEN :begin AND :end', [':begin' => $today[0], ':end' => $today[1]])->queryScalar();
+
         return date('YmdHis') . sprintf('%04d', $count + 1);
     }
 
@@ -126,6 +128,7 @@ class Order extends \yii\db\ActiveRecord
 
     /**
      * 订单状态选项
+     *
      * @return array
      */
     public static function statusOptions()
@@ -141,11 +144,13 @@ class Order extends \yii\db\ActiveRecord
 
     /**
      * 订单状态
+     *
      * @return string|mixed
      */
     public function getStatus_text()
     {
         $options = self::statusOptions();
+
         return isset($options[$this->status]) ? $options[$this->status] : null;
     }
 

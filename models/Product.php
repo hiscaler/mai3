@@ -56,18 +56,21 @@ class Product extends BaseActiveRecord
 
     /**
      * 商品描述
+     *
      * @var string
      */
     public $content;
 
     /**
      * 商品图片
+     *
      * @var array
      */
     public $imageFiles;
 
     /**
      * SKU 列表
+     *
      * @var array
      */
     public $skuItems;
@@ -75,6 +78,7 @@ class Product extends BaseActiveRecord
 
     /**
      * 特权用户
+     *
      * @var array
      */
     public $privilegeUsers;
@@ -173,6 +177,7 @@ class Product extends BaseActiveRecord
 
     /**
      * 所属分类
+     *
      * @return ActiveRecord
      */
     public function getCategory()
@@ -182,6 +187,7 @@ class Product extends BaseActiveRecord
 
     /**
      * 所属类型
+     *
      * @return ActiveRecord
      */
     public function getType()
@@ -191,6 +197,7 @@ class Product extends BaseActiveRecord
 
     /**
      * 所属品牌
+     *
      * @return ActiveRecord
      */
     public function getBrand()
@@ -200,6 +207,7 @@ class Product extends BaseActiveRecord
 
     /**
      * 商品图片
+     *
      * @return ActiveRecord
      */
     public function getImages()
@@ -209,6 +217,7 @@ class Product extends BaseActiveRecord
 
     /**
      * 商品单品
+     *
      * @return array
      */
     public function getItems()
@@ -273,7 +282,7 @@ class Product extends BaseActiveRecord
                     'content' => $this->content,
                     'updated_at' => $now,
                     'updated_by' => $userId
-                    ], ['product_id' => $this->id])->execute();
+                ], ['product_id' => $this->id])->execute();
             }
 
             // 如果 category_id 和 brand_id 发生变化，则需要同步更新 item 中的数据
@@ -323,7 +332,7 @@ class Product extends BaseActiveRecord
                             'product_id' => $this->id,
                             'url' => $imgUrl,
                             'path' => $imgPath,
-                            'description' => $imageDescriptions[$key] ? : ($file ? $file->getBaseName() : null),
+                            'description' => $imageDescriptions[$key] ?: ($file ? $file->getBaseName() : null),
                             'created_at' => $now,
                             'created_by' => $userId,
                             'updated_at' => $now,

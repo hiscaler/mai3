@@ -101,6 +101,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 输入类型选项
+     *
      * @return array
      */
     public static function inputTypeOptions()
@@ -116,6 +117,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 数据输入方式
+     *
      * @return string|mixed
      */
     public function getInput_type_text()
@@ -127,6 +129,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 返回数据类型选项
+     *
      * @retrun array
      */
     public static function returnValueTypeOptions()
@@ -140,6 +143,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 返回数据类型
+     *
      * @return string|mixed
      */
     public function getReturn_value_type_text()
@@ -151,13 +155,14 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 对象集合
+     *
      * @return array
      */
     public static function getObjectNames()
     {
         $names = [];
         $db = Yii::$app->getDb();
-        $tables = array_map(function($v) use ($db) {
+        $tables = array_map(function ($v) use ($db) {
             return str_replace($db->tablePrefix, '', $v);
         }, $db->getSchema()->getTableNames());
 
@@ -185,6 +190,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 格式化之后的对对象名称
+     *
      * @return string
      */
     public function getObject_name_formatted()
@@ -194,6 +200,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 获取对象的 Meta 数据
+     *
      * @param \yii\db\ActiveRecord $activeRecord
      * @return array
      */
@@ -206,7 +213,7 @@ class Meta extends \yii\db\ActiveRecord
             ->where([
                 'object_name' => strtr($activeRecord->tableName(), ['{{%' => '', '}}' => '']),
                 'enabled' => Constant::BOOLEAN_TRUE,
-                'tenant_id' => $tenantId ? : Yad::getTenantId(),
+                'tenant_id' => $tenantId ?: Yad::getTenantId(),
             ])
             ->indexBy('id')
             ->all();
@@ -284,6 +291,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 获取 Meta 对象的验证规则
+     *
      * @param integer $metaId
      * @return arrya
      */
@@ -292,7 +300,7 @@ class Meta extends \yii\db\ActiveRecord
         $rules = [];
         $validators = Yii::$app->getDb()->createCommand('SELECT [[name]], [[options]] FROM {{%meta_validator}} WHERE [[meta_id]] = :metaId', [':metaId' => (int) $metaId])->queryAll();
         foreach ($validators as $validator) {
-            $options = unserialize($validator['options']) ? : [];
+            $options = unserialize($validator['options']) ?: [];
             foreach ($options as $key => $value) {
                 if (trim($value) == '') {
                     unset($options[$key]);
@@ -306,6 +314,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 保存 Meta 数据
+     *
      * @param \yii\db\ActiveRecord $activeRecord
      * @param \yii\base\DynamicModel $dynamicModel
      * @param type $throwException
@@ -328,7 +337,7 @@ class Meta extends \yii\db\ActiveRecord
                 ->where([
                     'key' => array_keys($attributes),
                     'object_name' => strtr($activeRecord->tableName(), ['{{%' => '', '}}' => '']),
-                    'tenant_id' => $tenantId ? : Yad::getTenantId(),
+                    'tenant_id' => $tenantId ?: Yad::getTenantId(),
                 ])
                 ->column();
             if (!$activeRecord->isNewRecord) {
@@ -369,6 +378,7 @@ class Meta extends \yii\db\ActiveRecord
 
     /**
      * 获取自定义字段内容值
+     *
      * @param \yii\db\ActiveRecord $activeRecord
      * @param integer $objectId
      * @param array $keys 需要获取字段列表
@@ -417,7 +427,7 @@ class Meta extends \yii\db\ActiveRecord
         $db = Yii::$app->getDb();
         $metaId = $db->createCommand('SELECT [[id]] FROM {{%meta}} WHERE [[object_name]] = :objectName AND [[key]] = :key', [':objectName' => strtolower(trim($objectName)), ':key' => trim($key)])->queryScalar();
         if ($metaId) {
-            $value = $db->createCommand('SELECT [[value]] FROM {{%meta_value}} WHERE [[meta_id]] = :metaId AND [[object_id]] = :objectId', [':metaId' => $metaId, ':objectId' => (int) $objectId])->queryScalar() ? : null;
+            $value = $db->createCommand('SELECT [[value]] FROM {{%meta_value}} WHERE [[meta_id]] = :metaId AND [[object_id]] = :objectId', [':metaId' => $metaId, ':objectId' => (int) $objectId])->queryScalar() ?: null;
         }
 
         return $value;

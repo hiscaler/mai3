@@ -52,6 +52,7 @@ class Yad
 
     /**
      * 时区列表
+     *
      * @return array
      */
     public static function getTimezones()
@@ -78,6 +79,7 @@ class Yad
 
     /**
      * 设置租赁站点信息
+     *
      * @param integer $tenantId
      * @return boolean
      */
@@ -85,15 +87,15 @@ class Yad
     {
         $db = Yii::$app->getDb();
         $tenantUser = $db->createCommand('SELECT [[t.role]], [[t.rule_id]], [[u.role]] AS [[user_role]] FROM {{%tenant_user}} t LEFT JOIN {{%user}} u ON [[t.user_id]] = [[u.id]] WHERE [[t.tenant_id]] = :tenantId AND [[t.user_id]] = :userId AND [[t.enabled]] = :enabled')->bindValues([
-                ':tenantId' => (int) $tenantId,
-                ':userId' => Yii::$app->getUser()->getId(),
-                ':enabled' => Constant::BOOLEAN_TRUE
-            ])->queryOne();
+            ':tenantId' => (int) $tenantId,
+            ':userId' => Yii::$app->getUser()->getId(),
+            ':enabled' => Constant::BOOLEAN_TRUE
+        ])->queryOne();
         if ($tenantUser !== false) {
             $tenant = $db->createCommand('SELECT [[id]], [[name]], [[language]], [[timezone]], [[date_format]], [[time_format]], [[datetime_format]], [[domain_name]] FROM {{%tenant}} WHERE [[id]] = :id AND [[enabled]] = :enabled')->bindValues([
-                    ':id' => (int) $tenantId,
-                    ':enabled' => Constant::BOOLEAN_TRUE
-                ])->queryOne();
+                ':id' => (int) $tenantId,
+                ':enabled' => Constant::BOOLEAN_TRUE
+            ])->queryOne();
             if ($tenant) {
                 $cookie = new Cookie(['name' => '_tenant', 'httpOnly' => true]);
                 $cookie->value = [
@@ -123,6 +125,7 @@ class Yad
 
     /**
      * 获取保存在 COOKIE 中的站点信息记录
+     *
      * @param string $key
      * @param mixed $default
      * @return mixed
@@ -164,6 +167,7 @@ class Yad
 
     /**
      * 用户系统角色
+     *
      * @return mixed
      */
     public static function getUserRole()
@@ -173,6 +177,7 @@ class Yad
 
     /**
      * 租赁站点的用户角色
+     *
      * @return mixed
      */
     public static function getTenantUserRole()
@@ -182,6 +187,7 @@ class Yad
 
     /**
      * 租赁站点用户审核规则
+     *
      * @return mixed
      */
     public static function getTenantUserRule()
@@ -193,6 +199,7 @@ class Yad
      * Return table name by special model name
      * For Example: Yad::modelName2TableName('app\models\news') return `news`, if
      * Use table prefix, will return `table_prifix_news` name
+     *
      * @param string $modelName
      * @return string
      */
@@ -200,7 +207,7 @@ class Yad
     {
         $tableName = null;
         if (!empty($modelName)) {
-            $tableName = (Yii::$app->getDb()->tablePrefix ? : '') . Inflector::camel2id(StringHelper::basename(BaseActiveRecord::id2ClassName($modelName)), '_');
+            $tableName = (Yii::$app->getDb()->tablePrefix ?: '') . Inflector::camel2id(StringHelper::basename(BaseActiveRecord::id2ClassName($modelName)), '_');
         }
 
         return $tableName;
@@ -208,6 +215,7 @@ class Yad
 
     /**
      * 获取文本内容中的所有图片路径
+     *
      * @param string $content
      * @param string|integer $order
      * @return array|string|null

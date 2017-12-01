@@ -80,6 +80,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 类别选项
+     *
      * @return array
      */
     public static function typeOptions()
@@ -122,6 +123,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 处理并生成分类数据缓存，供后续代码调取
+     *
      * @param boolean $toTree
      * @return array
      */
@@ -231,6 +233,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 获取所有父节点数据
+     *
      * @param mixed|integer $id
      * @return array
      */
@@ -248,17 +251,20 @@ class Category extends BaseActiveRecord
 
     /**
      * 判断是否有子节点
+     *
      * @param integer $id
      * @return boolean
      */
     private static function hasChildren($id)
     {
         $rawData = self::getRawItems();
+
         return isset($rawData[$id]) && $rawData[$id]['hasChildren'];
     }
 
     /**
      * 获取所有子节点数据
+     *
      * @param mixed|integer $parent
      * @return array
      */
@@ -285,6 +291,7 @@ class Category extends BaseActiveRecord
 
     /**
      * 获取所有子节点 id 集合
+     *
      * @param mixed|integer $parent
      * @return array
      */

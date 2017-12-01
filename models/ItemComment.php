@@ -75,9 +75,10 @@ class ItemComment extends \yii\db\ActiveRecord
             'created_by' => Yii::t('itemComment', 'Created By'),
         ];
     }
-    
+
     /**
      * 评价等级
+     *
      * @return array
      */
     public static function levelOptions()
@@ -88,10 +89,11 @@ class ItemComment extends \yii\db\ActiveRecord
             self::LEVEL_BAD => '差评',
         ];
     }
-    
-    public function getLevel_text() {
+
+    public function getLevel_text()
+    {
         $options = self::levelOptions();
-        
+
         return isset($options[$this->level]) ? $options[$this->level] : null;
     }
 
@@ -116,6 +118,7 @@ class ItemComment extends \yii\db\ActiveRecord
                 $this->return_user_id = Yii::$app->getUser()->getId();
                 $this->return_datetime = time();
             }
+
             return true;
         } else {
             return false;

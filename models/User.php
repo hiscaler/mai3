@@ -147,6 +147,7 @@ class User extends ActiveRecord implements IdentityInterface
         if ($type !== null) {
             $condition['type'] = strtolower($type) == 'user' ? self::TYPE_USER : self::TYPE_MEMBER;
         }
+
         return static::findOne($condition);
     }
 
@@ -163,8 +164,8 @@ class User extends ActiveRecord implements IdentityInterface
         }
 
         return static::findOne([
-                'password_reset_token' => $token,
-                'status' => self::STATUS_ACTIVE,
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
         ]);
     }
 
@@ -182,6 +183,7 @@ class User extends ActiveRecord implements IdentityInterface
 
         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
+
         return $timestamp + $expire >= time();
     }
 
@@ -296,6 +298,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 用户状态选项
+     *
      * @return array
      */
     public static function statusOptions()
@@ -310,6 +313,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 用户状态
+     *
      * @return string|mixed
      */
     public function getStatus_text()
@@ -321,6 +325,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 用户分组
+     *
      * @return string|mixed
      */
     public function getUser_group_text()
@@ -332,6 +337,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 系统分组
+     *
      * @return string|mixed
      */
     public function getSystem_group_text()
@@ -343,6 +349,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * 根据用户积分修正用户所在分组
+     *
      * @param integer $userId
      * @return boolean
      */
@@ -371,15 +378,16 @@ class User extends ActiveRecord implements IdentityInterface
     private static function _getList($where)
     {
         return (new \yii\db\Query())
-                ->select('username')
-                ->from(self::tableName())
-                ->where($where)
-                ->indexBy('id')
-                ->column();
+            ->select('username')
+            ->from(self::tableName())
+            ->where($where)
+            ->indexBy('id')
+            ->column();
     }
 
     /**
      * 获取人员列表
+     *
      * @return array
      */
     public static function getList()
