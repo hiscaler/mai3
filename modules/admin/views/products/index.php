@@ -2,6 +2,7 @@
 
 use app\modules\admin\components\GridView;
 use yii\helpers\Html;
+use yii\helpers\Inflector;
 use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
@@ -11,6 +12,8 @@ use yii\widgets\Pjax;
 $this->title = Yii::t('app', 'Products');
 $this->params['breadcrumbs'][] = $this->title;
 
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
+
 $this->params['menus'] = [
     ['label' => Yii::t('app', 'List'), 'url' => ['index']],
     ['label' => Yii::t('app', 'Create'), 'url' => ['create']],
@@ -18,7 +21,6 @@ $this->params['menus'] = [
     ['label' => Yii::t('app', '搜索'), 'url' => '#'],
 ];
 ?>
-
 
 <div class="products-index">
 
@@ -55,8 +57,18 @@ $this->params['menus'] = [
                 'attribute' => 'name',
                 'format' => 'raw',
                 'value' => function ($model) {
-                    return "<span class=\"pk\">[ {$model['id']} ]</span>" . Html::a($model['name'], ['update', 'id' => $model['id']]);
-                }
+                    $output = "<span class=\"pk\">[ {$model['id']} ]</span>" . Html::a($model['name'], ['update', 'id' => $model['id']]);
+                    $words = [];
+                    foreach ($model['relatedLabels'] as $attr) {
+                        $words[] = $attr['name'];
+                    }
+                    $sentence = Inflector::sentence($words, '、', null, '、');
+                    if (!empty($sentence)) {
+                        $sentence = "<span class=\"labels\">{$sentence}</span>";
+                    }
+
+                    return $sentence . $output;
+                },
             ],
             [
                 'attribute' => 'market_price',
@@ -123,6 +135,12 @@ $this->params['menus'] = [
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
+                'template' => '{view} {entityLabels} {update} {delete}',
+                'buttons' => [
+                    'entityLabels' => function ($url, $model, $key) use ($baseUrl) {
+                        return Html::a(Html::img($baseUrl . '/images/attributes.png'), ['entity-labels/index', 'entityId' => $model['id'], 'entityName' => 'app-models-Product'], ['title' => Yii::t('app', 'Entity Labels'), 'class' => 'setting-entity-labels', 'data-pjax' => '0']);
+                    },
+                ],
                 'headerOptions' => array('class' => 'buttons-3 last'),
             ],
         ],
@@ -131,3 +149,33 @@ $this->params['menus'] = [
     ?>
 
 </div>
+
+<?php \app\modules\admin\components\JsBlock::begin() ?>
+<script type="text/javascript">
+    $(function () {
+        jQuery(document).on('click', 'a.setting-entity-labels', function () {
+            var $this = $(this);
+            $.ajax({
+                type: 'GET',
+                url: $this.attr('href'),
+                beforeSend: function (xhr) {
+                    $.fn.lock();
+                }, success: function (response) {
+                    layer.open({
+                        title: $this.attr('title'),
+                        content: response,
+                        lock: true,
+                        padding: '10px'
+                    });
+                    $.fn.unlock();
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
+                    $.fn.unlock();
+                }
+            });
+
+            return false;
+        });
+    });
+</script>
+<?php \app\modules\admin\components\JsBlock::end() ?>
