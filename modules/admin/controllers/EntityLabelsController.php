@@ -201,7 +201,7 @@ class EntityLabelsController extends Controller
                         $responseData = [
                             'success' => true,
                             'data' => [
-                                'value' => Option::BOOLEAN_FALSE
+                                'value' => Constant::BOOLEAN_FALSE
                             ]
                         ];
                     } else {

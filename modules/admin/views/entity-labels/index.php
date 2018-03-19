@@ -53,8 +53,6 @@ EOT;
         ?>
         <div class="panels">
             <?php
-                \yii\helpers\VarDumper::dump($dataProviders, 111, true);
-                exit;
             $i = 0;
             foreach ($dataProviders as $key => $dataProvider):
                 $i++;
