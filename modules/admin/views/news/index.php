@@ -10,7 +10,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\NewsSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$baseUrl = Yii::$app->getRequest()->getBaseUrl()  . '/admin';
+$baseUrl = Yii::$app->getRequest()->getBaseUrl() . '/admin';
 
 $this->params['breadcrumbs'][] = Yii::t('app', 'News');
 
@@ -158,19 +158,19 @@ $this->params['menus'] = [
                     },
                     'delete' => function ($url, $model, $key) {
                         return $model['status'] != Option::STATUS_DELETED ? Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                            'title' => Yii::t('yii', 'Delete'),
-                            'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
-                            'data-method' => 'post',
-                            'data-pjax' => '0',
-                        ]) : '';
+                                'title' => Yii::t('yii', 'Delete'),
+                                'data-confirm' => Yii::t('yii', 'Are you sure you want to delete this item?'),
+                                'data-method' => 'post',
+                                'data-pjax' => '0',
+                            ]) : '';
                     },
                     'undo' => function ($url, $model, $key) {
                         return $model['status'] == Option::STATUS_DELETED ? Html::a('<span class="glyphicon glyphicon-undo"></span>', $url, [
-                            'title' => Yii::t('app', 'Undo'),
-                            'data-confirm' => Yii::t('app', 'Are you sure you want to undo this item?'),
-                            'data-method' => 'post',
-                            'data-pjax' => '0',
-                        ]) : '';
+                                'title' => Yii::t('app', 'Undo'),
+                                'data-confirm' => Yii::t('app', 'Are you sure you want to undo this item?'),
+                                'data-method' => 'post',
+                                'data-pjax' => '0',
+                            ]) : '';
                     }
                 ],
                 'headerOptions' => array('class' => 'buttons-4 last'),
@@ -182,33 +182,34 @@ $this->params['menus'] = [
 
 </div>
 
-<?php
-$this->registerJs('yadjet.actions.toggle("table td.news-enabled-handler img", "' . Url::toRoute('toggle') . '");');
-$this->registerJs('yadjet.actions.toggle("table td.news-enabled-comment-handler img", "' . Url::toRoute('toggle-comment') . '");');
-
-$js = <<<'EOT'
-jQuery(document).on('click', 'a.setting-entity-labels', function () {
-    var $this = $(this);
-    $.ajax({
-        type: 'GET',
-        url: $this.attr('href'),
-        beforeSend: function(xhr) {
-            $.fn.lock();
-        }, success: function(response) {
-            layer.open({
-                title: $this.attr('title'),
-                content: response,
-                lock: true,
-                padding: '10px'
+<?php \app\modules\admin\components\JsBlock::begin() ?>
+<script type="text/javascript">
+    $(function () {
+        yadjet.actions.toggle('table td.news-enabled-handler img', '<?= Url::toRoute('toggle') ?>');
+        yadjet.actions.toggle('table td.news-enabled-comment-handler img', '<?= Url::toRoute('toggle-comment') ?>');
+        jQuery(document).on('click', 'a.setting-entity-labels', function () {
+            var $this = $(this);
+            $.ajax({
+                type: 'GET',
+                url: $this.attr('href'),
+                beforeSend: function (xhr) {
+                    $.fn.lock();
+                }, success: function (response) {
+                    layer.open({
+                        title: $this.attr('title'),
+                        content: response,
+                        lock: true,
+                        padding: '10px'
+                    });
+                    $.fn.unlock();
+                }, error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
+                    $.fn.unlock();
+                }
             });
-            $.fn.unlock();
-        }, error: function(XMLHttpRequest, textStatus, errorThrown) {
-            layer.alert('[ ' + XMLHttpRequest.status + ' ] ' + XMLHttpRequest.responseText);
-            $.fn.unlock();
-        }
-    });
 
-    return false;
-});
-EOT;
-$this->registerJs($js);
+            return false;
+        });
+    });
+</script>
+<?php \app\modules\admin\components\JsBlock::end() ?>
