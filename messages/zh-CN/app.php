@@ -97,6 +97,7 @@ return array(
     'Lookups' => '常规设定',
     'Ad Spaces' => '广告位管理',
     'Ads' => '广告管理',
+    'DB' => '数据库管理',
     'Faqs' => '常见问题管理',
     'Feedbacks' => '留言管理',
     'News' => '资讯管理',

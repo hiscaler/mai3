@@ -30,6 +30,12 @@ return [
                 'url' => ['users/index'],
                 'forceEmbed' => true,
             ],
+            'db' => [
+                'id' => 'db',
+                'label' => 'DB',
+                'url' => ['db/index'],
+                'forceEmbed' => true,
+            ],
         ],
         'Site Manage' => [
             'app-models-Lookup' => [
