@@ -108,6 +108,7 @@ class Brand extends BaseActiveRecord
      *
      * @param boolean $all
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getList($all = false)
     {

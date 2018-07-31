@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\Query;
+use yii\web\HttpException;
 
 /**
  * This is the model class for table "tenant".
@@ -152,6 +153,7 @@ class Tenant extends BaseActiveRecord
     /**
      * 租赁站点定义的审核流程规则
      *
+     * @param null $tenantId
      * @return array
      */
     public static function workflowRules($tenantId = null)
@@ -171,6 +173,8 @@ class Tenant extends BaseActiveRecord
 
     /**
      * 租户可管理模块
+     *
+     * @throws \yii\db\Exception
      */
     public static function modules()
     {
@@ -178,6 +182,10 @@ class Tenant extends BaseActiveRecord
     }
 
     // Events
+
+    /**
+     * @throws \yii\db\Exception
+     */
     public function afterFind()
     {
         parent::afterFind();
@@ -189,6 +197,11 @@ class Tenant extends BaseActiveRecord
         $this->_modules = $this->modules;
     }
 
+    /**
+     * @param $insert
+     * @return bool
+     * @throws \yii\db\Exception
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -203,6 +216,12 @@ class Tenant extends BaseActiveRecord
         }
     }
 
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     * @throws \yii\db\Exception
+     * @throws \yii\web\HttpException
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

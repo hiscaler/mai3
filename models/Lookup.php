@@ -249,6 +249,11 @@ class Lookup extends BaseActiveRecord
         }
     }
 
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     * @throws \yii\web\HttpException
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

@@ -157,6 +157,8 @@ class Meta extends \yii\db\ActiveRecord
      * 对象集合
      *
      * @return array
+     * @throws \ReflectionException
+     * @throws \yii\base\NotSupportedException
      */
     public static function getObjectNames()
     {
@@ -293,7 +295,8 @@ class Meta extends \yii\db\ActiveRecord
      * 获取 Meta 对象的验证规则
      *
      * @param integer $metaId
-     * @return arrya
+     * @return array
+     * @throws \yii\db\Exception
      */
     public static function getMetaRules($metaId)
     {
@@ -317,7 +320,8 @@ class Meta extends \yii\db\ActiveRecord
      *
      * @param \yii\db\ActiveRecord $activeRecord
      * @param \yii\base\DynamicModel $dynamicModel
-     * @param type $throwException
+     * @param null $tenantId
+     * @param bool $throwException
      * @return boolean|mixed
      * @throws \yii\base\ErrorException
      */
@@ -421,6 +425,13 @@ class Meta extends \yii\db\ActiveRecord
         return $values;
     }
 
+    /**
+     * @param $objectName
+     * @param $key
+     * @param $objectId
+     * @return null
+     * @throws \yii\db\Exception
+     */
     public static function getValue($objectName, $key, $objectId)
     {
         $value = null;

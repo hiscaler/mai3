@@ -158,6 +158,7 @@ class FileUploadConfig extends BaseActiveRecord
      *
      * @param array $pairs
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getConfigs($pairs = [])
     {
@@ -207,6 +208,7 @@ class FileUploadConfig extends BaseActiveRecord
      * @param string $modelName
      * @param string $attribute
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getConfig($modelName, $attribute)
     {
@@ -220,6 +222,7 @@ class FileUploadConfig extends BaseActiveRecord
      * 获取有效模型名称列表
      *
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function validModelNames()
     {
@@ -243,6 +246,7 @@ class FileUploadConfig extends BaseActiveRecord
      * 获取可设置上传设定的模型和字段属性名称列表
      *
      * @return array
+     * @throws \yii\base\InvalidConfigException
      */
     public static function modelAttributeOptions()
     {

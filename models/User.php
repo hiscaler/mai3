@@ -89,11 +89,11 @@ class User extends ActiveRecord implements IdentityInterface
             [['auth_key'], 'string', 'max' => 32],
             [['password_hash', 'password_reset_token'], 'string', 'max' => 255],
             [['email'], 'string', 'max' => 50],
-            [['credits_count'], 'default', 'value' => 0],
+            [['credits_count', 'login_count'], 'default', 'value' => 0],
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
-            ['status', 'default', 'value' => self::STATUS_PENDING],
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_PENDING, self::STATUS_ACTIVE, self::STATUS_LOCKED, self::STATUS_DELETED]],
             ['avatar', 'file',
                 'extensions' => $this->_fileUploadConfig['extensions'],
@@ -129,6 +129,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * @inheritdoc
+     * @throws NotSupportedException
      */
     public static function findIdentityByAccessToken($token, $type = null)
     {
@@ -139,6 +140,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Finds user by username
      *
      * @param string $username
+     * @param null $type
      * @return static|null
      */
     public static function findByUsername($username, $type = null)
@@ -226,6 +228,7 @@ class User extends ActiveRecord implements IdentityInterface
      * Generates password hash from password and sets it to the model
      *
      * @param string $password
+     * @throws \yii\base\Exception
      */
     public function setPassword($password)
     {
@@ -234,6 +237,8 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Generates "remember me" authentication key
+     *
+     * @throws \yii\base\Exception
      */
     public function generateAuthKey()
     {
@@ -352,6 +357,7 @@ class User extends ActiveRecord implements IdentityInterface
      *
      * @param integer $userId
      * @return boolean
+     * @throws \yii\db\Exception
      */
     public static function fixUserGroup($userId)
     {

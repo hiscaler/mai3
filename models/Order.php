@@ -36,6 +36,7 @@ class Order extends \yii\db\ActiveRecord
     const STATUS_CANCEL = 2;
     const STATUS_VOID = 3;
     const STATUS_DELETED = 4;
+    const STATUS_PAID = 5;
 
     /**
      * @inheritdoc
@@ -93,6 +94,7 @@ class Order extends \yii\db\ActiveRecord
      * 生成订单号
      *
      * @return string
+     * @throws \yii\db\Exception
      */
     public static function generateSn()
     {
@@ -135,10 +137,11 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             self::STATUS_PENDING => '待审核',
-            self::STATUS_ACTIVE => '有效',
-            self::STATUS_CANCEL => '取消',
-            self::STATUS_VOID => '无效',
-            self::STATUS_DELETED => '删除',
+            self::STATUS_ACTIVE => '有效订单',
+            self::STATUS_CANCEL => '已取消',
+            self::STATUS_VOID => '无效订单',
+            self::STATUS_DELETED => '已删除',
+            self::STATUS_PAID => '已付款',
         ];
     }
 

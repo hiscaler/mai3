@@ -102,6 +102,7 @@ class Type extends BaseActiveRecord
      *
      * @param string $id
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getRawData($id)
     {
@@ -143,6 +144,14 @@ class Type extends BaseActiveRecord
     }
 
     // 事件
+
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     * @throws \yii\db\Exception
+     * @throws \yii\web\HttpException
+     * @throws \Exception
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

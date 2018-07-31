@@ -56,6 +56,10 @@ class TenantUser extends ActiveRecord
         ];
     }
 
+    /**
+     * @return false|null|string
+     * @throws \yii\db\Exception
+     */
     public function getUsername()
     {
         return Yii::$app->getDb()->createCommand('SELECT [[username]] FROM {{%user}} WHERE [[id]] = :id')->bindValue(':id', $this->user_id, PDO::PARAM_INT)->queryScalar();

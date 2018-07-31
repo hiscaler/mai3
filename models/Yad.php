@@ -82,6 +82,7 @@ class Yad
      *
      * @param integer $tenantId
      * @return boolean
+     * @throws \yii\db\Exception
      */
     public static function setTenantData($tenantId)
     {

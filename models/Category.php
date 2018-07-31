@@ -90,6 +90,8 @@ class Category extends BaseActiveRecord
 
     /**
      * 生成数据缓存
+     *
+     * @throws \yii\db\Exception
      */
     public static function generateCache($toTree = false, $tenantId = null)
     {
@@ -125,7 +127,9 @@ class Category extends BaseActiveRecord
      * 处理并生成分类数据缓存，供后续代码调取
      *
      * @param boolean $toTree
+     * @param null $tenantId
      * @return array
+     * @throws \yii\db\Exception
      */
     private static function getRawItems($toTree = false, $tenantId = null)
     {
@@ -140,6 +144,13 @@ class Category extends BaseActiveRecord
         return $items;
     }
 
+    /**
+     * @param int $type
+     * @param bool $all
+     * @param bool $toTree
+     * @return array
+     * @throws \yii\db\Exception
+     */
     private static function getRawItemsByType($type = 0, $all = false, $toTree = false)
     {
         $items = [];
@@ -160,7 +171,7 @@ class Category extends BaseActiveRecord
      * @param integer $type
      * @param mixed $prompt
      * @param boolean $all
-     * @return string
+     * @return array
      */
     public static function getTree($type, $prompt = null, $all = false)
     {
@@ -186,7 +197,8 @@ class Category extends BaseActiveRecord
      * @param mixed $prompt
      * @param boolean $all
      * @param mixed|integer $userId
-     * @return string
+     * @return array
+     * @throws \yii\db\Exception
      */
     public static function getOwnerTree($type, $prompt = null, $all = false, $userId = null)
     {
@@ -236,6 +248,7 @@ class Category extends BaseActiveRecord
      *
      * @param mixed|integer $id
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getParents($id)
     {
@@ -254,6 +267,7 @@ class Category extends BaseActiveRecord
      *
      * @param integer $id
      * @return boolean
+     * @throws \yii\db\Exception
      */
     private static function hasChildren($id)
     {
@@ -267,6 +281,7 @@ class Category extends BaseActiveRecord
      *
      * @param mixed|integer $parent
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getChildren($parent = 0)
     {
@@ -294,6 +309,7 @@ class Category extends BaseActiveRecord
      *
      * @param mixed|integer $parent
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getChildrenIds($parent = 0)
     {
@@ -306,6 +322,12 @@ class Category extends BaseActiveRecord
     }
 
     // 事件
+
+    /**
+     * @param $insert
+     * @return bool
+     * @throws \yii\db\Exception
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -323,12 +345,21 @@ class Category extends BaseActiveRecord
         }
     }
 
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     * @throws \yii\db\Exception
+     * @throws \yii\web\HttpException
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);
         self::generateCache();
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
     public function afterDelete()
     {
         parent::afterDelete();

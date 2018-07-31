@@ -25,6 +25,12 @@ class Member extends User
     public $referral;
 
     // Events
+
+    /**
+     * @param $insert
+     * @return bool
+     * @throws \yii\db\Exception
+     */
     public function beforeSave($insert)
     {
         if (parent::beforeSave($insert)) {
@@ -47,6 +53,11 @@ class Member extends User
         }
     }
 
+    /**
+     * @param $insert
+     * @param $changedAttributes
+     * @throws \Exception
+     */
     public function afterSave($insert, $changedAttributes)
     {
         parent::afterSave($insert, $changedAttributes);

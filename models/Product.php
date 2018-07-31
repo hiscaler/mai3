@@ -178,7 +178,7 @@ class Product extends BaseActiveRecord
     /**
      * 所属分类
      *
-     * @return ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getCategory()
     {
@@ -188,7 +188,7 @@ class Product extends BaseActiveRecord
     /**
      * 所属类型
      *
-     * @return ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getType()
     {
@@ -198,7 +198,7 @@ class Product extends BaseActiveRecord
     /**
      * 所属品牌
      *
-     * @return ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getBrand()
     {
@@ -208,7 +208,7 @@ class Product extends BaseActiveRecord
     /**
      * 商品图片
      *
-     * @return ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getImages()
     {
@@ -218,7 +218,7 @@ class Product extends BaseActiveRecord
     /**
      * 商品单品
      *
-     * @return array
+     * @return \yii\db\ActiveQuery
      */
     public function getItems()
     {

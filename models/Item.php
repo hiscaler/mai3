@@ -95,7 +95,7 @@ class Item extends \yii\db\ActiveRecord
     /**
      * 所属商品
      *
-     * @return \yii\db\ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getProduct()
     {
@@ -105,7 +105,7 @@ class Item extends \yii\db\ActiveRecord
     /**
      * 评论
      *
-     * @return ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getComments()
     {
@@ -115,7 +115,7 @@ class Item extends \yii\db\ActiveRecord
     /**
      * 销售情况
      *
-     * @return ActiveRecord
+     * @return \yii\db\ActiveQuery
      */
     public function getSales()
     {
@@ -123,6 +123,10 @@ class Item extends \yii\db\ActiveRecord
     }
 
     // Events
+
+    /**
+     * @throws \yii\db\Exception
+     */
     public function afterDelete()
     {
         parent::afterDelete();

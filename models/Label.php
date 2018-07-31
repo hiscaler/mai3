@@ -61,9 +61,10 @@ class Label extends BaseActiveRecord
     /**
      * 获取自定义属性列表
      *
-     * @param boolean $all // 是否查询出所有数据
-     * @param boolean $group // 是否分组
+     * @param boolean $all 是否查询出所有数据
+     * @param boolean $group 是否分组
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getItems($all = false, $group = false)
     {
@@ -134,6 +135,7 @@ class Label extends BaseActiveRecord
      * @param integer $entityId
      * @param string $entityName
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getEntityLabelIds($entityId, $entityName)
     {
@@ -146,6 +148,7 @@ class Label extends BaseActiveRecord
      * @param integer $labelId
      * @param string $entityName
      * @return array
+     * @throws \yii\db\Exception
      */
     public static function getEntityIds($labelId, $entityName)
     {
@@ -169,6 +172,9 @@ class Label extends BaseActiveRecord
         }
     }
 
+    /**
+     * @throws \yii\db\Exception
+     */
     public function afterDelete()
     {
         parent::afterDelete();
